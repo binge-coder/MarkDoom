@@ -1,13 +1,13 @@
-import { contextBridge } from 'electron'
+import { contextBridge } from "electron";
 
 if (!process.contextIsolated) {
-  throw new Error('context isolation must be enabled in the browser')
+  throw new Error("context isolation must be enabled in the browser");
 }
 
 try {
-  contextBridge.exposeInMainWorld('context', {
+  contextBridge.exposeInMainWorld("context", {
     //todo
-  })
+  });
 } catch (error) {
-  console.error(error)
+  console.error(error);
 }

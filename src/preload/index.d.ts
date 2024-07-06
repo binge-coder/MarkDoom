@@ -3,6 +3,6 @@ declare global {
     // electron: ElectronAPI
     context: {
       //todo
-    }
+    };
   }
 }
