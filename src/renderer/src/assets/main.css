@@ -15,7 +15,7 @@
 
     @apply bg-slate-900;
 
-    /* @apply bg-transparent; */
+    @apply bg-transparent;
 
     @apply font-mono antialiased text-white;
 
