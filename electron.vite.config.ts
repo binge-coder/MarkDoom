@@ -16,7 +16,8 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
-    assetsInclude: "src/renderer/assets/**", // this should be "src/renderer/src/assets/**" i think??
+    assetsInclude: "src/renderer/assets/**",
+    // assetsInclude: "src/renderer/src/assets/**",
     resolve: {
       alias: {
         "@renderer": resolve("src/renderer/src"),
