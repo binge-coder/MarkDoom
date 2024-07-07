@@ -1,6 +1,6 @@
 import {
   Content,
-  // MarkdownEditor,
+  MarkdownEditor,
   NotePreviewList,
   RootLayout,
   Sidebar,
@@ -17,8 +17,7 @@ const App = () => {
         <NotePreviewList className="mt-3 space-y-1" />
       </Sidebar>
       <Content className="border-l border-l-white/20 bg-zinc-900/50 ">
-        {/* <MarkdownEditor /> */}
-        content
+        <MarkdownEditor />
       </Content>
     </RootLayout>
   );
