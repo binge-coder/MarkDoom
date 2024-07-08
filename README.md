@@ -1,6 +1,9 @@
-If in problem:
+# If in problem:
 - Asset problem: electron vite config has a comment on this
 - chatgpt
+
+# Todo
+- add more plugins like linkplugin, codeblockplugin (see : https://mdxeditor.dev/editor/docs/links)
 
 # Market this product
 
