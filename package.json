@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@mdxeditor/editor": "^3.8.0",
+    "fs-extra": "^11.2.0",
     "jotai": "^2.8.4"
   },
   "devDependencies": {
