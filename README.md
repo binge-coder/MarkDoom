@@ -4,7 +4,7 @@
 
 # Todo
 - add more plugins like linkplugin, codeblockplugin (see : https://mdxeditor.dev/editor/docs/links)
-
+<!-- 
 # Market this product
 
 A minimalistic daily journaling desktop app. 
@@ -21,3 +21,4 @@ With helpful templates to get started
         - ask people to get their api key from gemini, chatgpt, etc.
         - have them input that key. then use that key to have ai working
         - have an easy tutorial in app with images on how to do it. infact write a blog about getting openAI keys and link to it??? 
+ -->
