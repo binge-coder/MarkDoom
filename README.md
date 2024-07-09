@@ -2,6 +2,10 @@
 - Asset problem: electron vite config has a comment on this
 - chatgpt
 
+# when need to change name of application:
+- git commit here to save if something goes wrong
+- search current used name in workspace. replace each instance with new name manually
+
 # Todo
 - add more plugins like linkplugin, codeblockplugin (see : https://mdxeditor.dev/editor/docs/links)
 <!-- 
