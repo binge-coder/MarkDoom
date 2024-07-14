@@ -1,8 +1,15 @@
 import { homedir } from "os";
 import { appDirectoryName, fileEncoding } from "../../shared/constants";
-import { ensureDir, readdir, readFile, stat } from "fs-extra";
+import {
+  ensureDir,
+  existsSync,
+  readdir,
+  readFile,
+  stat,
+  writeFile,
+} from "fs-extra";
 import { NoteInfo } from "../../shared/models";
-import { GetNotes, ReadNote } from "../../shared/types";
+import { GetNotes, ReadNote, WriteNote } from "../../shared/types";
 
 export const getRootDir = () => {
   return `${homedir}/${appDirectoryName}`;
@@ -47,7 +54,27 @@ export const getNoteInfoFromFilename = async (
   };
 };
 
-export const readNote: ReadNote = async (filename: string) => {
+export const readNote: ReadNote = async (filename) => {
   const rootDir = getRootDir();
-  return readFile(`${rootDir}/${filename}.md`, { encoding: fileEncoding });
+  const filePath = `${rootDir}/${filename}.md`;
+
+  // Log the file path
+  console.info(`Reading note from: ${filePath}`);
+
+  // Check if the file exists
+  if (!existsSync(filePath)) {
+    const error = new Error(`File not found: ${filePath}`);
+    console.error(error);
+    throw error;
+  }
+
+  return readFile(filePath, { encoding: fileEncoding });
+};
+
+export const writeNote: WriteNote = async (filename, content) => {
+  const rootDir = getRootDir();
+  console.info(`Writing note: ${filename}`);
+  await writeFile(`${rootDir}/${filename}`, content, {
+    encoding: fileEncoding,
+  });
 };
