@@ -10,6 +10,7 @@ export const useMarkdownEditor = () => {
   const selectedNote = useAtomValue(selectedNoteAtom);
   const saveNote = useSetAtom(saveNoteAtom);
   const editorRef = useRef<MDXEditorMethods>(null);
+
   const handleAutoSaving = throttle(
     async (content: NoteContent) => {
       if (!selectedNote) return;
@@ -23,5 +24,16 @@ export const useMarkdownEditor = () => {
     },
   );
 
-  return { editorRef, selectedNote, handleAutoSaving };
+  // trigger auto-saving when selecting different note always
+  const handleBlur = async () => {
+    if (!selectedNote) return;
+    handleAutoSaving.cancel();
+    const content = editorRef.current?.getMarkdown();
+
+    if (content != null) {
+      await saveNote(content);
+    }
+  };
+
+  return { editorRef, selectedNote, handleAutoSaving, handleBlur };
 };
