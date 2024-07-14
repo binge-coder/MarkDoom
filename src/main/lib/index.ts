@@ -10,9 +10,10 @@ import {
 } from "fs-extra";
 import { NoteInfo } from "../../shared/models";
 import { GetNotes, ReadNote, WriteNote } from "../../shared/types";
+import path from "path";
 
 export const getRootDir = () => {
-  return `${homedir}/${appDirectoryName}`;
+  return path.join(homedir(), appDirectoryName);
 };
 
 export const getNotes: GetNotes = async () => {
@@ -56,16 +57,17 @@ export const getNoteInfoFromFilename = async (
 
 export const readNote: ReadNote = async (filename) => {
   const rootDir = getRootDir();
-  const filePath = `${rootDir}/${filename}.md`;
+  const filePath = path.join(
+    rootDir,
+    filename.endsWith(".md") ? filename : `${filename}.md`,
+  );
 
-  // Log the file path
   console.info(`Reading note from: ${filePath}`);
 
-  // Check if the file exists
   if (!existsSync(filePath)) {
-    const error = new Error(`File not found: ${filePath}`);
-    console.error(error);
-    throw error;
+    console.info(`File not found: ${filePath}. Creating a new file.`);
+    await writeFile(filePath, "", { encoding: fileEncoding });
+    return "";
   }
 
   return readFile(filePath, { encoding: fileEncoding });
@@ -73,8 +75,11 @@ export const readNote: ReadNote = async (filename) => {
 
 export const writeNote: WriteNote = async (filename, content) => {
   const rootDir = getRootDir();
-  console.info(`Writing note: ${filename}`);
-  await writeFile(`${rootDir}/${filename}`, content, {
-    encoding: fileEncoding,
-  });
+  const filePath = path.join(
+    rootDir,
+    filename.endsWith(".md") ? filename : `${filename}.md`,
+  );
+
+  console.info(`Writing note: ${filePath}`);
+  await writeFile(filePath, content, { encoding: fileEncoding });
 };

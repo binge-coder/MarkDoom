@@ -16,6 +16,7 @@ export const MarkdownEditor = () => {
       ref={editorRef}
       key={selectedNote.title}
       markdown={selectedNote.content}
+      onChange={handleAutoSaving}
       plugins={[
         headingsPlugin(),
         listsPlugin(),
