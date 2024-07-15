@@ -46,7 +46,10 @@ export const getNoteInfoFromFilename = async (
 
 export const readNote: ReadNote = async (filename) => {
   const rootDir = getRootDir();
-  const filePath = path.join(rootDir, `${filename}.md`);
+  const filePath = path.join(
+    rootDir,
+    filename.endsWith(".md") ? filename : `${filename}.md`,
+  );
 
   // Log the file path
   console.info(`Reading note from: ${filePath}`);
@@ -63,7 +66,10 @@ export const readNote: ReadNote = async (filename) => {
 
 export const writeNote: WriteNote = async (filename, content) => {
   const rootDir = getRootDir();
-  const filePath = path.join(rootDir, filename);
+  const filePath = path.join(
+    rootDir,
+    filename.endsWith(".md") ? filename : `${filename}.md`,
+  );
 
   console.info(`Writing note: ${filePath}`);
   await writeFile(filePath, content, {
