@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { GetNotes, ReadNote, WriteNote } from "../shared/types";
+import { CreateNote, GetNotes, ReadNote, WriteNote } from "../shared/types";
 
 if (!process.contextIsolated) {
   throw new Error("context isolation must be enabled in the browser");
@@ -14,6 +14,8 @@ try {
       ipcRenderer.invoke("readNote", ...args),
     writeNote: (...args: Parameters<WriteNote>) =>
       ipcRenderer.invoke("writeNote", ...args),
+    createNote: (...args: Parameters<CreateNote>) =>
+      ipcRenderer.invoke("createNote", ...args),
   });
 } catch (error) {
   console.error(error);
