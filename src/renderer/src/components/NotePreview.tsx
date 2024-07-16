@@ -19,8 +19,8 @@ export const NotePreview = ({
       className={cn(
         "cursor-pointer px-2 py-2 rounded-md transition-colors duration-75 ",
         {
-          "bg-zinc-900/50": isActive,
-          "hover:bg-zinc-500/75": !isActive,
+          "bg-slate-50/50": isActive,
+          "hover:bg-slate-300/40": !isActive,
         },
         className,
       )}
@@ -31,7 +31,7 @@ export const NotePreview = ({
       <span className="inline-block w-full mb-1 text-xs font-light text-right">
         {date}
       </span>
-      <hr />
+      <hr className="border border-slate-800" />
     </div>
   );
 };

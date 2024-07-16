@@ -13,11 +13,13 @@
 
     @apply select-none;
 
-    @apply bg-slate-900;
+    /* @apply bg-slate-900; */
 
     @apply bg-transparent;
 
-    @apply font-mono antialiased text-white;
+    /* @apply font-mono antialiased text-white; */
+    @apply font-mono antialiased text-slate-800;
+
 
     @apply overflow-hidden;
   }
