@@ -17,8 +17,8 @@
 
     @apply bg-transparent;
 
-    /* @apply font-mono antialiased text-white; */
-    @apply font-mono antialiased text-slate-800;
+    @apply font-mono antialiased text-white;
+    /* @apply font-mono antialiased text-slate-800; */
 
 
     @apply overflow-hidden;
