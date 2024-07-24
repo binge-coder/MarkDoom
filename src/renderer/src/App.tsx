@@ -5,6 +5,7 @@ import {
   NotePreviewList,
   RootLayout,
   Sidebar,
+  ChatComponent,
 } from "@/components";
 import { ActionButtonsRow } from "@/components";
 import { useRef } from "react";
@@ -29,6 +30,7 @@ const App = () => {
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
       </Content>
+      <ChatComponent />
     </RootLayout>
   );
 };
