@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import Markdown from "react-markdown";
+import gfm from "remark-gfm";
 
 export const ChatComponent = () => {
   const [prompt, setPrompt] = useState("");
@@ -15,6 +17,8 @@ export const ChatComponent = () => {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent(prompt);
       const response = result.response;
+      console.log(response.text());
+
       setResult(response.text());
     } catch (error) {
       console.error("Error generating text:", error);
@@ -23,13 +27,13 @@ export const ChatComponent = () => {
   };
 
   return (
-    <div className="p-2 flex flex-col max-w-64 overflow-auto">
+    <div className="p-2 flex flex-col max-w-72 overflow-auto">
       <input
         type="text"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         placeholder="Enter your prompt"
-        className="text-black"
+        className="text-black p-1"
       />
       <button
         onClick={handleGenerateText}
@@ -37,7 +41,10 @@ export const ChatComponent = () => {
       >
         Submit
       </button>
-      <div>{result}</div>
+      {/* <div>{result}</div> */}
+      <div className="prose prose-invert">
+        <Markdown remarkPlugins={[gfm]}>{result}</Markdown>
+      </div>
     </div>
   );
 };
