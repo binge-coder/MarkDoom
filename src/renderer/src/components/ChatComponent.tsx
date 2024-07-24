@@ -23,7 +23,7 @@ export const ChatComponent = () => {
   };
 
   return (
-    <div className="border border-red-500 flex flex-col">
+    <div className="p-2 flex flex-col max-w-64 overflow-auto">
       <input
         type="text"
         value={prompt}
@@ -31,7 +31,12 @@ export const ChatComponent = () => {
         placeholder="Enter your prompt"
         className="text-black"
       />
-      <button onClick={handleGenerateText}>Generate Text</button>
+      <button
+        onClick={handleGenerateText}
+        className="bg-blue-500 rounded-md mt-2"
+      >
+        Submit
+      </button>
       <div>{result}</div>
     </div>
   );
