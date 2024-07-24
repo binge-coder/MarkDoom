@@ -6,3 +6,4 @@ export * from "./NotePreview";
 export * from "./MarkdownEditor";
 export * from "./FloatingNoteTitle";
 export * from "./ChatComponent";
+export * from "./PreferencesPage";
