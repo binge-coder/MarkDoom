@@ -159,3 +159,12 @@ export const deleteNote: DeleteNote = async (filename) => {
   await remove(filePath);
   return true;
 };
+
+export const readPrefs = async () => {
+  const rootDir = getRootDir();
+  const filePath = path.join(rootDir, "preferences.json");
+  
+  // Log the file path
+  console.info(`Reading preferences from: ${filePath}`);
+
+}
