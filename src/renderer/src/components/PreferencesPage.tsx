@@ -1,9 +1,13 @@
 import { PropsWithChildren } from "react";
 import React, { useState, useEffect } from "react";
+import { IoMdClose } from "react-icons/io";
 
 const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
   return (
-    <div className="border border-slate-400 rounded-md p-1 mb-1 flex justify-between">
+    <div
+      className="border border-slate-400 rounded-md p-1 mb-1 flex justify-between"
+      {...props}
+    >
       {children}
     </div>
   );
@@ -36,12 +40,12 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black">
+    <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black border border-double border-4 border-black">
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 absolute top-1 right-1"
+        className="bg-blue-500 text-white p-1 rounded hover:bg-blue-700 absolute top-1 right-1"
         onClick={onClose}
       >
-        Close
+        <IoMdClose className="w-6 h-6" />
       </button>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
@@ -55,12 +59,14 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
             onChange={handleApiInput}
           />
         </PrefListItem>
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded mt-4 hover:bg-green-700"
-          onClick={handleSave}
-        >
-          Save
-        </button>
+        <div className="flex justify-center">
+          <button
+            className="bg-slate-500 active:bg-green-800 text-white px-4 py-2 rounded mt-4 hover:bg-gray-800"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

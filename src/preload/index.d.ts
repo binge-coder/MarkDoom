@@ -2,8 +2,10 @@ import {
   CreateNote,
   DeleteNote,
   GetNotes,
+  GetSettings,
   ReadNote,
   WriteNote,
+  SaveSettings,
 } from "@shared/types";
 
 declare global {
@@ -16,6 +18,8 @@ declare global {
       writeNote: WriteNote;
       createNote: CreateNote;
       deleteNote: DeleteNote;
+      getSettings: GetSettings;
+      saveSettings: SaveSettings;
     };
   }
 }

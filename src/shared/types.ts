@@ -9,7 +9,12 @@ export type WriteNote = (
 export type CreateNote = () => Promise<NoteInfo["title"] | false>;
 export type DeleteNote = (title: NoteInfo["title"]) => Promise<boolean>;
 
-// export type Settings = {
-//   locale: string;
-//   geminiAPIKey: string;
-// };
+export type Settings = {
+  language: string;
+  geminiApi: string;
+};
+
+export type GetSettings = () => Promise<Settings>;
+export type SaveSettings = (
+  newSettings: Settings,
+) => Promise<{ success: boolean }>;
