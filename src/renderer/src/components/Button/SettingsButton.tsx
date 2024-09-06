@@ -1,12 +1,16 @@
-import React from "react";
 import { ActionButton, ActionButtonProps } from "@/components";
+import { useSetAtom } from "jotai";
+import { showSettingsAtom } from "@renderer/store";
+import { IoMdSettings } from "react-icons/io";
 
-type SettingsButtonProps = {
-  onClick: () => void;
+export const SettingsButton = (...props: ActionButtonProps[]) => {
+  const setShowSettings = useSetAtom(showSettingsAtom);
+  const handleSettingsToggle = () => {
+    setShowSettings((prev) => !prev);
+  };
+  return (
+    <ActionButton onClick={handleSettingsToggle} {...props}>
+      <IoMdSettings className="h-5 w-5" />
+    </ActionButton>
+  );
 };
-
-const SettingsButton: React.FC<SettingsButtonProps> = ({ onClick }) => {
-  return <ActionButton onClick={onClick}>Settings</ActionButton>;
-};
-
-export default SettingsButton;

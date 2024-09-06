@@ -107,3 +107,6 @@ export const deleteNoteAtom = atom(null, async (get, set) => {
   // make selected note null
   set(selectedNoteIndexAtom, null);
 });
+
+export const showChatAtom = atom(false);
+export const showSettingsAtom = atom(false);
