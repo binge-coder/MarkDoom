@@ -160,11 +160,20 @@ export const deleteNote: DeleteNote = async (filename) => {
   return true;
 };
 
-export const readPrefs = async () => {
-  const rootDir = getRootDir();
-  const filePath = path.join(rootDir, "preferences.json");
-  
-  // Log the file path
-  console.info(`Reading preferences from: ${filePath}`);
+const defaultSettings = {
+  language: "en",
+  geminiApi: "",
+};
 
-}
+export const checkAndCreateSettingsFile = () => {
+  const rootDir = getRootDir();
+  const settingsPath = path.join(rootDir, "settings.json");
+
+  // Check if the file exists
+  if (!existsSync(settingsPath)) {
+    writeFile(settingsPath, JSON.stringify(defaultSettings, null, 2), "utf-8");
+    console.log("settings.json created with default settings.");
+  } else {
+    console.log("settings.json already exists.");
+  }
+};

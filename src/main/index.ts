@@ -2,7 +2,14 @@ import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { BrowserWindow, app, ipcMain, shell } from "electron";
 import { join } from "path";
 import icon from "../../resources/icon.png?asset";
-import { createNote, getNotes, readNote, writeNote, deleteNote } from "./lib";
+import {
+  createNote,
+  getNotes,
+  readNote,
+  writeNote,
+  deleteNote,
+  checkAndCreateSettingsFile,
+} from "./lib";
 import {
   CreateNote,
   GetNotes,
@@ -58,7 +65,7 @@ function createWindow(): void {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
-
+  checkAndCreateSettingsFile();
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils

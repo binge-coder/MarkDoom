@@ -16,13 +16,10 @@ type Props = {
 
 export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
-  //   const savedValue = window.settings.get("geminiApiKey");
-  //   const geminiApi = savedValue || "";
   const [geminiKeyInput, setgeminiKeyInput] = useState("");
 
   const handleApiInput = (e) => {
     setgeminiKeyInput(e.target.value);
-    // window.settings.set("geminiApiKey", e.target.value);
   };
   return (
     <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black">
