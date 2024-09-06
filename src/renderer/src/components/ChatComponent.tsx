@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -6,14 +6,26 @@ import gfm from "remark-gfm";
 export const ChatComponent = () => {
   const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState("");
+  const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const settings = await window.context.getSettings(); // Fetch settings from preload
+      setGeminiApiKey(settings.geminiApi); // Set the Gemini API key from settings
+    };
+    fetchSettings();
+  }, []);
 
   const handleGenerateText = async () => {
     if (!prompt) return; // Handle empty prompt
-
-    try {
-      const genAI = new GoogleGenerativeAI(
-        "AIzaSyATEBQoC9XkJIMqiSU6PhIX9bQhKFdUIJ4",
+    if (!geminiApiKey) {
+      setResult(
+        "Gemini API key is missing. Please set it in preferences. Then close and open chat window again.",
       );
+      return;
+    }
+    try {
+      const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent(prompt);
       const response = result.response;
