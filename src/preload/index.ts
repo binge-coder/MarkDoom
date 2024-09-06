@@ -5,6 +5,7 @@ import {
   GetNotes,
   ReadNote,
   WriteNote,
+  Settings,
 } from "../shared/types";
 
 if (!process.contextIsolated) {
@@ -24,6 +25,9 @@ try {
       ipcRenderer.invoke("createNote", ...args),
     deleteNote: (...args: Parameters<DeleteNote>) =>
       ipcRenderer.invoke("deleteNote", ...args),
+    getSettings: () => ipcRenderer.invoke("get-settings"),
+    saveSettings: (settings: Settings) =>
+      ipcRenderer.invoke("save-settings", settings),
   });
 } catch (error) {
   console.error(error);

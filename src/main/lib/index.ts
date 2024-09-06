@@ -165,10 +165,9 @@ const defaultSettings = {
   geminiApi: "",
 };
 
-export const checkAndCreateSettingsFile = () => {
-  const rootDir = getRootDir();
-  const settingsPath = path.join(rootDir, "settings.json");
+export const settingsPath = path.join(getRootDir(), "settings.json");
 
+export const checkAndCreateSettingsFile = () => {
   // Check if the file exists
   if (!existsSync(settingsPath)) {
     writeFile(settingsPath, JSON.stringify(defaultSettings, null, 2), "utf-8");

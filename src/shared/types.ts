@@ -8,3 +8,8 @@ export type WriteNote = (
 ) => Promise<void>;
 export type CreateNote = () => Promise<NoteInfo["title"] | false>;
 export type DeleteNote = (title: NoteInfo["title"]) => Promise<boolean>;
+
+// export type Settings = {
+//   locale: string;
+//   geminiAPIKey: string;
+// };

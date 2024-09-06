@@ -9,6 +9,7 @@ import {
   writeNote,
   deleteNote,
   checkAndCreateSettingsFile,
+  settingsPath,
 } from "./lib";
 import {
   CreateNote,
@@ -17,6 +18,7 @@ import {
   WriteNote,
   DeleteNote,
 } from "../shared/types";
+import { readFile, writeFile, existsSync } from "fs-extra";
 
 function createWindow(): void {
   // Create the browser window.
@@ -90,6 +92,25 @@ app.whenReady().then(() => {
   ipcMain.handle("deleteNote", (_, ...args: Parameters<DeleteNote>) =>
     deleteNote(...args),
   );
+
+  // Handle fetching settings
+  ipcMain.handle("get-settings", async () => {
+    if (!existsSync(settingsPath)) {
+      await checkAndCreateSettingsFile(); // Ensure settings.json is created
+    }
+    const settings = await readFile(settingsPath, { encoding: "utf-8" });
+    return JSON.parse(settings); // Return the parsed settings object
+  });
+
+  // Handle saving settings
+  ipcMain.handle("save-settings", async (event, newSettings) => {
+    await writeFile(
+      settingsPath,
+      JSON.stringify(newSettings, null, 2),
+      "utf-8",
+    );
+    return { success: true }; // Return success after saving
+  });
 
   createWindow();
 
