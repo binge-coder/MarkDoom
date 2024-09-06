@@ -12,6 +12,7 @@ import {
 import { ActionButtonsRow } from "@/components";
 import { useRef, useState } from "react";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import SettingsButton from "./components/Button/SettingsButton";
 
 const App = () => {
   // const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -40,9 +41,10 @@ const App = () => {
           <IoChatboxEllipsesOutline className="h-4 w-4" />
           {/* <p className="border border-red-500">open chat window</p> */}
         </ActionButton>
-        <ActionButton>
+        {/* <ActionButton>
           <button onClick={handleOpenSettings}>settings</button>
-        </ActionButton>
+        </ActionButton> */}
+        <SettingsButton onClick={handleOpenSettings} />
         <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
       </Sidebar>
       <Content
