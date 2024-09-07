@@ -4,6 +4,8 @@ import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { selectedNoteAtom } from "@renderer/store";
 import { useAtomValue } from "jotai";
+import { useSetAtom } from "jotai";
+import { showChatAtom } from "@renderer/store";
 
 export const ChatComponent = () => {
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -15,6 +17,7 @@ export const ChatComponent = () => {
   const [result, setResult] = useState("");
   const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
   const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
+  const setShowChat = useSetAtom(showChatAtom);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -49,6 +52,7 @@ export const ChatComponent = () => {
 
   return (
     <div className="p-2 flex flex-col max-w-72 overflow-auto">
+      <button onClick={() => setShowChat(false)}>X</button>
       <input
         type="text"
         value={promptToShow}
