@@ -2,11 +2,19 @@ import { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
+import { selectedNoteAtom } from "@renderer/store";
+import { useAtomValue } from "jotai";
 
 export const ChatComponent = () => {
-  const [prompt, setPrompt] = useState("");
+  const selectedNote = useAtomValue(selectedNoteAtom);
+  const [context, setContext] = useState(
+    selectedNote && selectedNote.content != ""
+      ? ` Please use the following information as context: ${selectedNote.content}`
+      : "",
+  );
   const [result, setResult] = useState("");
   const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
+  const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -17,7 +25,7 @@ export const ChatComponent = () => {
   }, []);
 
   const handleGenerateText = async () => {
-    if (!prompt) return; // Handle empty prompt
+    if (!promptToShow) return; // Handle empty prompt
     if (!geminiApiKey) {
       setResult(
         "Gemini API key is missing. Please set it in preferences. Then close and open chat window again.",
@@ -27,7 +35,8 @@ export const ChatComponent = () => {
     try {
       const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const result = await model.generateContent(prompt);
+      const AIPrompt = promptToShow + context;
+      const result = await model.generateContent(AIPrompt);
       const response = result.response;
       console.log(response.text());
 
@@ -42,8 +51,8 @@ export const ChatComponent = () => {
     <div className="p-2 flex flex-col max-w-72 overflow-auto">
       <input
         type="text"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
+        value={promptToShow}
+        onChange={(e) => setPromptToShow(e.target.value)}
         placeholder="Enter your prompt"
         className="text-black p-1"
       />
