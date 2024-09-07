@@ -25,6 +25,9 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    // resizable: true,
+    // fullscreenable: true,
+    // fullscreen: true,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),

@@ -8,7 +8,7 @@ interface XbuttonProps {
 export const Xbutton: React.FC<XbuttonProps> = ({ onClick }) => {
   return (
     <button
-      className="bg-stone-600 text-white/70 p-1 rounded hover:bg-stone-700 absolute top-2 right-2"
+      className="ring-slate-800/90 bg-slate-900/30 hover:bg-slate-800/30 hover:ring-[2px] text-slate-200 p-1 rounded absolute top-2 right-2 transition-colors duration-100"
       onClick={onClick}
     >
       <IoMdClose className="w-4 h-4" />

@@ -6,7 +6,7 @@ import { GenericButton } from "@/components";
 const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
   return (
     <div
-      className="border border-slate-400 rounded-md py-2 px-2 mb-1 flex justify-between "
+      className="border border-black rounded-md py-2 px-2 mb-1 flex justify-between "
       {...props}
     >
       {children}
@@ -41,18 +41,18 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-10 bg-neutral-900 rounded-md shadow-lg text-white p-2 border-black">
+    <div className="fixed inset-10 bg-neutral-500 border border-slate-800/90 rounded-md shadow-lg text-black p-2 border-black">
       <Xbutton onClick={onClose}></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
         <PrefListItem>
-          Your Gemini API key:{" "}
+          <div className="flex items-center">Your Gemini API key:</div>
           <input
             type="text"
-            className="border border-black min-w-96 px-1 text-black rounded"
             placeholder="paste your key"
             value={geminiKeyInput}
             onChange={handleApiInput}
+            className="border border-black min-w-96 p-1 text-black rounded bg-slate-200 focus:outline-black"
           />
         </PrefListItem>
         <div className="flex justify-center">

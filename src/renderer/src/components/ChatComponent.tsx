@@ -62,7 +62,7 @@ export const ChatComponent = () => {
         value={promptToShow}
         onChange={(e) => setPromptToShow(e.target.value)}
         placeholder="Enter your prompt"
-        className="text-black px-2 rounded-sm"
+        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black"
       />
       {/* <button
         onClick={handleGenerateText}
