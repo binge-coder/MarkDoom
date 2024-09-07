@@ -1,11 +1,12 @@
 import { PropsWithChildren } from "react";
 import React, { useState, useEffect } from "react";
 import { Xbutton } from "@/components/Button";
+import { GenericButton } from "@/components";
 
 const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
   return (
     <div
-      className="border border-slate-400 rounded-md p-1 mb-1 flex justify-between"
+      className="border border-slate-400 rounded-md py-2 px-2 mb-1 flex justify-between "
       {...props}
     >
       {children}
@@ -40,7 +41,7 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black border-double border-4 border-black">
+    <div className="fixed inset-10 bg-neutral-900 rounded-md shadow-lg text-white p-2 border-black">
       <Xbutton onClick={onClose}></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
@@ -48,19 +49,14 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
           Your Gemini API key:{" "}
           <input
             type="text"
-            className="border border-black min-w-96 px-1"
+            className="border border-black min-w-96 px-1 text-black rounded"
             placeholder="paste your key"
             value={geminiKeyInput}
             onChange={handleApiInput}
           />
         </PrefListItem>
         <div className="flex justify-center">
-          <button
-            className="bg-slate-500 active:bg-green-800 text-white px-4 py-2 rounded mt-4 hover:bg-gray-800"
-            onClick={handleSave}
-          >
-            Save
-          </button>
+          <GenericButton onClick={handleSave}>Save Preferences</GenericButton>
         </div>
       </div>
     </div>

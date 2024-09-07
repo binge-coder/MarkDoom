@@ -103,7 +103,7 @@ app.whenReady().then(() => {
   });
 
   // Handle saving settings
-  ipcMain.handle("save-settings", async (event, newSettings) => {
+  ipcMain.handle("save-settings", async (_, newSettings) => {
     await writeFile(
       settingsPath,
       JSON.stringify(newSettings, null, 2),

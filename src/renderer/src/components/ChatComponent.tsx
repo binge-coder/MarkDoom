@@ -6,7 +6,7 @@ import { selectedNoteAtom } from "@renderer/store";
 import { useAtomValue } from "jotai";
 import { useSetAtom } from "jotai";
 import { showChatAtom } from "@renderer/store";
-import { Xbutton } from "./Button";
+import { GenericButton, Xbutton } from "./Button";
 
 export const ChatComponent = () => {
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -53,7 +53,7 @@ export const ChatComponent = () => {
 
   return (
     <div className="p-2 flex flex-col max-w-72 overflow-auto">
-      <div className="h-7">
+      <div className="h-8 text-center">
         <span>GEMINI CHAT</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
@@ -64,12 +64,13 @@ export const ChatComponent = () => {
         placeholder="Enter your prompt"
         className="text-black px-2 rounded-sm"
       />
-      <button
+      {/* <button
         onClick={handleGenerateText}
         className="my-2 bg-neutral-800 text-white p-1 rounded hover:bg-neutral-600 active:bg-neutral-500"
       >
         Submit
-      </button>
+      </button> */}
+      <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
       {/* <div>{result}</div> */}
       <div className="prose prose-invert">
         <Markdown remarkPlugins={[gfm]}>{result}</Markdown>

@@ -25,6 +25,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@google/generative-ai": "^0.15.0",
     "@mdxeditor/editor": "^3.8.0",
+    "class-variance-authority": "^0.7.0",
     "electron-store": "^10.0.0",
     "fs-extra": "^11.2.0",
     "jotai": "^2.8.4",
