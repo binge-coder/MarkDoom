@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import React, { useState, useEffect } from "react";
-import { IoMdClose } from "react-icons/io";
+import { Xbutton } from "@/components/Button";
 
 const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
   return (
@@ -40,13 +40,8 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black border border-double border-4 border-black">
-      <button
-        className="bg-blue-500 text-white p-1 rounded hover:bg-blue-700 absolute top-1 right-1"
-        onClick={onClose}
-      >
-        <IoMdClose className="w-6 h-6" />
-      </button>
+    <div className="fixed inset-10 bg-white rounded-md shadow-lg text-black border-double border-4 border-black">
+      <Xbutton onClick={onClose}></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
         <PrefListItem>

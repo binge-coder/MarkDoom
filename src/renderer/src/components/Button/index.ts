@@ -3,3 +3,4 @@ export * from "./NewNoteButton";
 export * from "./DeleteNoteButton";
 export * from "./ChatButton";
 export * from "./SettingsButton";
+export * from "./Xbutton";

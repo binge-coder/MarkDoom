@@ -6,6 +6,7 @@ import { selectedNoteAtom } from "@renderer/store";
 import { useAtomValue } from "jotai";
 import { useSetAtom } from "jotai";
 import { showChatAtom } from "@renderer/store";
+import { Xbutton } from "./Button";
 
 export const ChatComponent = () => {
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -52,17 +53,20 @@ export const ChatComponent = () => {
 
   return (
     <div className="p-2 flex flex-col max-w-72 overflow-auto">
-      <button onClick={() => setShowChat(false)}>X</button>
+      <div className="h-7">
+        <span>GEMINI CHAT</span>
+        <Xbutton onClick={() => setShowChat(false)} />
+      </div>
       <input
         type="text"
         value={promptToShow}
         onChange={(e) => setPromptToShow(e.target.value)}
         placeholder="Enter your prompt"
-        className="text-black p-1"
+        className="text-black px-2 rounded-sm"
       />
       <button
         onClick={handleGenerateText}
-        className="bg-blue-500 rounded-md mt-2"
+        className="my-2 bg-neutral-800 text-white p-1 rounded hover:bg-neutral-600 active:bg-neutral-500"
       >
         Submit
       </button>
