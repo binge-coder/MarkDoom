@@ -110,3 +110,4 @@ export const deleteNoteAtom = atom(null, async (get, set) => {
 
 export const showChatAtom = atom(false);
 export const showSettingsAtom = atom(false);
+export const showLeftSideBarAtom = atom(true);

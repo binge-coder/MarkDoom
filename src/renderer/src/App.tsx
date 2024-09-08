@@ -7,11 +7,12 @@ import {
   Sidebar,
   ChatComponent,
   PreferencesPage,
+  LeftBarHideButton,
 } from "@/components";
 import { ActionButtonsRow } from "@/components";
 import { useRef } from "react";
-import { useAtom } from "jotai";
-import { showChatAtom, showSettingsAtom } from "@/store";
+import { useAtom, useAtomValue } from "jotai";
+import { showChatAtom, showLeftSideBarAtom, showSettingsAtom } from "@/store";
 
 const App = () => {
   const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -21,6 +22,7 @@ const App = () => {
 
   const [showChat] = useAtom(showChatAtom);
   const [showSettings, setShowSettings] = useAtom(showSettingsAtom);
+  const showLeftSideBar = useAtomValue(showLeftSideBarAtom);
 
   const handleCloseSettings = () => {
     setShowSettings(false);
@@ -29,18 +31,20 @@ const App = () => {
   return (
     <RootLayout>
       <PreferencesPage isVisible={showSettings} onClose={handleCloseSettings} />
-      <Sidebar className="bg-slate-800/15 p-2">
-        <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
-        <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
-      </Sidebar>
+      {showLeftSideBar && (
+        <Sidebar className="bg-slate-800/55 p-2">
+          <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
+          <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
+        </Sidebar>
+      )}
       <Content
         ref={contentContainerRef}
-        className="border-l border-l-black/40 bg-slate-50/30"
+        className="border-l border-l-black/40 bg-slate-900/80"
       >
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
       </Content>
-      {showChat && <ChatComponent />}
+      {showChat && <ChatComponent className="bg-slate-800/55" />}
     </RootLayout>
   );
 };

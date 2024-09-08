@@ -3,8 +3,8 @@ import {
   NewNoteButton,
   SettingsButton,
   ChatButton,
+  // LeftBarHideButton,
 } from "@/components";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { ComponentProps } from "react";
 
 export const ActionButtonsRow = (props: ComponentProps<"div">) => {
@@ -14,6 +14,7 @@ export const ActionButtonsRow = (props: ComponentProps<"div">) => {
       <DeleteNoteButton />
       <ChatButton />
       <SettingsButton />
+      {/* <LeftBarHideButton /> */}
     </div>
   );
 };

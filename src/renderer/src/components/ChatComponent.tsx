@@ -7,8 +7,14 @@ import { useAtomValue } from "jotai";
 import { useSetAtom } from "jotai";
 import { showChatAtom } from "@renderer/store";
 import { GenericButton, Xbutton } from "./Button";
+import { twMerge } from "tailwind-merge";
+import { ComponentProps } from "react";
 
-export const ChatComponent = () => {
+// interface ChatComponentProps {
+//   className?: string;
+// }
+
+export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
   const [context, setContext] = useState(
     selectedNote && selectedNote.content != ""
@@ -40,6 +46,7 @@ export const ChatComponent = () => {
       const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const AIPrompt = promptToShow + context;
+      // console.log(AIPrompt);
       const result = await model.generateContent(AIPrompt);
       const response = result.response;
       console.log(response.text());
@@ -52,8 +59,10 @@ export const ChatComponent = () => {
   };
 
   return (
-    <div className="p-2 flex flex-col max-w-72 overflow-auto">
-      <div className="h-8 text-center">
+    <div
+      className={twMerge("p-2 flex flex-col max-w-72 overflow-auto", className)}
+    >
+      <div className="text-center flex justify-center mb-2">
         <span>GEMINI CHAT</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
