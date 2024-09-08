@@ -1,27 +1,27 @@
 import { ActionButton } from "@/components";
-import { useAtom } from "jotai";
-import { showLeftSideBarAtom } from "@renderer/store";
 import { FaAngleLeft } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 import { ComponentProps } from "react";
+import { useAtom } from "jotai";
+import { showChatAtom } from "@renderer/store";
 
 type Props = ComponentProps<typeof ActionButton>;
 
-export const LeftBarHideButton = (props: Props) => {
-  const [showLeftSideBar, setShowLeftSideBar] = useAtom(showLeftSideBarAtom);
+export const RightBarHideButton = (props: Props) => {
+  const [showRightSideBar, setShowRightSideBar] = useAtom(showChatAtom);
 
   return (
     <ActionButton
       onClick={() => {
-        setShowLeftSideBar((prev) => !prev);
+        setShowRightSideBar((prev) => !prev);
       }}
       {...props}
       className={props.className}
     >
-      {showLeftSideBar ? (
-        <FaAngleLeft className="h-5 w-5" />
-      ) : (
+      {showRightSideBar ? (
         <FaAngleRight className="h-5 w-5" />
+      ) : (
+        <FaAngleLeft className="h-5 w-5" />
       )}
     </ActionButton>
   );

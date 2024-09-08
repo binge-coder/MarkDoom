@@ -2,7 +2,7 @@ import { selectedNoteAtom } from "@renderer/store";
 import { useAtomValue } from "jotai";
 import { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
-import { LeftBarHideButton } from "./Button";
+import { LeftBarHideButton, RightBarHideButton } from "@/components";
 
 export const FloatingNoteTitle = ({
   className,
@@ -17,7 +17,10 @@ export const FloatingNoteTitle = ({
     >
       {/* LeftBarHideButton aligned to the left */}
       <div className="absolute left-1 top-3">
-        <LeftBarHideButton />
+        <LeftBarHideButton className="border-none" />
+      </div>
+      <div className="absolute right-1 top-3">
+        <RightBarHideButton className="border-none" />
       </div>
 
       {/* Title centered */}

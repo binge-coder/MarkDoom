@@ -6,3 +6,4 @@ export * from "./SettingsButton";
 export * from "./Xbutton";
 export * from "./GenericButton";
 export * from "./LeftBarHideButton";
+export * from "./RightBarHideButton";

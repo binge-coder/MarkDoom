@@ -37,7 +37,9 @@ function createWindow(): void {
     vibrancy: "under-window",
     visualEffectState: "active",
     // titleBarStyle: "hidden",
+
     backgroundMaterial: "acrylic",
+
     // trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),

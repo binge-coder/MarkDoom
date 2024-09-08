@@ -31,7 +31,7 @@ export const NotePreview = ({
       <span className="inline-block w-full mb-1 text-xs font-light text-right">
         {date}
       </span>
-      <hr className="border border-slate-800" />
+      <hr className="border border-slate-400" />
     </div>
   );
 };

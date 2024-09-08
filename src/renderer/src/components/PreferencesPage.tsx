@@ -41,7 +41,7 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-10 bg-slate-600 border border-slate-800/90 rounded-md shadow-lg text-white p-2 border-black">
+    <div className="fixed inset-10 bg-black/90 border border-slate-800/90 rounded-md shadow-lg text-white p-2 border-black backdrop-blur">
       <Xbutton onClick={onClose}></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
@@ -56,7 +56,12 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
           />
         </PrefListItem>
         <div className="flex justify-center">
-          <GenericButton onClick={handleSave}>Save Preferences</GenericButton>
+          <GenericButton
+            onClick={handleSave}
+            className="border border-slate-400"
+          >
+            Save Preferences
+          </GenericButton>
         </div>
       </div>
     </div>

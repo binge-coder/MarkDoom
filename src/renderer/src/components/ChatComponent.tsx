@@ -18,7 +18,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
   const [context, setContext] = useState(
     selectedNote && selectedNote.content != ""
-      ? ` Please use the following information as context: ${selectedNote.content}`
+      ? `\nPlease use the following information as context:\n${selectedNote.content}`
       : "",
   );
   const [result, setResult] = useState("");
@@ -46,7 +46,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const AIPrompt = promptToShow + context;
-      // console.log(AIPrompt);
+      console.log(AIPrompt);
       const result = await model.generateContent(AIPrompt);
       const response = result.response;
       console.log(response.text());
