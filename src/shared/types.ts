@@ -12,6 +12,7 @@ export type DeleteNote = (title: NoteInfo["title"]) => Promise<boolean>;
 export type Settings = {
   language: string;
   geminiApi: string;
+  backgroundMaterial: string;
 };
 
 export type GetSettings = () => Promise<Settings>;

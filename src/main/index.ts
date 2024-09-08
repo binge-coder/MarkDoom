@@ -20,7 +20,10 @@ import {
 } from "../shared/types";
 import { readFile, writeFile, existsSync } from "fs-extra";
 
-function createWindow(): void {
+async function createWindow(): Promise<void> {
+  const settings = await readFile(settingsPath, { encoding: "utf-8" });
+  const { backgroundMaterial } = JSON.parse(settings);
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -38,7 +41,7 @@ function createWindow(): void {
     // visualEffectState: "active",
     // titleBarStyle: "hidden",
 
-    // backgroundMaterial: "mica",
+    backgroundMaterial: backgroundMaterial || "tabbed",
 
     // trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {

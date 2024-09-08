@@ -163,6 +163,7 @@ export const deleteNote: DeleteNote = async (filename) => {
 const defaultSettings = {
   language: "en",
   geminiApi: "",
+  backgroundMaterial: "tabbed",
 };
 
 export const settingsPath = path.join(getRootDir(), "settings.json");

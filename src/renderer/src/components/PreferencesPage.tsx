@@ -6,7 +6,7 @@ import { GenericButton } from "@/components";
 const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
   return (
     <div
-      className="border border-slate-400 rounded-md py-2 px-2 mb-1 flex justify-between "
+      className="border border-slate-400 rounded-md py-2 px-2 mb-2 flex justify-between "
       {...props}
     >
       {children}
@@ -21,21 +21,23 @@ type Props = {
 export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
   const [geminiKeyInput, setgeminiKeyInput] = useState("");
+  const [backdrop, setBackdrop] = useState("tabbed");
 
   useEffect(() => {
     const fetchSettings = async () => {
       const settings = await window.context.getSettings(); // Fetch the settings
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
+      setBackdrop(settings.backgroundMaterial || "tabbed");
     };
     fetchSettings();
   }, []);
 
-  const handleApiInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setgeminiKeyInput(e.target.value);
-  };
-
   const handleSave = async () => {
-    const newSettings = { geminiApi: geminiKeyInput, language: "en" }; // Update the settings
+    const newSettings = {
+      geminiApi: geminiKeyInput,
+      language: "en",
+      backgroundMaterial: backdrop,
+    }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");
   };
@@ -64,10 +66,26 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
             type="text"
             placeholder="paste your key"
             value={geminiKeyInput}
-            onChange={handleApiInput}
-            className="border border-black min-w-96 p-1 text-black rounded bg-slate-200 focus:outline-black"
+            onChange={(e) => setgeminiKeyInput(e.target.value)}
+            className="min-w-96 p-1 text-black rounded bg-slate-200 "
           />
         </PrefListItem>
+        <PrefListItem>
+          <div>Enter window backdrop: </div>
+          <div>
+            <select
+              className="text-black p-1 rounded bg-slate-200 "
+              value={backdrop}
+              onChange={(e) => setBackdrop(e.target.value)}
+            >
+              <option value="mica">Mica</option>
+              <option value="acrylic">Acrylic (blur on win11)</option>
+              <option value="none">None</option>
+              <option value="tabbed">Tabbed</option>
+            </select>
+          </div>
+        </PrefListItem>
+
         <div className="flex justify-center">
           <GenericButton
             onClick={handleSave}
