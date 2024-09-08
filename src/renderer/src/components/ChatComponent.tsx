@@ -60,7 +60,10 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
 
   return (
     <div
-      className={twMerge("p-2 flex flex-col max-w-72 overflow-auto", className)}
+      className={twMerge(
+        "p-2 flex flex-col max-w-72 overflow-auto min-w-64",
+        className,
+      )}
     >
       <div className="text-center flex justify-center mb-2">
         <span>GEMINI CHAT</span>
@@ -73,12 +76,6 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         placeholder="Enter your prompt"
         className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black"
       />
-      {/* <button
-        onClick={handleGenerateText}
-        className="my-2 bg-neutral-800 text-white p-1 rounded hover:bg-neutral-600 active:bg-neutral-500"
-      >
-        Submit
-      </button> */}
       <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
       {/* <div>{result}</div> */}
       <div className="prose prose-invert">
@@ -92,7 +89,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
 // import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // // Access your API key as an environment variable (see "Set up your API key" above)
-// const genAI = new GoogleGenerativeAI("AIzaSyATEBQoC9XkJIMqiSU6PhIX9bQhKFdUIJ4");
+// const genAI = new GoogleGenerativeAI("");
 
 // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 

@@ -46,7 +46,20 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
         <PrefListItem>
-          <div className="flex items-center">Your Gemini API key:</div>
+          <div className="flex flex-col items-center">
+            Your Gemini API key (optional):
+            <div className="text-sm w-full">
+              Get yours from{" "}
+              <a
+                className="text-blue-500 underline"
+                href="https://aistudio.google.com/app/apikey"
+                target="_blank"
+                rel="noreferrer"
+              >
+                here
+              </a>
+            </div>
+          </div>
           <input
             type="text"
             placeholder="paste your key"

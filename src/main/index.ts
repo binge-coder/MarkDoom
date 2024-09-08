@@ -25,20 +25,20 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
-    // resizable: true,
-    // fullscreenable: true,
-    // fullscreen: true,
+    resizable: true,
+    fullscreenable: true,
+    fullscreen: false,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     center: true,
     title: "MarkDoom",
-    // frame: false,
-    vibrancy: "under-window",
-    visualEffectState: "active",
+    frame: true,
+    // vibrancy: "under-window",
+    // visualEffectState: "active",
     // titleBarStyle: "hidden",
 
-    backgroundMaterial: "acrylic",
+    // backgroundMaterial: "mica",
 
     // trafficLightPosition: { x: 15, y: 10 },
     webPreferences: {
