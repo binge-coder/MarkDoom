@@ -2,8 +2,8 @@ name: Build and Release Electron App for Windows and Linux
 
 on:
   push:
-    branches:
-      - main  # Adjust if you use a different default branch
+    tags:
+      - 'v*'  # This will trigger the workflow on pushing a tag starting with 'v'
 
 jobs:
   build-linux:
@@ -18,7 +18,7 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Electron App for Linux
         run: npm run build:linux
@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: markdoom-linux
-          path: ./dist/*.AppImage  # Adjust this path to the Linux output
+          path: ./dist/*.AppImage  # Adjust this path to your Linux output
 
   build-windows:
     runs-on: windows-latest
@@ -41,7 +41,7 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Electron App for Windows
         run: npm run build:win
@@ -50,46 +50,41 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: markdoom-windows
-          path: ./dist/*.exe  # Adjust this path to the Windows output
+          path: ./dist/*.exe  # Adjust this path to your Windows output
 
   release:
     needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get version from package.json
+      - name: Get version from tag
         id: get_version
-        run: |
-          version=$(jq -r .version < package.json)
-          echo "VERSION=$version" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: markdoom-linux
+          path: ./dist/linux
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: markdoom-windows
+          path: ./dist/windows
 
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          release_name: "MarkDoom v${{ env.VERSION }}"
-          draft: false
-          prerelease: false
-          body: |
-            ### Changes in MarkDoom v${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v${{ env.VERSION }} \
+            --title "MarkDoom v${{ env.VERSION }}" \
+            --notes "### Changes in MarkDoom v${{ env.VERSION }}
             - Build Linux and Windows binaries for MarkDoom.
-            - Electron-based app with React and TypeScript.
-
-      - name: Upload Linux Binary to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/*.AppImage  # Adjust to your Linux output path
-          asset_name: markdoom-linux-${{ env.VERSION }}.AppImage
-          asset_content_type: application/octet-stream
-
-      - name: Upload Windows Binary to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/*.exe  # Adjust to your Windows output path
-          asset_name: markdoom-windows-${{ env.VERSION }}.exe
-          asset_content_type: application/octet-stream
+            - Electron-based app with React and TypeScript." \
+            ./dist/linux/*.AppImage#"MarkDoom-linux-${{ env.VERSION }}.AppImage" \
+            ./dist/windows/*.exe#"MarkDoom-windows-${{ env.VERSION }}.exe"
