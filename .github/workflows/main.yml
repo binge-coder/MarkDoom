@@ -6,38 +6,48 @@ on:
       - main  # Adjust if you use a different default branch
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Updated to v4
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4  # Updated to v4
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'  # Explicitly set to Node.js 20
+          node-version: '20.x'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build Electron App
-        run: npm run build
+      - name: Build Electron App for Linux
+        run: npm run build:linux
 
-      - name: Package Electron App
-        run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            npm run build:linux   # For Linux
-          else
-            npm run build:win     # For Windows
-          fi
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4  # Updated to v4
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: electron-app-${{ matrix.os }}
-          path: |
-            ./dist/*.AppImage  # For Linux
-            ./dist/*.exe       # For Windows
+          name: electron-app-linux
+          path: ./dist/*.AppImage  # Adjust this path to the Linux output
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Electron App for Windows
+        run: npm run build:win
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-app-windows
+          path: ./dist/*.exe  # Adjust this path to the Windows output
