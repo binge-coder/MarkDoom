@@ -26,3 +26,6 @@ With helpful templates to get started
         - have them input that key. then use that key to have ai working
         - have an easy tutorial in app with images on how to do it. infact write a blog about getting openAI keys and link to it??? 
  -->
+
+ - using github actions to build on github servers : https://github.com/marketplace/actions/electron-builder-action
+ 
