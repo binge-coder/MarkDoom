@@ -29,9 +29,9 @@ jobs:
       - name: Package Electron App
         run: |
           if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            npm run package-linux
+            npm run build:linux   # For Linux
           else
-            npm run package-win
+            npm run build:win     # For Windows
           fi
 
       - name: Upload Artifact
