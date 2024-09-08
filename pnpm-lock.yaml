@@ -52,13 +52,13 @@ importers:
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.1)
       '@types/node':
-        specifier: ^18.19.9
+        specifier: ^18.19.24
         version: 18.19.24
       '@types/react':
-        specifier: ^18.2.48
+        specifier: ^18.2.66
         version: 18.2.66
       '@types/react-dom':
-        specifier: ^18.2.18
+        specifier: ^18.2.22
         version: 18.2.22
       '@vitejs/plugin-react':
         specifier: ^4.2.1
@@ -70,19 +70,19 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       electron:
-        specifier: '29'
+        specifier: ^29.4.5
         version: 29.4.5
       electron-builder:
         specifier: 24.13.0
         version: 24.13.0
       electron-vite:
-        specifier: ^2.0.0
+        specifier: ^2.1.0
         version: 2.1.0(vite@5.1.6(@types/node@18.19.24))
       eslint:
-        specifier: ^8.56.0
+        specifier: ^8.57.0
         version: 8.57.0
       eslint-plugin-react:
-        specifier: ^7.33.2
+        specifier: ^7.34.1
         version: 7.34.1(eslint@8.57.0)
       lodash:
         specifier: ^4.17.21
@@ -91,7 +91,7 @@ importers:
         specifier: ^8.4.35
         version: 8.4.35
       prettier:
-        specifier: ^3.2.4
+        specifier: ^3.2.5
         version: 3.2.5
       react:
         specifier: ^18.2.0
@@ -106,10 +106,10 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.4.2
         version: 5.4.2
       vite:
-        specifier: ^5.0.12
+        specifier: ^5.1.6
         version: 5.1.6(@types/node@18.19.24)
 
 packages:
@@ -1636,8 +1636,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  caniuse-lite@1.0.30001597:
-    resolution: {integrity: sha512-7LjJvmQU6Sj7bL0j5b5WY/3n7utXUJvAe1lxhsHDbLmwX9mdL86Yjtr+5SRCyf8qME4M7pU2hswj0FpyBVCv9w==}
+  caniuse-lite@1.0.30001658:
+    resolution: {integrity: sha512-N2YVqWbJELVdrnsW5p+apoQyYt51aBMSsBZki1XZEfeBCexcM/sf4xiAHcXQBkuOwJBXtWF7aW1sYX6tKebPHw==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -5656,7 +5656,7 @@ snapshots:
   autoprefixer@10.4.18(postcss@8.4.35):
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001597
+      caniuse-lite: 1.0.30001658
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -5699,7 +5699,7 @@ snapshots:
 
   browserslist@4.23.0:
     dependencies:
-      caniuse-lite: 1.0.30001597
+      caniuse-lite: 1.0.30001658
       electron-to-chromium: 1.4.708
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
@@ -5775,7 +5775,7 @@ snapshots:
 
   camelcase-css@2.0.1: {}
 
-  caniuse-lite@1.0.30001597: {}
+  caniuse-lite@1.0.30001658: {}
 
   ccount@2.0.1: {}
 
