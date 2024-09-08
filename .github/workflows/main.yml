@@ -1,0 +1,43 @@
+name: Build Electron App for Windows and Linux
+
+on:
+  push:
+    branches:
+      - main  # Adjust if you use a different default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x' # Set Node.js version based on your app requirements
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Electron App
+        run: npm run build
+
+      - name: Package Electron App
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            npm run package-linux
+          else
+            npm run package-win
+          fi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: electron-app-${{ matrix.os }}
+          path: |
+            ./dist/*.AppImage # For Linux
+            ./dist/*.exe      # For Windows
