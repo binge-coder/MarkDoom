@@ -9,6 +9,7 @@ import { showChatAtom } from "@renderer/store";
 import { GenericButton, Xbutton } from "./Button";
 import { twMerge } from "tailwind-merge";
 import { ComponentProps } from "react";
+import { BarLoader } from "react-spinners";
 
 // interface ChatComponentProps {
 //   className?: string;
@@ -25,6 +26,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
   const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
   const setShowChat = useSetAtom(showChatAtom);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -42,6 +44,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       );
       return;
     }
+    setLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -55,6 +58,8 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     } catch (error) {
       console.error("Error generating text:", error);
       setResult("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,6 +84,16 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
       {/* <div>{result}</div> */}
       <div className="prose prose-invert">
+        {/* {loading ? "loading..." : null} */}
+        <div className="flex flex-row items-center mt-1">
+          <BarLoader
+            // color="#4f46e5" // Tailwind's 'indigo-600' color
+            loading={loading} // Control when the loader shows
+            width={"100%"} // Width of the loader
+            height={4} // Height of the loader bars
+            aria-label="Loading"
+          />
+        </div>
         <Markdown remarkPlugins={[gfm]}>{result}</Markdown>
       </div>
     </div>

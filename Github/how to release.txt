@@ -1,0 +1,7 @@
+gh release create v1.0.0 \
+  --title "MarkDoom v1.0.0" \
+  --notes-file RELEASE_NOTES.md \
+  --draft \
+  ./dist/markdoom-1.0.0.AppImage#"MarkDoom-linux-1.0.0.AppImage" \
+  ./dist/markdoom_1.0.0_amd64.deb#"MarkDoom-linux-1.0.0.deb"\
+  ./dist/markdoom-1.0.0-setup.exe#"MarkDoom-windows-1.0.0.exe"
