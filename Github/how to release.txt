@@ -1,8 +1,8 @@
 # Using this:
 The workflow is triggered when a tag starting with "v" is pushed.
 ```
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
 
