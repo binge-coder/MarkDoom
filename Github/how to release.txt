@@ -1,3 +1,13 @@
+# Using this:
+The workflow is triggered when a tag starting with "v" is pushed.
+```
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+
+# Dont use this
+```
 gh release create v1.0.0 \
   --title "MarkDoom v1.0.0" \
   --notes-file RELEASE_NOTES.md \
@@ -5,3 +15,4 @@ gh release create v1.0.0 \
   ./dist/markdoom-1.0.0.AppImage#"MarkDoom-linux-1.0.0.AppImage" \
   ./dist/markdoom_1.0.0_amd64.deb#"MarkDoom-linux-1.0.0.deb"\
   ./dist/markdoom-1.0.0-setup.exe#"MarkDoom-windows-1.0.0.exe"
+```

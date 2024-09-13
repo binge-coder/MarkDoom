@@ -2,6 +2,8 @@ import { PropsWithChildren, ReactNode } from "react";
 import React, { useState, useEffect } from "react";
 import { Xbutton } from "@/components/Button";
 import { GenericButton } from "@/components";
+import { motion } from "framer-motion";
+import { FiCheckCircle } from "react-icons/fi";
 
 interface PrefListItemProps {
   title: string;
@@ -28,15 +30,26 @@ const PrefListItem: React.FC<PropsWithChildren<PrefListItemProps>> = ({
   );
 };
 
-type Props = {
+type PreferencesPageProps = {
   isVisible: boolean;
   onClose: () => void;
 };
 
-export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
+export const PreferencesPage: React.FC<PreferencesPageProps> = ({
+  isVisible,
+  onClose,
+}) => {
   if (!isVisible) return null;
   const [geminiKeyInput, setgeminiKeyInput] = useState("");
   const [backdrop, setBackdrop] = useState("tabbed");
+  const [isSavedAnimate, setIsSavedAnimate] = useState(false);
+
+  const savePreferencesAnimatefn = () => {
+    setIsSavedAnimate(true);
+    setTimeout(() => {
+      setIsSavedAnimate(false); // Hide tickmark after 2 seconds
+    }, 2000);
+  };
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -55,6 +68,7 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
     }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");
+    savePreferencesAnimatefn();
   };
 
   return (
@@ -112,6 +126,17 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
           >
             Save Preferences
           </GenericButton>
+          {isSavedAnimate && (
+            <motion.div
+              className="mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <FiCheckCircle className="text-green-500 h-full w-7 ml-1" />
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
