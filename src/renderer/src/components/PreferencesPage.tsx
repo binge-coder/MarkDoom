@@ -1,18 +1,33 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import React, { useState, useEffect } from "react";
 import { Xbutton } from "@/components/Button";
 import { GenericButton } from "@/components";
 
-const PrefListItem: React.FC<PropsWithChildren> = ({ children, ...props }) => {
+interface PrefListItemProps {
+  title: string;
+  subtitle?: ReactNode;
+}
+
+const PrefListItem: React.FC<PropsWithChildren<PrefListItemProps>> = ({
+  children,
+  title,
+  subtitle,
+  ...props
+}) => {
   return (
     <div
-      className="border border-slate-400 rounded-md py-2 px-2 mb-2 flex justify-between "
+      className="border border-slate-400 rounded-md py-2 px-2 mb-2 flex justify-between"
       {...props}
     >
+      <div className="flex flex-col">
+        <div>{title}</div>
+        {subtitle && <div className="text-sm">{subtitle}</div>}
+      </div>
       {children}
     </div>
   );
 };
+
 type Props = {
   isVisible: boolean;
   onClose: () => void;
@@ -44,13 +59,13 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
 
   return (
     <div className="fixed inset-10 bg-black/90 border border-slate-800/90 rounded-md shadow-lg text-white p-2 border-black backdrop-blur">
-      <Xbutton onClick={onClose}></Xbutton>
+      <Xbutton onClick={onClose} aria-label="Close Preferences"></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
       <div className="m-4">
-        <PrefListItem>
-          <div className="flex flex-col items-center">
-            Your Gemini API key (optional):
-            <div className="text-sm w-full">
+        <PrefListItem
+          title="Your Gemini API key (optional):"
+          subtitle={
+            <>
               Get yours from{" "}
               <a
                 className="text-blue-500 underline"
@@ -60,8 +75,9 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
               >
                 here
               </a>
-            </div>
-          </div>
+            </>
+          }
+        >
           <input
             type="text"
             placeholder="paste your key"
@@ -70,8 +86,11 @@ export const PreferencesPage: React.FC<Props> = ({ isVisible, onClose }) => {
             className="min-w-96 p-1 text-black rounded bg-slate-200 "
           />
         </PrefListItem>
-        <PrefListItem>
-          <div>Enter window backdrop: </div>
+
+        <PrefListItem
+          title="Enter window backdrop: "
+          subtitle={<p>Restart the app to apply changes.</p>}
+        >
           <div>
             <select
               className="text-black p-1 rounded bg-slate-200 "
