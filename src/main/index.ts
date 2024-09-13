@@ -22,10 +22,10 @@ import { readFile, writeFile, existsSync } from "fs-extra";
 
 async function createWindow(): Promise<void> {
   const settings = await readFile(settingsPath, { encoding: "utf-8" });
-  const { backgroundMaterial } = JSON.parse(settings);
+  const { backgroundMaterial: savedBackgroundMaterial } = JSON.parse(settings);
 
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  // Default properties for the browser window
+  const windowOptions: Electron.BrowserWindowConstructorOptions = {
     width: 900,
     height: 670,
     resizable: true,
@@ -37,19 +37,21 @@ async function createWindow(): Promise<void> {
     center: true,
     title: "MarkDoom",
     frame: true,
-    // vibrancy: "under-window",
-    // visualEffectState: "active",
-    // titleBarStyle: "hidden",
-
-    backgroundMaterial: backgroundMaterial || "tabbed",
-
-    // trafficLightPosition: { x: 15, y: 10 },
+    backgroundMaterial: savedBackgroundMaterial || "none",
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: true,
       contextIsolation: true,
     },
-  });
+  };
+
+  // Conditionally set backgroundMaterial and backgroundColor
+  if (savedBackgroundMaterial == "none") {
+    windowOptions.backgroundColor = "#1f1f1f";
+  }
+
+  // Create the browser window.
+  const mainWindow = new BrowserWindow(windowOptions);
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();

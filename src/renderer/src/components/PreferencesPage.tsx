@@ -41,7 +41,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
 }) => {
   if (!isVisible) return null;
   const [geminiKeyInput, setgeminiKeyInput] = useState("");
-  const [backdrop, setBackdrop] = useState("tabbed");
+  const [backdrop, setBackdrop] = useState("none");
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
 
   const savePreferencesAnimatefn = () => {
@@ -55,7 +55,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     const fetchSettings = async () => {
       const settings = await window.context.getSettings(); // Fetch the settings
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
-      setBackdrop(settings.backgroundMaterial || "tabbed");
+      setBackdrop(settings.backgroundMaterial || "none");
     };
     fetchSettings();
   }, []);
@@ -111,10 +111,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               value={backdrop}
               onChange={(e) => setBackdrop(e.target.value)}
             >
-              <option value="mica">Mica</option>
+              {/* <option value="mica">Mica</option> */}
               <option value="acrylic">Acrylic (blur on win11)</option>
               <option value="none">None</option>
-              <option value="tabbed">Tabbed</option>
+              {/* <option value="tabbed">Tabbed</option> */}
             </select>
           </div>
         </PrefListItem>
