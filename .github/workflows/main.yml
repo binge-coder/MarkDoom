@@ -1,9 +1,12 @@
-name: Build and Release Electron App for Windows and Linux
+name: Create Release
 
 on:
   push:
-    branches:
-      - main  # Adjust if you use a different default branch
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   build-linux:
@@ -54,16 +57,10 @@ jobs:
 
   release:
     needs: [build-linux, build-windows]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Get version from package.json
-        id: get_version
-        run: |
-          version=$(jq -r .version < package.json)
-          echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Download Linux Artifact
         uses: actions/download-artifact@v4
@@ -77,17 +74,14 @@ jobs:
           name: markdoom-windows
           path: ./dist/windows
 
-      - name: Setup GitHub CLI
-        uses: cli/setup-gh@v1
-
-      - name: Create GitHub Release
+      - name: Create release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
         run: |
-          gh release create v${{ env.VERSION }} \
-            --title "MarkDoom v${{ env.VERSION }}" \
-            --notes "### Changes in MarkDoom v${{ env.VERSION }}
-            - Build Linux and Windows binaries for MarkDoom.
-            - Electron-based app with React and TypeScript." \
-            ./dist/linux/*.AppImage#"markdoom-linux-${{ env.VERSION }}.AppImage" \
-            ./dist/windows/*.exe#"markdoom-windows-${{ env.VERSION }}.exe"
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag#v}" \
+              --generate-notes \
+              ./dist/linux/*.AppImage#"markdoom-linux-${tag#v}.AppImage" \
+              ./dist/windows/*.exe#"markdoom-windows-${tag#v}.exe"
