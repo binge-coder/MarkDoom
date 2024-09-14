@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Xbutton } from "@/components/Button";
 import { GenericButton } from "@/components";
 import { motion } from "framer-motion";
-import { FiCheckCircle } from "react-icons/fi";
+import { FaCheck } from "react-icons/fa6";
+import { Lorem } from "./Lorem";
 
 interface PrefListItemProps {
   title: string;
@@ -72,10 +73,14 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   };
 
   return (
-    <div className="fixed inset-10 bg-black/90 border border-slate-800/90 rounded-md shadow-lg text-white p-2 border-black backdrop-blur">
-      <Xbutton onClick={onClose} aria-label="Close Preferences"></Xbutton>
+    <div className="fixed inset-10 bg-[#1f1f1f] border border-slate-400 rounded-md shadow-lg text-white p-2 ">
+      <Xbutton
+        onClick={onClose}
+        aria-label="Close Preferences"
+        className="border border-slate-400"
+      ></Xbutton>
       <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
-      <div className="m-4">
+      <div className="mx-4 max-h-full overflow-y-auto h-4/5 pb-1 px-1">
         <PrefListItem
           title="Your Gemini API key (optional):"
           subtitle={
@@ -119,25 +124,32 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           </div>
         </PrefListItem>
 
-        <div className="flex justify-center">
-          <GenericButton
-            onClick={handleSave}
-            className="border border-slate-400"
+        {/* <Lorem /> */}
+      </div>
+
+      <div className="flex justify-center">
+        <GenericButton onClick={handleSave} className="border border-slate-400">
+          Save Preferences
+        </GenericButton>
+        {isSavedAnimate && (
+          <motion.div
+            className="flex items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{
+              opacity: { duration: 0.3 },
+              scale: {
+                type: "spring",
+                stiffness: 300,
+                damping: 10,
+                duration: 0.5,
+              },
+            }}
           >
-            Save Preferences
-          </GenericButton>
-          {isSavedAnimate && (
-            <motion.div
-              className="mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <FiCheckCircle className="text-green-500 h-full w-7 ml-1" />
-            </motion.div>
-          )}
-        </div>
+            <FaCheck className="text-green-500 w-7 h-7 ml-2" />
+          </motion.div>
+        )}
       </div>
     </div>
   );

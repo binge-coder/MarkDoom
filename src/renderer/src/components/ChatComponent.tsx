@@ -66,11 +66,11 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   return (
     <div
       className={twMerge(
-        "p-2 flex flex-col max-w-72 overflow-auto min-w-64",
+        "p-2 flex flex-col overflow-auto min-w-[250px] max-w-72 h-[100vh]",
         className,
       )}
     >
-      <div className="text-center flex justify-center mb-2">
+      <div className="flex flex-row justify-center mb-2">
         <span>GEMINI CHAT</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
@@ -79,7 +79,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         value={promptToShow}
         onChange={(e) => setPromptToShow(e.target.value)}
         placeholder="Enter your prompt"
-        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black"
+        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2"
       />
       <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
       {/* <div>{result}</div> */}

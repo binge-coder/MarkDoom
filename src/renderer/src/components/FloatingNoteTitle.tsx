@@ -9,7 +9,7 @@ export const FloatingNoteTitle = ({
   ...props
 }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
-  if (!selectedNote) return null;
+  // if (!selectedNote) return null;
   return (
     <div
       className={twMerge("relative flex items-center", className)}
@@ -25,7 +25,9 @@ export const FloatingNoteTitle = ({
 
       {/* Title centered */}
       <div className="flex-1 text-center">
-        <span className="text-gray-700">{selectedNote.title}</span>
+        {selectedNote && (
+          <span className="text-gray-700">{selectedNote.title}</span>
+        )}
       </div>
     </div>
   );
