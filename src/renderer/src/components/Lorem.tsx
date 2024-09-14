@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-export const Lorem = (props: Props) => {
+export const Lorem = () => {
   return (
     <div>
       <p>
