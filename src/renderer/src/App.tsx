@@ -32,19 +32,19 @@ const App = () => {
     <RootLayout>
       <PreferencesPage isVisible={showSettings} onClose={handleCloseSettings} />
       {showLeftSideBar && (
-        <Sidebar className="bg-slate-800/55 p-2">
+        <Sidebar className="bg-slate-800/40 p-2">
           <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
           <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
         </Sidebar>
       )}
       <Content
         ref={contentContainerRef}
-        className="border-l border-l-black/40 bg-slate-900/80"
+        className="border-l border-l-black/40 bg-slate-900/50"
       >
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
       </Content>
-      {showChat && <ChatComponent className="bg-slate-800/55" />}
+      {showChat && <ChatComponent className="bg-slate-800/40" />}
     </RootLayout>
   );
 };

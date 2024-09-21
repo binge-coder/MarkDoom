@@ -26,7 +26,7 @@ export const FloatingNoteTitle = ({
       {/* Title centered */}
       <div className="flex-1 text-center">
         {selectedNote && (
-          <span className="text-gray-700">{selectedNote.title}</span>
+          <span className="text-gray-400">{selectedNote.title}</span>
         )}
       </div>
     </div>
