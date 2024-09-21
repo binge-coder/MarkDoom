@@ -39,7 +39,7 @@ const App = () => {
       )}
       <Content
         ref={contentContainerRef}
-        className="border-l border-l-black/40 bg-slate-900/50"
+        className="border-l border-l-black/40 bg-slate-900/60"
       >
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
