@@ -1,18 +1,17 @@
 import {
+  ActionButtonsRow,
+  ChatComponent,
   Content,
   FloatingNoteTitle,
   MarkdownEditor,
   NotePreviewList,
+  PreferencesPage,
   RootLayout,
   Sidebar,
-  ChatComponent,
-  PreferencesPage,
-  LeftBarHideButton,
 } from "@/components";
-import { ActionButtonsRow } from "@/components";
-import { useRef } from "react";
-import { useAtom, useAtomValue } from "jotai";
 import { showChatAtom, showLeftSideBarAtom, showSettingsAtom } from "@/store";
+import { useAtom, useAtomValue } from "jotai";
+import { useRef } from "react";
 
 const App = () => {
   const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -31,12 +30,14 @@ const App = () => {
   return (
     <RootLayout>
       <PreferencesPage isVisible={showSettings} onClose={handleCloseSettings} />
-      {showLeftSideBar && (
-        <Sidebar className="bg-slate-800/40 p-2">
-          <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
-          <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
-        </Sidebar>
-      )}
+
+      <Sidebar
+        className={`bg-slate-800/40 transform ${showLeftSideBar ? "translate-x-0 w-[250px] p-2" : "-translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
+      >
+        <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
+        <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
+      </Sidebar>
+
       <Content
         ref={contentContainerRef}
         className="border-l border-l-black/40 bg-slate-900/60"
@@ -44,7 +45,9 @@ const App = () => {
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
       </Content>
-      {showChat && <ChatComponent className="bg-slate-800/40" />}
+      <ChatComponent
+        className={`bg-slate-800/40 transform ${showChat ? "translate-x-0 w-[250px] p-2" : "translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
+      />
     </RootLayout>
   );
 };

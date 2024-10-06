@@ -70,7 +70,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   return (
     <div
       className={twMerge(
-        "p-2 flex flex-col overflow-auto min-w-[250px] max-w-72 h-[100vh]",
+        "p-2 flex flex-col overflow-auto  max-w-72 h-[100vh]",
         className,
       )}
     >
