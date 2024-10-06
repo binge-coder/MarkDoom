@@ -73,7 +73,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   };
 
   return (
-    <div className="fixed inset-10 bg-[#1f1f1f] border border-slate-400 rounded-md shadow-lg text-white p-2 ">
+    <div className="fixed inset-10 bg-black border border-slate-400 rounded-md shadow-lg text-white p-2 z-30 ">
       <Xbutton
         onClick={onClose}
         aria-label="Close Preferences"
