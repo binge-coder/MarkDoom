@@ -1,15 +1,12 @@
-import { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { selectedNoteAtom, showChatAtom } from "@renderer/store";
+import { useAtomValue, useSetAtom } from "jotai";
+import { ComponentProps, useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import gfm from "remark-gfm";
-import { selectedNoteAtom } from "@renderer/store";
-import { useAtomValue } from "jotai";
-import { useSetAtom } from "jotai";
-import { showChatAtom } from "@renderer/store";
-import { GenericButton, Xbutton } from "./Button";
-import { twMerge } from "tailwind-merge";
-import { ComponentProps } from "react";
 import { BarLoader } from "react-spinners";
+import gfm from "remark-gfm";
+import { twMerge } from "tailwind-merge";
+import { GenericButton, Xbutton } from "./Button";
 
 // interface ChatComponentProps {
 //   className?: string;
@@ -17,16 +14,23 @@ import { BarLoader } from "react-spinners";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
-  const [context, setContext] = useState(
-    selectedNote && selectedNote.content != ""
-      ? `\nPlease use the following information as context:\n${selectedNote.content}`
-      : "",
-  );
   const [result, setResult] = useState("");
   const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
   const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
   const setShowChat = useSetAtom(showChatAtom);
   const [loading, setLoading] = useState(false);
+  const [context, setContext] = useState<string>();
+
+  useEffect(() => {
+    if (selectedNote && selectedNote.content != "") {
+      setContext(
+        `\nPlease use the following information as context:\n${selectedNote.content}`,
+      );
+    } else {
+      setContext("");
+    }
+    // console.log("selectedNote", selectedNote);
+  }, [selectedNote]);
 
   useEffect(() => {
     const fetchSettings = async () => {
