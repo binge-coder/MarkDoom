@@ -1,67 +1,34 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useState } from "react";
+import axios from "axios";
 import Markdown from "react-markdown";
 import { BarLoader } from "react-spinners";
 import gfm from "remark-gfm";
 import { twMerge } from "tailwind-merge";
+import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { GenericButton, Xbutton } from "./Button";
 
-// interface ChatComponentProps {
-//   className?: string;
-// }
+// Commented out Gemini import
+// import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
   const [result, setResult] = useState("");
-  const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
-  const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
+  // const [geminiApiKey, setGeminiApiKey] = useState("");
+  const [promptToShow, setPromptToShow] = useState("");
   const setShowChat = useSetAtom(showChatAtom);
   const [loading, setLoading] = useState(false);
-  const [context, setContext] = useState<string>();
-
-  useEffect(() => {
-    if (selectedNote && selectedNote.content != "") {
-      setContext(
-        `\nPlease use the following information as context:\n${selectedNote.content}`,
-      );
-    } else {
-      setContext("");
-    }
-    // console.log("selectedNote", selectedNote);
-  }, [selectedNote]);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const settings = await window.context.getSettings(); // Fetch settings from preload
-      setGeminiApiKey(settings.geminiApi); // Set the Gemini API key from settings
-    };
-    fetchSettings();
-  }, []);
 
   const handleGenerateText = async () => {
-    if (!promptToShow) return; // Handle empty prompt
-    if (!geminiApiKey) {
-      setResult(
-        "Gemini API key is missing. Please set it in preferences. Then close and open chat window again.",
-      );
-      return;
-    }
     setLoading(true);
     try {
-      const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      const AIPrompt = promptToShow + context;
-      console.log(AIPrompt);
-      const result = await model.generateContent(AIPrompt);
-      const response = result.response;
-      console.log(response.text());
-
-      setResult(response.text());
+      const response = await axios.post("http://127.0.0.1:5000/ai", {
+        text: selectedNote?.content || "",
+        prompt: promptToShow,
+      });
+      setResult(response.data.reply);
     } catch (error) {
       console.error("Error generating text:", error);
-      setResult("An error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -75,7 +42,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       )}
     >
       <div className="flex flex-row justify-center mb-2">
-        <span>GEMINI CHAT</span>
+        <span>AI CHAT</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
       <input
@@ -86,15 +53,12 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2"
       />
       <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
-      {/* <div>{result}</div> */}
       <div className="prose prose-invert">
-        {/* {loading ? "loading..." : null} */}
         <div className="flex flex-row items-center mt-1">
           <BarLoader
-            // color="#4f46e5" // Tailwind's 'indigo-600' color
-            loading={loading} // Control when the loader shows
-            width={"100%"} // Width of the loader
-            height={4} // Height of the loader bars
+            loading={loading}
+            width={"100%"}
+            height={4}
             aria-label="Loading"
           />
         </div>
