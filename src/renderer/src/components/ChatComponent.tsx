@@ -67,22 +67,3 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     </div>
   );
 };
-
-// // const { GoogleGenerativeAI } = require("@google/generative-ai");
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-
-// // Access your API key as an environment variable (see "Set up your API key" above)
-// const genAI = new GoogleGenerativeAI("");
-
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// export async function generateText(prompt) {
-//   try {
-//     const result = await model.generateContent(prompt);
-//     const response = await result.response;
-//     return response.text();
-//   } catch (error) {
-//     console.error("Error generating text:", error);
-//     return "An error occurred. Please try again later.";
-//   }
-// }
