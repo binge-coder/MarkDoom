@@ -75,7 +75,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       )}
     >
       <div className="flex flex-row justify-center mb-2">
-        <span>GEMINI CHAT</span>
+        <span>AI CHAT</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
       <input
