@@ -32,12 +32,12 @@ const PrefListItem: React.FC<PropsWithChildren<PrefListItemProps>> = ({
 }) => {
   return (
     <div
-      className="border border-slate-400 rounded-md py-2 px-2 mb-2 flex justify-between"
+      className="border border-slate-600/60 bg-slate-800/30 hover:bg-slate-800/40 rounded-md py-2 px-3 mb-3 flex justify-between transition-colors duration-150"
       {...props}
     >
       <div className="flex flex-col">
-        <div>{title}</div>
-        {subtitle && <div className="text-sm">{subtitle}</div>}
+        <div className="font-medium">{title}</div>
+        {subtitle && <div className="text-sm text-slate-300">{subtitle}</div>}
       </div>
       {children}
     </div>
@@ -127,21 +127,21 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   };
 
   return (
-    <div className="fixed inset-10 bg-black border border-slate-400 rounded-md shadow-lg text-white p-2 z-30 ">
+    <div className="fixed inset-10 bg-slate-900/95 backdrop-blur-sm border border-slate-600/60 rounded-md shadow-xl text-white p-4 z-30">
       <Xbutton
         onClick={onClose}
         aria-label="Close Preferences"
-        className="border border-slate-400"
+        className="border border-slate-600/60 hover:bg-slate-700/50"
       ></Xbutton>
-      <h2 className="text-lg font-bold my-4 ml-4">Preferences</h2>
-      <div className="mx-4 max-h-full overflow-y-auto h-4/5 pb-1 px-1">
+      <h2 className="text-xl font-bold my-4 ml-2 text-center">Preferences</h2>
+      <div className="mx-2 max-h-full overflow-y-auto h-4/5 pb-1 px-1 space-y-2">
         <PrefListItem
           title="Your Gemini API key (optional):"
           subtitle={
             <>
               Get yours from{" "}
               <a
-                className="text-blue-500 underline"
+                className="text-blue-400 hover:text-blue-300 underline"
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noreferrer"
@@ -156,15 +156,15 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
             placeholder="paste your key"
             value={geminiKeyInput}
             onChange={(e) => setgeminiKeyInput(e.target.value)}
-            className="min-w-96 p-1 text-black rounded bg-slate-200 "
+            className="min-w-96 p-1.5 text-black rounded bg-slate-200 border border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
           />
         </PrefListItem>
 
         <PrefListItem
-          title="Enter window backdrop: "
+          title="Window backdrop effect:"
           subtitle={
             <>
-              <p>Changes will now apply immediately when saving.</p>
+              <p>Changes will apply immediately when saving.</p>
               {applyError && (
                 <p className="text-red-400 flex items-center mt-1">
                   <FaTriangleExclamation className="mr-1" /> {applyError}
@@ -187,7 +187,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         >
           <div>
             <select
-              className="text-black p-1 rounded bg-slate-200 "
+              className="text-black p-1.5 rounded bg-slate-200 border border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
               value={backdrop}
               onChange={(e) => handleBackdropChange(e.target.value)}
             >
@@ -205,10 +205,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           subtitle={
             <>
               <p>Click to set a new keyboard shortcut for toggling Zen Mode.</p>
-              <p className="text-yellow-300 text-xs mt-1">
+              <p className="text-yellow-300/90 text-xs mt-1">
                 Format: Use <span className="font-bold">+</span> between keys
                 (e.g., <span className="font-mono">ctrl+shift+z</span>,{" "}
-                <span className="font-mono">f11</span>
+                <span className="font-mono">f11</span>,{" "}
                 <span className="font-mono">ctrl+enter</span>)
               </p>
               {shortcutError && (
@@ -223,14 +223,17 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
             type="text"
             value={zenModeShortcut}
             onChange={(e) => setZenModeShortcut(e.target.value)}
-            className="min-w-48 p-1 text-black rounded bg-slate-200"
+            className="min-w-48 p-1.5 text-black rounded bg-slate-200 border border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
             placeholder="Enter shortcut"
           />
         </PrefListItem>
       </div>
 
-      <div className="flex justify-center">
-        <GenericButton onClick={handleSave} className="border border-slate-400">
+      <div className="flex justify-center mt-5">
+        <GenericButton
+          onClick={handleSave}
+          className="border border-slate-600/60 hover:bg-slate-700/50 px-6"
+        >
           Save Preferences
         </GenericButton>
         {isSavedAnimate && (
