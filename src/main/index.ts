@@ -160,8 +160,21 @@ app.whenReady().then(async () => {
         encoding: "utf-8",
       });
       const settings = JSON.parse(settingsContent);
-      if (settings.fullscreenShortcut) {
+      // Check for both new and old setting property names for backward compatibility
+      if (settings.zenModeShortcut) {
+        zenModeShortcut = settings.zenModeShortcut;
+      } else if (settings.fullscreenShortcut) {
         zenModeShortcut = settings.fullscreenShortcut;
+        // Update the settings file to use the new property name
+        settings.zenModeShortcut = settings.fullscreenShortcut;
+        await writeFile(
+          settingsPath,
+          JSON.stringify(settings, null, 2),
+          "utf-8",
+        );
+        console.log(
+          "Updated settings file with new zenModeShortcut property name",
+        );
       }
     }
   } catch (error) {
@@ -170,14 +183,6 @@ app.whenReady().then(async () => {
 
   // Register the Zen Mode shortcut
   registerZenModeShortcut(zenModeShortcut);
-
-  // Register F11 shortcut for Zen Mode toggle
-  globalShortcut.register("F11", () => {
-    if (mainWindow) {
-      const isZenMode = mainWindow.isFullScreen();
-      mainWindow.setFullScreen(!isZenMode);
-    }
-  });
 
   // IPC test
   // ipcMain.on("ping", () => console.log("pong"));

@@ -164,7 +164,7 @@ const defaultSettings = {
   language: "en",
   geminiApi: "",
   backgroundMaterial: "acrylic", // Ensure this matches the allowed values
-  zenModeShortcut: "F11", // Renamed from fullscreenShortcut to zenModeShortcut
+  zenModeShortcut: "F11", // Use the new property name consistently
 };
 
 export const settingsPath = path.join(getRootDir(), "settings.json");
