@@ -1,12 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { selectedNoteAtom, showChatAtom } from "@renderer/store";
+import { motion } from "framer-motion";
 import { useAtomValue, useSetAtom } from "jotai";
 import { ComponentProps, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { twMerge } from "tailwind-merge";
 import { GenericButton, Xbutton } from "./Button";
-import { motion } from "framer-motion";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -80,17 +80,19 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         placeholder="Enter your prompt"
         className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2"
       />
-      <GenericButton onClick={handleGenerateText} className="w-full mb-2">Submit</GenericButton>
+      <GenericButton onClick={handleGenerateText} className="w-full mb-2">
+        Submit
+      </GenericButton>
       <div className="prose prose-invert">
         <div className="flex flex-row items-center">
           {loading && (
-            <motion.div 
+            <motion.div
               className="w-full h-1 bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-sm"
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
               transition={{
                 scaleX: { duration: 2, repeat: Infinity },
-                opacity: { duration: 0.5 }
+                opacity: { duration: 0.5 },
               }}
             />
           )}
