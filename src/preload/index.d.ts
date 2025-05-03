@@ -33,6 +33,9 @@ declare global {
         isFullScreen?: boolean;
         error?: string;
       }>;
+      updateFullscreenShortcut: (shortcut: string) => Promise<{
+        success: boolean;
+      }>;
     };
   }
 }

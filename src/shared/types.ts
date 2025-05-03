@@ -13,6 +13,7 @@ export type Settings = {
   language: string;
   geminiApi: string;
   backgroundMaterial: string;
+  fullscreenShortcut: string; // New field for the custom shortcut
 };
 
 export type GetSettings = () => Promise<Settings>;

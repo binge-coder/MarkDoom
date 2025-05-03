@@ -164,6 +164,7 @@ const defaultSettings = {
   language: "en",
   geminiApi: "",
   backgroundMaterial: "acrylic", // Ensure this matches the allowed values
+  fullscreenShortcut: "F11", // Default shortcut value
 };
 
 export const settingsPath = path.join(getRootDir(), "settings.json");

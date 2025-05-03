@@ -23,6 +23,40 @@ import {
 // Keep a reference to the main window
 let mainWindow: BrowserWindow | null = null;
 
+// Track the current registered shortcut
+let currentFullscreenShortcut: string | null = null;
+
+// Function to register fullscreen shortcut
+function registerFullscreenShortcut(shortcut: string): boolean {
+  try {
+    // Unregister previous shortcut if exists
+    if (currentFullscreenShortcut) {
+      globalShortcut.unregister(currentFullscreenShortcut);
+      currentFullscreenShortcut = null;
+    }
+
+    // Register the new shortcut
+    const success = globalShortcut.register(shortcut, () => {
+      if (mainWindow) {
+        const isFullScreen = mainWindow.isFullScreen();
+        mainWindow.setFullScreen(!isFullScreen);
+      }
+    });
+
+    if (success) {
+      currentFullscreenShortcut = shortcut;
+      console.log(`Registered fullscreen shortcut: ${shortcut}`);
+      return true;
+    } else {
+      console.error(`Failed to register shortcut: ${shortcut}`);
+      return false;
+    }
+  } catch (error) {
+    console.error(`Error registering shortcut ${shortcut}:`, error);
+    return false;
+  }
+}
+
 async function createWindow(): Promise<void> {
   // Settings file is already ensured to exist in app.whenReady()
   type BackgroundMaterialType =
@@ -118,6 +152,25 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  // Load the fullscreen shortcut from settings
+  let fullscreenShortcut = "F11"; // Default
+  try {
+    if (existsSync(settingsPath)) {
+      const settingsContent = await readFile(settingsPath, {
+        encoding: "utf-8",
+      });
+      const settings = JSON.parse(settingsContent);
+      if (settings.fullscreenShortcut) {
+        fullscreenShortcut = settings.fullscreenShortcut;
+      }
+    }
+  } catch (error) {
+    console.error("Error reading settings for shortcut:", error);
+  }
+
+  // Register the fullscreen shortcut
+  registerFullscreenShortcut(fullscreenShortcut);
+
   // Register F11 shortcut for fullscreen toggle
   globalShortcut.register("F11", () => {
     if (mainWindow) {
@@ -209,6 +262,12 @@ app.whenReady().then(async () => {
     }
   });
 
+  // Add a new handler for updating the fullscreen shortcut
+  ipcMain.handle("update-fullscreen-shortcut", (_, shortcut: string) => {
+    const success = registerFullscreenShortcut(shortcut);
+    return { success };
+  });
+
   await createWindow();
 
   app.on("activate", function () {
@@ -225,6 +284,12 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+// Clean up shortcuts when quitting
+app.on("will-quit", () => {
+  // Unregister all shortcuts
+  globalShortcut.unregisterAll();
 });
 
 // In this file you can include the rest of your app"s specific main process

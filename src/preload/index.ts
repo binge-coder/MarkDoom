@@ -31,6 +31,8 @@ try {
     applyBackgroundMaterial: (material: string) =>
       ipcRenderer.invoke("apply-background-material", material),
     toggleFullscreen: () => ipcRenderer.invoke("toggle-fullscreen"),
+    updateFullscreenShortcut: (shortcut: string) =>
+      ipcRenderer.invoke("update-fullscreen-shortcut", shortcut),
   });
 } catch (error) {
   console.error(error);

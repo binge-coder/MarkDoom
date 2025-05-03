@@ -59,6 +59,8 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
+  const [fullscreenShortcut, setFullscreenShortcut] = useState("F11");
+  const [shortcutError, setShortcutError] = useState<string | null>(null);
 
   const savePreferencesAnimatefn = () => {
     setIsSavedAnimate(true);
@@ -72,6 +74,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const settings = await window.context.getSettings(); // Fetch the settings
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
       setBackdrop(settings.backgroundMaterial || "none");
+      setFullscreenShortcut(settings.fullscreenShortcut || "F11");
     };
     fetchSettings();
   }, []);
@@ -81,6 +84,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       geminiApi: geminiKeyInput,
       language: "en",
       backgroundMaterial: backdrop,
+      fullscreenShortcut: fullscreenShortcut,
     }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");
@@ -97,6 +101,22 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     } catch (err) {
       const error = err instanceof Error ? err.message : String(err);
       setApplyError(`Error: ${error}`);
+    }
+
+    // Apply the fullscreen shortcut
+    try {
+      const shortcutResult =
+        await window.context.updateFullscreenShortcut(fullscreenShortcut);
+      if (!shortcutResult.success) {
+        setShortcutError(
+          "Failed to register shortcut. It may be in use by another application.",
+        );
+      } else {
+        setShortcutError(null);
+      }
+    } catch (err) {
+      const error = err instanceof Error ? err.message : String(err);
+      setShortcutError(`Error: ${error}`);
     }
 
     savePreferencesAnimatefn();
@@ -180,7 +200,35 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           </div>
         </PrefListItem>
 
-        {/* <Lorem /> */}
+        <PrefListItem
+          title="Fullscreen shortcut:"
+          subtitle={
+            <>
+              <p>
+                Click to set a new keyboard shortcut for toggling fullscreen
+                mode.
+              </p>
+              <p className="text-yellow-300 text-xs mt-1">
+                Format: Use <span className="font-bold">+</span> between keys
+                (e.g., <span className="font-mono">Ctrl+Shift+F</span>,{" "}
+                <span className="font-mono">F11</span>)
+              </p>
+              {shortcutError && (
+                <p className="text-red-400 flex items-center mt-1">
+                  <FaTriangleExclamation className="mr-1" /> {shortcutError}
+                </p>
+              )}
+            </>
+          }
+        >
+          <input
+            type="text"
+            value={fullscreenShortcut}
+            onChange={(e) => setFullscreenShortcut(e.target.value)}
+            className="min-w-48 p-1 text-black rounded bg-slate-200"
+            placeholder="Enter shortcut"
+          />
+        </PrefListItem>
       </div>
 
       <div className="flex justify-center">
