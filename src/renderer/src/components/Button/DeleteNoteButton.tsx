@@ -1,7 +1,7 @@
 import { ActionButton, ActionButtonProps } from "@/components";
 import { deleteNoteAtom } from "@/store";
 import { useSetAtom } from "jotai";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { Trash2 } from "lucide-react";
 
 export const DeleteNoteButton = (...props: ActionButtonProps[]) => {
   const deleteNote = useSetAtom(deleteNoteAtom);
@@ -12,7 +12,7 @@ export const DeleteNoteButton = (...props: ActionButtonProps[]) => {
   };
   return (
     <ActionButton onClick={handleDeletion} title={"Delete Note"} {...props}>
-      <FaRegTrashCan className="h-5 w-5" />
+      <Trash2 className="h-5 w-5" />
     </ActionButton>
   );
 };

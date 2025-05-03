@@ -1,5 +1,5 @@
+import { X } from "lucide-react";
 import React from "react";
-import { IoMdClose } from "react-icons/io";
 import { twMerge } from "tailwind-merge";
 
 interface XbuttonProps {
@@ -16,7 +16,7 @@ export const Xbutton: React.FC<XbuttonProps> = ({ onClick, className }) => {
       )}
       onClick={onClick}
     >
-      <IoMdClose className="w-4 h-4" />
+      <X className="w-4 h-4" />
     </button>
   );
 };

@@ -1,7 +1,7 @@
 import { ActionButton, ActionButtonProps } from "@/components";
-import { useSetAtom } from "jotai";
 import { showSettingsAtom } from "@renderer/store";
-import { IoMdSettings } from "react-icons/io";
+import { useSetAtom } from "jotai";
+import { Settings } from "lucide-react";
 
 export const SettingsButton = (...props: ActionButtonProps[]) => {
   const setShowSettings = useSetAtom(showSettingsAtom);
@@ -10,7 +10,7 @@ export const SettingsButton = (...props: ActionButtonProps[]) => {
   };
   return (
     <ActionButton onClick={handleSettingsToggle} title={"Settings"} {...props}>
-      <IoMdSettings className="h-5 w-5" />
+      <Settings className="h-5 w-5" />
     </ActionButton>
   );
 };

@@ -1,6 +1,6 @@
 import { ActionButton, ActionButtonProps } from "@/components";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 
 export const ZenModeButton = (props: ActionButtonProps) => {
   const [isZenMode, setIsZenMode] = useState(false);
@@ -28,9 +28,9 @@ export const ZenModeButton = (props: ActionButtonProps) => {
   return (
     <ActionButton onClick={toggleZenMode} title={"Zen Mode"} {...props}>
       {isZenMode ? (
-        <RxExitFullScreen className="h-5 w-5" />
+        <Minimize2 className="h-5 w-5" />
       ) : (
-        <RxEnterFullScreen className="h-5 w-5" />
+        <Maximize2 className="h-5 w-5" />
       )}
     </ActionButton>
   );

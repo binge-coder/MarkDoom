@@ -1,14 +1,13 @@
 import { GenericButton } from "@/components";
 import { Xbutton } from "@/components/Button";
 import { motion } from "framer-motion";
+import { AlertTriangle, Check, Eye, EyeOff } from "lucide-react";
 import React, {
   PropsWithChildren,
   ReactNode,
   useEffect,
   useState,
 } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaCheck, FaTriangleExclamation } from "react-icons/fa6";
 
 interface PrefListItemProps {
   title: string;
@@ -167,7 +166,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800 focus:outline-none"
               aria-label={showApiKey ? "Hide API key" : "Show API key"}
             >
-              {showApiKey ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              {showApiKey ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </PrefListItem>
@@ -179,7 +178,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               <p>Changes will apply immediately when saving.</p>
               {applyError && (
                 <p className="text-red-400 flex items-center mt-1">
-                  <FaTriangleExclamation className="mr-1" /> {applyError}
+                  <AlertTriangle className="mr-1 h-4 w-4" /> {applyError}
                 </p>
               )}
               {debugInfo && debugInfo.success && (
@@ -225,7 +224,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               </p>
               {shortcutError && (
                 <p className="text-red-400 flex items-center mt-1">
-                  <FaTriangleExclamation className="mr-1" /> {shortcutError}
+                  <AlertTriangle className="mr-1 h-4 w-4" /> {shortcutError}
                 </p>
               )}
             </>
@@ -264,7 +263,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               },
             }}
           >
-            <FaCheck className="text-green-500 w-7 h-7 ml-2" />
+            <Check className="text-green-500 w-7 h-7 ml-2" />
           </motion.div>
         )}
       </div>

@@ -1,8 +1,7 @@
 import { ActionButton } from "@/components";
-import { useAtom } from "jotai";
 import { showLeftSideBarAtom } from "@renderer/store";
-import { FaAngleLeft } from "react-icons/fa";
-import { FaAngleRight } from "react-icons/fa";
+import { useAtom } from "jotai";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ComponentProps } from "react";
 
 type Props = ComponentProps<typeof ActionButton>;
@@ -19,9 +18,9 @@ export const LeftBarHideButton = (props: Props) => {
       className={props.className}
     >
       {showLeftSideBar ? (
-        <FaAngleLeft className="h-5 w-5" />
+        <ChevronLeft className="h-5 w-5" />
       ) : (
-        <FaAngleRight className="h-5 w-5" />
+        <ChevronRight className="h-5 w-5" />
       )}
     </ActionButton>
   );
