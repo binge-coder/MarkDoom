@@ -144,7 +144,10 @@ const CustomInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 bg-slate-700/70 border border-slate-600/50 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400/50 hover:bg-slate-700/90 transition-colors duration-200 shadow-sm"
+        className={cn(
+          "w-full px-4 py-2.5 bg-slate-700/70 border border-slate-600/50 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400/50 hover:bg-slate-700/90 transition-colors duration-200 shadow-sm overflow-x-auto",
+          icon && "pr-10", // Add padding on the right when icon is present
+        )}
       />
       {icon && (
         <button
