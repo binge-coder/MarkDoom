@@ -28,6 +28,11 @@ declare global {
           backgroundColor?: string;
         };
       }>;
+      toggleFullscreen: () => Promise<{
+        success: boolean;
+        isFullScreen?: boolean;
+        error?: string;
+      }>;
     };
   }
 }

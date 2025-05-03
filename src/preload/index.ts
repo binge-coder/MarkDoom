@@ -30,6 +30,7 @@ try {
       ipcRenderer.invoke("save-settings", settings),
     applyBackgroundMaterial: (material: string) =>
       ipcRenderer.invoke("apply-background-material", material),
+    toggleFullscreen: () => ipcRenderer.invoke("toggle-fullscreen"),
   });
 } catch (error) {
   console.error(error);

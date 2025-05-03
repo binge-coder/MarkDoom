@@ -1,9 +1,9 @@
 import {
+  ChatButton,
   DeleteNoteButton,
+  FullscreenButton,
   NewNoteButton,
   SettingsButton,
-  ChatButton,
-  // LeftBarHideButton,
 } from "@/components";
 import { ComponentProps } from "react";
 
@@ -14,6 +14,7 @@ export const ActionButtonsRow = (props: ComponentProps<"div">) => {
       <DeleteNoteButton />
       <ChatButton />
       <SettingsButton />
+      <FullscreenButton />
       {/* <LeftBarHideButton /> */}
     </div>
   );

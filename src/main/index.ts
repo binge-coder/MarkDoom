@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { BrowserWindow, app, ipcMain, shell } from "electron";
+import { BrowserWindow, app, globalShortcut, ipcMain, shell } from "electron";
 import { existsSync, readFile, writeFile } from "fs-extra";
 import { join } from "path";
 import icon from "../../resources/icon.png?asset";
@@ -74,7 +74,6 @@ async function createWindow(): Promise<void> {
     },
   };
 
-  // Rest of your function...
   // Conditionally set backgroundMaterial and backgroundColor
   if (savedBackgroundMaterial == "none") {
     windowOptions.backgroundColor = "#1f1f1f";
@@ -119,6 +118,14 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  // Register F11 shortcut for fullscreen toggle
+  globalShortcut.register("F11", () => {
+    if (mainWindow) {
+      const isFullScreen = mainWindow.isFullScreen();
+      mainWindow.setFullScreen(!isFullScreen);
+    }
+  });
+
   // IPC test
   // ipcMain.on("ping", () => console.log("pong"));
   ipcMain.handle("getNotes", (_, ...args: Parameters<GetNotes>) =>
@@ -136,6 +143,16 @@ app.whenReady().then(async () => {
   ipcMain.handle("deleteNote", (_, ...args: Parameters<DeleteNote>) =>
     deleteNote(...args),
   );
+
+  // Add a new handler for toggling fullscreen
+  ipcMain.handle("toggle-fullscreen", () => {
+    if (mainWindow) {
+      const isFullScreen = mainWindow.isFullScreen();
+      mainWindow.setFullScreen(!isFullScreen);
+      return { success: true, isFullScreen: !isFullScreen };
+    }
+    return { success: false, error: "No window available" };
+  });
 
   // Handle fetching settings
   ipcMain.handle("get-settings", async () => {
