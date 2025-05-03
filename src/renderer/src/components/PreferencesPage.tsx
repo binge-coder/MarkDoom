@@ -75,9 +75,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
       setBackdrop(settings.backgroundMaterial || "none");
       // Handle both new and old settings format for backward compatibility
-      setZenModeShortcut(
-        settings.zenModeShortcut || settings.fullscreenShortcut || "F11",
-      );
+      setZenModeShortcut(settings.zenModeShortcut || "F11");
     };
     fetchSettings();
   }, []);
