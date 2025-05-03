@@ -9,7 +9,7 @@ export const NewNoteButton = (...props: ActionButtonProps[]) => {
     await createEmptyNote();
   };
   return (
-    <ActionButton onClick={handleCreation} {...props}>
+    <ActionButton onClick={handleCreation} title={"New Note"} {...props}>
       <LuFilePlus className="h-5 w-5" />
     </ActionButton>
   );

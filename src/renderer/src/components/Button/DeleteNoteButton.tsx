@@ -11,7 +11,7 @@ export const DeleteNoteButton = (...props: ActionButtonProps[]) => {
     await deleteNote();
   };
   return (
-    <ActionButton onClick={handleDeletion} {...props}>
+    <ActionButton onClick={handleDeletion} title={"Delete Note"} {...props}>
       <FaRegTrashCan className="h-5 w-5" />
     </ActionButton>
   );

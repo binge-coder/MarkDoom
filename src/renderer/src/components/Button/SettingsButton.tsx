@@ -9,7 +9,7 @@ export const SettingsButton = (...props: ActionButtonProps[]) => {
     setShowSettings((prev) => !prev);
   };
   return (
-    <ActionButton onClick={handleSettingsToggle} {...props}>
+    <ActionButton onClick={handleSettingsToggle} title={"Settings"} {...props}>
       <IoMdSettings className="h-5 w-5" />
     </ActionButton>
   );

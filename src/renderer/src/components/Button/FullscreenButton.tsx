@@ -27,11 +27,7 @@ export const ZenModeButton = (props: ActionButtonProps) => {
   }, []);
 
   return (
-    <ActionButton
-      onClick={toggleZenMode}
-      title={isZenMode ? "Exit Zen Mode" : "Enter Zen Mode"}
-      {...props}
-    >
+    <ActionButton onClick={toggleZenMode} title={"Zen Mode"} {...props}>
       {isZenMode ? (
         <RxExitFullScreen className="h-5 w-5" />
       ) : (

@@ -11,7 +11,7 @@ export const ChatButton = (...props: ActionButtonProps[]) => {
     setShowSettings((prev) => !prev);
   };
   return (
-    <ActionButton onClick={handleChatToggle} {...props}>
+    <ActionButton onClick={handleChatToggle} title={"AI Assistant"} {...props}>
       <FaRobot className="h-5 w-5" />
       {/* <SiGooglebard className="h-5 w-5" /> */}
     </ActionButton>
