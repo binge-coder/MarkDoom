@@ -207,8 +207,9 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               <p>Click to set a new keyboard shortcut for toggling Zen Mode.</p>
               <p className="text-yellow-300 text-xs mt-1">
                 Format: Use <span className="font-bold">+</span> between keys
-                (e.g., <span className="font-mono">Ctrl+Shift+F</span>,{" "}
-                <span className="font-mono">F11</span>)
+                (e.g., <span className="font-mono">ctrl+shift+z</span>,{" "}
+                <span className="font-mono">f11</span>
+                <span className="font-mono">ctrl+enter</span>)
               </p>
               {shortcutError && (
                 <p className="text-red-400 flex items-center mt-1">
