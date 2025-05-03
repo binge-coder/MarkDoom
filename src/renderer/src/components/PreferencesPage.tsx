@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaCheck, FaTriangleExclamation } from "react-icons/fa6";
 
 interface PrefListItemProps {
@@ -61,6 +62,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
   const [zenModeShortcut, setZenModeShortcut] = useState("F11");
   const [shortcutError, setShortcutError] = useState<string | null>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
 
   const savePreferencesAnimatefn = () => {
     setIsSavedAnimate(true);
@@ -151,13 +153,23 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
             </>
           }
         >
-          <input
-            type="text"
-            placeholder="paste your key"
-            value={geminiKeyInput}
-            onChange={(e) => setgeminiKeyInput(e.target.value)}
-            className="min-w-96 p-1.5 text-black rounded bg-slate-200 border border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
-          />
+          <div className="relative">
+            <input
+              type={showApiKey ? "text" : "password"}
+              placeholder="paste your key"
+              value={geminiKeyInput}
+              onChange={(e) => setgeminiKeyInput(e.target.value)}
+              className="min-w-96 p-1.5 text-black rounded bg-slate-200 border border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800 focus:outline-none"
+              aria-label={showApiKey ? "Hide API key" : "Show API key"}
+            >
+              {showApiKey ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+            </button>
+          </div>
         </PrefListItem>
 
         <PrefListItem
