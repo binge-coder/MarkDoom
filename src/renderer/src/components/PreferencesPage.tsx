@@ -59,7 +59,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
-  const [zenModeShortcut, setZenModeShortcut] = useState("F11"); // Renamed from fullscreenShortcut
+  const [zenModeShortcut, setZenModeShortcut] = useState("F11");
   const [shortcutError, setShortcutError] = useState<string | null>(null);
 
   const savePreferencesAnimatefn = () => {
@@ -74,7 +74,6 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const settings = await window.context.getSettings(); // Fetch the settings
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
       setBackdrop(settings.backgroundMaterial || "none");
-      // Handle both new and old settings format for backward compatibility
       setZenModeShortcut(settings.zenModeShortcut || "F11");
     };
     fetchSettings();
@@ -85,7 +84,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       geminiApi: geminiKeyInput,
       language: "en",
       backgroundMaterial: backdrop,
-      zenModeShortcut: zenModeShortcut, // Renamed from fullscreenShortcut
+      zenModeShortcut: zenModeShortcut,
     }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");

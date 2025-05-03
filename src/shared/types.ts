@@ -13,7 +13,7 @@ export type Settings = {
   language: string;
   geminiApi: string;
   backgroundMaterial: string;
-  zenModeShortcut: string; // Renamed from fullscreenShortcut to zenModeShortcut
+  zenModeShortcut: string;
 };
 
 export type GetSettings = () => Promise<Settings>;

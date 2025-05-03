@@ -7,5 +7,4 @@ export * from "./NewNoteButton";
 export * from "./RightBarHideButton";
 export * from "./SettingsButton";
 export * from "./Xbutton";
-// Renamed from FullscreenButton to ZenModeButton
-export * from "./FullscreenButton";
+export * from "./ZenModeButton";

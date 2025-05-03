@@ -92,8 +92,8 @@ async function createWindow(): Promise<void> {
     width: 900,
     height: 670,
     resizable: true,
-    fullscreenable: true,
-    fullscreen: false,
+    fullscreenable: true, // Electron API property name, can't change
+    fullscreen: false, // Electron API property name, can't change
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
@@ -160,21 +160,8 @@ app.whenReady().then(async () => {
         encoding: "utf-8",
       });
       const settings = JSON.parse(settingsContent);
-      // Check for both new and old setting property names for backward compatibility
       if (settings.zenModeShortcut) {
         zenModeShortcut = settings.zenModeShortcut;
-      } else if (settings.fullscreenShortcut) {
-        zenModeShortcut = settings.fullscreenShortcut;
-        // Update the settings file to use the new property name
-        settings.zenModeShortcut = settings.fullscreenShortcut;
-        await writeFile(
-          settingsPath,
-          JSON.stringify(settings, null, 2),
-          "utf-8",
-        );
-        console.log(
-          "Updated settings file with new zenModeShortcut property name",
-        );
       }
     }
   } catch (error) {

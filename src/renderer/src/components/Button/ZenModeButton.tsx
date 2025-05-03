@@ -2,19 +2,18 @@ import { ActionButton, ActionButtonProps } from "@/components";
 import { useCallback, useEffect, useState } from "react";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 
-// Renamed component to ZenModeButton
 export const ZenModeButton = (props: ActionButtonProps) => {
   const [isZenMode, setIsZenMode] = useState(false);
 
-  // Update state when fullscreen changes from elsewhere (like F11 key)
+  // Update state when zen mode changes from elsewhere (like F11 key)
   useEffect(() => {
-    const handleFullscreenChange = () => {
+    const handleZenModeChange = () => {
       setIsZenMode(!!document.fullscreenElement);
     };
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleZenModeChange);
     return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleZenModeChange);
     };
   }, []);
 
