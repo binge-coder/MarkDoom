@@ -1,14 +1,27 @@
-import { PropsWithChildren, ReactNode } from "react";
-import React, { useState, useEffect } from "react";
-import { Xbutton } from "@/components/Button";
 import { GenericButton } from "@/components";
+import { Xbutton } from "@/components/Button";
 import { motion } from "framer-motion";
-import { FaCheck } from "react-icons/fa6";
-import { Lorem } from "./Lorem";
+import React, {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
+import { FaCheck, FaTriangleExclamation } from "react-icons/fa6";
 
 interface PrefListItemProps {
   title: string;
   subtitle?: ReactNode;
+}
+
+// Define type for debug info
+interface DebugInfo {
+  success: boolean;
+  appliedMaterial?: string;
+  error?: string;
+  currentSettings?: {
+    backgroundColor?: string;
+  };
 }
 
 const PrefListItem: React.FC<PropsWithChildren<PrefListItemProps>> = ({
@@ -44,6 +57,8 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [geminiKeyInput, setgeminiKeyInput] = useState("");
   const [backdrop, setBackdrop] = useState("none");
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
+  const [applyError, setApplyError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
 
   const savePreferencesAnimatefn = () => {
     setIsSavedAnimate(true);
@@ -69,7 +84,26 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");
+
+    // Apply background material immediately
+    try {
+      const result = await window.context.applyBackgroundMaterial(backdrop);
+      if (!result.success) {
+        setApplyError(`Failed to apply: ${result.error}`);
+      } else {
+        setApplyError(null);
+        setDebugInfo(result);
+      }
+    } catch (err) {
+      const error = err instanceof Error ? err.message : String(err);
+      setApplyError(`Error: ${error}`);
+    }
+
     savePreferencesAnimatefn();
+  };
+
+  const handleBackdropChange = async (value: string) => {
+    setBackdrop(value);
   };
 
   return (
@@ -108,18 +142,40 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
 
         <PrefListItem
           title="Enter window backdrop: "
-          subtitle={<p>Restart the app to apply changes.</p>}
+          subtitle={
+            <>
+              <p>Changes will now apply immediately when saving.</p>
+              {applyError && (
+                <p className="text-red-400 flex items-center mt-1">
+                  <FaTriangleExclamation className="mr-1" /> {applyError}
+                </p>
+              )}
+              {debugInfo && debugInfo.success && (
+                <div className="text-xs mt-1 text-gray-400">
+                  Applied: {debugInfo.appliedMaterial}
+                  {debugInfo.currentSettings && (
+                    <div>
+                      <div>
+                        Background: {debugInfo.currentSettings.backgroundColor}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          }
         >
           <div>
             <select
               className="text-black p-1 rounded bg-slate-200 "
               value={backdrop}
-              onChange={(e) => setBackdrop(e.target.value)}
+              onChange={(e) => handleBackdropChange(e.target.value)}
             >
-              {/* <option value="mica">Mica</option> */}
+              <option value="mica">Mica</option>
               <option value="acrylic">Acrylic (blur on win11)</option>
               <option value="none">None</option>
-              {/* <option value="tabbed">Tabbed</option> */}
+              <option value="tabbed">Tabbed</option>
+              <option value="auto">Auto</option>
             </select>
           </div>
         </PrefListItem>

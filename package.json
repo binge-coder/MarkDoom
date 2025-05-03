@@ -25,6 +25,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@google/generative-ai": "^0.15.0",
     "@mdxeditor/editor": "^3.11.3",
+    "caniuse-lite": "^1.0.30001716",
     "electron-store": "^10.0.0",
     "framer-motion": "^11.5.4",
     "fs-extra": "^11.2.0",

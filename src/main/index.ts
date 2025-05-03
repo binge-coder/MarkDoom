@@ -20,6 +20,9 @@ import {
   writeNote,
 } from "./lib";
 
+// Keep a reference to the main window
+let mainWindow: BrowserWindow | null = null;
+
 async function createWindow(): Promise<void> {
   // Settings file is already ensured to exist in app.whenReady()
   type BackgroundMaterialType =
@@ -78,23 +81,27 @@ async function createWindow(): Promise<void> {
   }
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow(windowOptions);
+  mainWindow = new BrowserWindow(windowOptions);
 
   mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
+    if (mainWindow) {
+      mainWindow.show();
+    }
   });
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: "deny" };
-  });
+  if (mainWindow) {
+    mainWindow.webContents.setWindowOpenHandler((details) => {
+      shell.openExternal(details.url);
+      return { action: "deny" };
+    });
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+    // HMR for renderer base on electron-vite cli.
+    // Load the remote URL for development or the local html file for production.
+    if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
+      mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+    } else {
+      mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+    }
   }
 }
 
@@ -147,6 +154,42 @@ app.whenReady().then(async () => {
       "utf-8",
     );
     return { success: true }; // Return success after saving
+  });
+
+  // New handler to update window background material without restart
+  ipcMain.handle("apply-background-material", async (_, material) => {
+    if (!mainWindow) return { success: false, error: "No window available" };
+
+    try {
+      if (material === "none") {
+        mainWindow.setBackgroundColor("#1f1f1f");
+      } else {
+        // Clear background color if using a material effect
+        mainWindow.setBackgroundColor("#00000000");
+      }
+
+      // Set the background material
+      if (process.platform === "win32") {
+        // @ts-ignore - TypeScript doesn't know about this Electron method for Windows
+        mainWindow.setBackgroundMaterial(material);
+        return {
+          success: true,
+          appliedMaterial: material,
+          // Get current window settings for debugging
+          currentSettings: {
+            backgroundColor: mainWindow.getBackgroundColor(),
+          },
+        };
+      }
+      return { success: false, error: "Not on Windows platform" };
+    } catch (error) {
+      console.error("Error applying background material:", error);
+      return {
+        success: false,
+        error: String(error),
+        material,
+      };
+    }
   });
 
   await createWindow();

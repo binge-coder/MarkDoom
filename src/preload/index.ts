@@ -4,8 +4,8 @@ import {
   DeleteNote,
   GetNotes,
   ReadNote,
-  WriteNote,
   Settings,
+  WriteNote,
 } from "../shared/types";
 
 if (!process.contextIsolated) {
@@ -28,6 +28,8 @@ try {
     getSettings: () => ipcRenderer.invoke("get-settings"),
     saveSettings: (settings: Settings) =>
       ipcRenderer.invoke("save-settings", settings),
+    applyBackgroundMaterial: (material: string) =>
+      ipcRenderer.invoke("apply-background-material", material),
   });
 } catch (error) {
   console.error(error);

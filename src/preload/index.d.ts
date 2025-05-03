@@ -4,8 +4,8 @@ import {
   GetNotes,
   GetSettings,
   ReadNote,
-  WriteNote,
   SaveSettings,
+  WriteNote,
 } from "@shared/types";
 
 declare global {
@@ -20,6 +20,14 @@ declare global {
       deleteNote: DeleteNote;
       getSettings: GetSettings;
       saveSettings: SaveSettings;
+      applyBackgroundMaterial: (material: string) => Promise<{
+        success: boolean;
+        error?: string;
+        appliedMaterial?: string;
+        currentSettings?: {
+          backgroundColor?: string;
+        };
+      }>;
     };
   }
 }
