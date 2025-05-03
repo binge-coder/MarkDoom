@@ -1,28 +1,54 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { BrowserWindow, app, ipcMain, shell } from "electron";
+import { existsSync, readFile, writeFile } from "fs-extra";
 import { join } from "path";
 import icon from "../../resources/icon.png?asset";
 import {
-  createNote,
-  getNotes,
-  readNote,
-  writeNote,
-  deleteNote,
-  checkAndCreateSettingsFile,
-  settingsPath,
-} from "./lib";
-import {
   CreateNote,
+  DeleteNote,
   GetNotes,
   ReadNote,
   WriteNote,
-  DeleteNote,
 } from "../shared/types";
-import { readFile, writeFile, existsSync } from "fs-extra";
+import {
+  checkAndCreateSettingsFile,
+  createNote,
+  deleteNote,
+  getNotes,
+  readNote,
+  settingsPath,
+  writeNote,
+} from "./lib";
 
 async function createWindow(): Promise<void> {
-  const settings = await readFile(settingsPath, { encoding: "utf-8" });
-  const { backgroundMaterial: savedBackgroundMaterial } = JSON.parse(settings);
+  // Settings file is already ensured to exist in app.whenReady()
+  type BackgroundMaterialType =
+    | "none"
+    | "tabbed"
+    | "auto"
+    | "mica"
+    | "acrylic"
+    | undefined;
+  let savedBackgroundMaterial: BackgroundMaterialType = "none";
+  try {
+    const settings = await readFile(settingsPath, { encoding: "utf-8" });
+    const parsedSettings = JSON.parse(settings);
+
+    // Validate the value is one of the allowed types
+    const material = parsedSettings.backgroundMaterial;
+    if (
+      material === "none" ||
+      material === "tabbed" ||
+      material === "auto" ||
+      material === "mica" ||
+      material === "acrylic"
+    ) {
+      savedBackgroundMaterial = material;
+    }
+  } catch (error) {
+    console.error("Error reading settings file:", error);
+    // Continue with default settings
+  }
 
   // Default properties for the browser window
   const windowOptions: Electron.BrowserWindowConstructorOptions = {
@@ -37,7 +63,7 @@ async function createWindow(): Promise<void> {
     center: true,
     title: "MarkDoom",
     frame: true,
-    backgroundMaterial: savedBackgroundMaterial || "none",
+    backgroundMaterial: savedBackgroundMaterial,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: true,
@@ -45,6 +71,7 @@ async function createWindow(): Promise<void> {
     },
   };
 
+  // Rest of your function...
   // Conditionally set backgroundMaterial and backgroundColor
   if (savedBackgroundMaterial == "none") {
     windowOptions.backgroundColor = "#1f1f1f";
@@ -74,10 +101,10 @@ async function createWindow(): Promise<void> {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.electron");
-  checkAndCreateSettingsFile();
+  await checkAndCreateSettingsFile();
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -122,7 +149,7 @@ app.whenReady().then(() => {
     return { success: true }; // Return success after saving
   });
 
-  createWindow();
+  await createWindow();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

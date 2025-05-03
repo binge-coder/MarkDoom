@@ -163,15 +163,23 @@ export const deleteNote: DeleteNote = async (filename) => {
 const defaultSettings = {
   language: "en",
   geminiApi: "",
-  backgroundMaterial: "tabbed",
+  backgroundMaterial: "tabbed", // Ensure this matches the allowed values
 };
 
 export const settingsPath = path.join(getRootDir(), "settings.json");
 
-export const checkAndCreateSettingsFile = () => {
+export const checkAndCreateSettingsFile = async () => {
+  // Ensure the root directory exists
+  const rootDir = getRootDir();
+  await ensureDir(rootDir);
+
   // Check if the file exists
   if (!existsSync(settingsPath)) {
-    writeFile(settingsPath, JSON.stringify(defaultSettings, null, 2), "utf-8");
+    await writeFile(
+      settingsPath,
+      JSON.stringify(defaultSettings, null, 2),
+      "utf-8",
+    );
     console.log("settings.json created with default settings.");
   } else {
     console.log("settings.json already exists.");
