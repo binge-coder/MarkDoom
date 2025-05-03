@@ -259,7 +259,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ type: "spring", damping: 15 }}
-        className="relative w-full max-w-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl p-6 overflow-hidden mx-4"
+        className="relative w-full max-w-3xl bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl p-6 overflow-hidden mx-4"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40"></div>
 
