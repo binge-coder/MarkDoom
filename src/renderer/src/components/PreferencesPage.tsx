@@ -59,7 +59,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<DebugInfo | null>(null);
-  const [fullscreenShortcut, setFullscreenShortcut] = useState("F11");
+  const [zenModeShortcut, setZenModeShortcut] = useState("F11"); // Renamed from fullscreenShortcut
   const [shortcutError, setShortcutError] = useState<string | null>(null);
 
   const savePreferencesAnimatefn = () => {
@@ -74,7 +74,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const settings = await window.context.getSettings(); // Fetch the settings
       setgeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
       setBackdrop(settings.backgroundMaterial || "none");
-      setFullscreenShortcut(settings.fullscreenShortcut || "F11");
+      // Handle both new and old settings format for backward compatibility
+      setZenModeShortcut(
+        settings.zenModeShortcut || settings.fullscreenShortcut || "F11",
+      );
     };
     fetchSettings();
   }, []);
@@ -84,7 +87,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       geminiApi: geminiKeyInput,
       language: "en",
       backgroundMaterial: backdrop,
-      fullscreenShortcut: fullscreenShortcut,
+      zenModeShortcut: zenModeShortcut, // Renamed from fullscreenShortcut
     }; // Update the settings
     await window.context.saveSettings(newSettings); // Save the settings
     console.log("Settings saved.");
@@ -103,10 +106,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       setApplyError(`Error: ${error}`);
     }
 
-    // Apply the fullscreen shortcut
+    // Apply the Zen Mode shortcut
     try {
       const shortcutResult =
-        await window.context.updateFullscreenShortcut(fullscreenShortcut);
+        await window.context.updateZenModeShortcut(zenModeShortcut);
       if (!shortcutResult.success) {
         setShortcutError(
           "Failed to register shortcut. It may be in use by another application.",
@@ -201,13 +204,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         </PrefListItem>
 
         <PrefListItem
-          title="Fullscreen shortcut:"
+          title="Zen Mode shortcut:"
           subtitle={
             <>
-              <p>
-                Click to set a new keyboard shortcut for toggling fullscreen
-                mode.
-              </p>
+              <p>Click to set a new keyboard shortcut for toggling Zen Mode.</p>
               <p className="text-yellow-300 text-xs mt-1">
                 Format: Use <span className="font-bold">+</span> between keys
                 (e.g., <span className="font-mono">Ctrl+Shift+F</span>,{" "}
@@ -223,8 +223,8 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         >
           <input
             type="text"
-            value={fullscreenShortcut}
-            onChange={(e) => setFullscreenShortcut(e.target.value)}
+            value={zenModeShortcut}
+            onChange={(e) => setZenModeShortcut(e.target.value)}
             className="min-w-48 p-1 text-black rounded bg-slate-200"
             placeholder="Enter shortcut"
           />

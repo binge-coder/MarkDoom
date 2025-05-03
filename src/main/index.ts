@@ -24,35 +24,35 @@ import {
 let mainWindow: BrowserWindow | null = null;
 
 // Track the current registered shortcut
-let currentFullscreenShortcut: string | null = null;
+let currentZenModeShortcut: string | null = null;
 
-// Function to register fullscreen shortcut
-function registerFullscreenShortcut(shortcut: string): boolean {
+// Function to register Zen Mode shortcut (previously fullscreen shortcut)
+function registerZenModeShortcut(shortcut: string): boolean {
   try {
     // Unregister previous shortcut if exists
-    if (currentFullscreenShortcut) {
-      globalShortcut.unregister(currentFullscreenShortcut);
-      currentFullscreenShortcut = null;
+    if (currentZenModeShortcut) {
+      globalShortcut.unregister(currentZenModeShortcut);
+      currentZenModeShortcut = null;
     }
 
     // Register the new shortcut
     const success = globalShortcut.register(shortcut, () => {
       if (mainWindow) {
-        const isFullScreen = mainWindow.isFullScreen();
-        mainWindow.setFullScreen(!isFullScreen);
+        const isZenMode = mainWindow.isFullScreen();
+        mainWindow.setFullScreen(!isZenMode);
       }
     });
 
     if (success) {
-      currentFullscreenShortcut = shortcut;
-      console.log(`Registered fullscreen shortcut: ${shortcut}`);
+      currentZenModeShortcut = shortcut;
+      console.log(`Registered Zen Mode shortcut: ${shortcut}`);
       return true;
     } else {
-      console.error(`Failed to register shortcut: ${shortcut}`);
+      console.error(`Failed to register Zen Mode shortcut: ${shortcut}`);
       return false;
     }
   } catch (error) {
-    console.error(`Error registering shortcut ${shortcut}:`, error);
+    console.error(`Error registering Zen Mode shortcut ${shortcut}:`, error);
     return false;
   }
 }
@@ -152,8 +152,8 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  // Load the fullscreen shortcut from settings
-  let fullscreenShortcut = "F11"; // Default
+  // Load the Zen Mode shortcut from settings
+  let zenModeShortcut = "F11"; // Default
   try {
     if (existsSync(settingsPath)) {
       const settingsContent = await readFile(settingsPath, {
@@ -161,21 +161,21 @@ app.whenReady().then(async () => {
       });
       const settings = JSON.parse(settingsContent);
       if (settings.fullscreenShortcut) {
-        fullscreenShortcut = settings.fullscreenShortcut;
+        zenModeShortcut = settings.fullscreenShortcut;
       }
     }
   } catch (error) {
     console.error("Error reading settings for shortcut:", error);
   }
 
-  // Register the fullscreen shortcut
-  registerFullscreenShortcut(fullscreenShortcut);
+  // Register the Zen Mode shortcut
+  registerZenModeShortcut(zenModeShortcut);
 
-  // Register F11 shortcut for fullscreen toggle
+  // Register F11 shortcut for Zen Mode toggle
   globalShortcut.register("F11", () => {
     if (mainWindow) {
-      const isFullScreen = mainWindow.isFullScreen();
-      mainWindow.setFullScreen(!isFullScreen);
+      const isZenMode = mainWindow.isFullScreen();
+      mainWindow.setFullScreen(!isZenMode);
     }
   });
 
@@ -197,12 +197,12 @@ app.whenReady().then(async () => {
     deleteNote(...args),
   );
 
-  // Add a new handler for toggling fullscreen
-  ipcMain.handle("toggle-fullscreen", () => {
+  // Add a new handler for toggling Zen Mode
+  ipcMain.handle("toggle-zen-mode", () => {
     if (mainWindow) {
-      const isFullScreen = mainWindow.isFullScreen();
-      mainWindow.setFullScreen(!isFullScreen);
-      return { success: true, isFullScreen: !isFullScreen };
+      const isZenMode = mainWindow.isFullScreen();
+      mainWindow.setFullScreen(!isZenMode);
+      return { success: true, isZenMode: !isZenMode };
     }
     return { success: false, error: "No window available" };
   });
@@ -262,9 +262,9 @@ app.whenReady().then(async () => {
     }
   });
 
-  // Add a new handler for updating the fullscreen shortcut
-  ipcMain.handle("update-fullscreen-shortcut", (_, shortcut: string) => {
-    const success = registerFullscreenShortcut(shortcut);
+  // Add a new handler for updating the Zen Mode shortcut
+  ipcMain.handle("update-zen-mode-shortcut", (_, shortcut: string) => {
+    const success = registerZenModeShortcut(shortcut);
     return { success };
   });
 

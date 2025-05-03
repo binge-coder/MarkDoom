@@ -1,8 +1,13 @@
-## Welcome to Mark-Doom
-This is my first Electron.js project. This is **fully functional**. You can use it as a daily driver if you want.
-## Features
-1. It supports markdown
-2. Clean and Minimal
-3. Free and Open Source
-4. Works offline
-5. Can use AI 
+# Welcome
+## This is a markdown editor with AI capabilities
+- this is a bullet point
+- this is another
+
+### This is level 3 heading
+1. first point
+2. second point
+3. third point
+
+### Text decoration
+> this is a blockquote
+

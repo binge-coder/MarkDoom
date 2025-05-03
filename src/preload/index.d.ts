@@ -28,6 +28,16 @@ declare global {
           backgroundColor?: string;
         };
       }>;
+      // New Zen Mode terminology
+      toggleZenMode: () => Promise<{
+        success: boolean;
+        isZenMode?: boolean;
+        error?: string;
+      }>;
+      updateZenModeShortcut: (shortcut: string) => Promise<{
+        success: boolean;
+      }>;
+      // Keep old methods for backward compatibility
       toggleFullscreen: () => Promise<{
         success: boolean;
         isFullScreen?: boolean;

@@ -2,40 +2,41 @@ import { ActionButton, ActionButtonProps } from "@/components";
 import { useCallback, useEffect, useState } from "react";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 
-export const FullscreenButton = (props: ActionButtonProps) => {
-    const [isFullscreen, setIsFullscreen] = useState(false);
+// Renamed component to ZenModeButton
+export const ZenModeButton = (props: ActionButtonProps) => {
+  const [isZenMode, setIsZenMode] = useState(false);
 
-    // Update state when fullscreen changes from elsewhere (like F11 key)
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
+  // Update state when fullscreen changes from elsewhere (like F11 key)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsZenMode(!!document.fullscreenElement);
+    };
 
-        document.addEventListener("fullscreenchange", handleFullscreenChange);
-        return () => {
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-        };
-    }, []);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
-    const toggleFullscreen = useCallback(async () => {
-        try {
-            await window.context.toggleFullscreen();
-        } catch (err) {
-            console.error("Failed to toggle fullscreen:", err);
-        }
-    }, []);
+  const toggleZenMode = useCallback(async () => {
+    try {
+      await window.context.toggleZenMode();
+    } catch (err) {
+      console.error("Failed to toggle Zen Mode:", err);
+    }
+  }, []);
 
-    return (
-        <ActionButton
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit fullscreen mode" : "Enter fullscreen mode"}
-            {...props}
-        >
-            {isFullscreen ? (
-                <RxExitFullScreen className="h-5 w-5" />
-            ) : (
-                <RxEnterFullScreen className="h-5 w-5" />
-            )}
-        </ActionButton>
-    );
+  return (
+    <ActionButton
+      onClick={toggleZenMode}
+      title={isZenMode ? "Exit Zen Mode" : "Enter Zen Mode"}
+      {...props}
+    >
+      {isZenMode ? (
+        <RxExitFullScreen className="h-5 w-5" />
+      ) : (
+        <RxEnterFullScreen className="h-5 w-5" />
+      )}
+    </ActionButton>
+  );
 };

@@ -30,9 +30,15 @@ try {
       ipcRenderer.invoke("save-settings", settings),
     applyBackgroundMaterial: (material: string) =>
       ipcRenderer.invoke("apply-background-material", material),
-    toggleFullscreen: () => ipcRenderer.invoke("toggle-fullscreen"),
+    // Renamed from toggleFullscreen to toggleZenMode
+    toggleZenMode: () => ipcRenderer.invoke("toggle-zen-mode"),
+    // Renamed from updateFullscreenShortcut to updateZenModeShortcut
+    updateZenModeShortcut: (shortcut: string) =>
+      ipcRenderer.invoke("update-zen-mode-shortcut", shortcut),
+    // Keep old methods for backward compatibility
+    toggleFullscreen: () => ipcRenderer.invoke("toggle-zen-mode"),
     updateFullscreenShortcut: (shortcut: string) =>
-      ipcRenderer.invoke("update-fullscreen-shortcut", shortcut),
+      ipcRenderer.invoke("update-zen-mode-shortcut", shortcut),
   });
 } catch (error) {
   console.error(error);
