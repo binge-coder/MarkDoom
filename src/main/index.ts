@@ -93,6 +93,8 @@ async function createWindow(): Promise<void> {
     height: 670,
     resizable: true,
     fullscreenable: true, // Electron API property name, can't change
+    maximizable: true,
+    minimizable: true,
     fullscreen: false, // Electron API property name, can't change
     show: false,
     autoHideMenuBar: true,
