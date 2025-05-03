@@ -3,14 +3,10 @@ import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { useAtomValue, useSetAtom } from "jotai";
 import { ComponentProps, useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import { BarLoader } from "react-spinners";
 import gfm from "remark-gfm";
 import { twMerge } from "tailwind-merge";
 import { GenericButton, Xbutton } from "./Button";
-
-// interface ChatComponentProps {
-//   className?: string;
-// }
+import { motion } from "framer-motion";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
@@ -29,7 +25,6 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     } else {
       setContext("");
     }
-    // console.log("selectedNote", selectedNote);
   }, [selectedNote]);
 
   useEffect(() => {
@@ -70,7 +65,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   return (
     <div
       className={twMerge(
-        "p-2 flex flex-col overflow-auto  max-w-72 h-[100vh]",
+        "p-2 flex flex-col overflow-auto max-w-72 h-[100vh]",
         className,
       )}
     >
@@ -85,40 +80,23 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         placeholder="Enter your prompt"
         className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2"
       />
-      <GenericButton onClick={handleGenerateText}>Submit</GenericButton>
-      {/* <div>{result}</div> */}
+      <GenericButton onClick={handleGenerateText} className="w-full mb-2">Submit</GenericButton>
       <div className="prose prose-invert">
-        {/* {loading ? "loading..." : null} */}
-        <div className="flex flex-row items-center mt-1">
-          <BarLoader
-            // color="#4f46e5" // Tailwind's 'indigo-600' color
-            loading={loading} // Control when the loader shows
-            width={"100%"} // Width of the loader
-            height={4} // Height of the loader bars
-            aria-label="Loading"
-          />
+        <div className="flex flex-row items-center">
+          {loading && (
+            <motion.div 
+              className="w-full h-1 bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-sm"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{
+                scaleX: { duration: 2, repeat: Infinity },
+                opacity: { duration: 0.5 }
+              }}
+            />
+          )}
         </div>
         <Markdown remarkPlugins={[gfm]}>{result}</Markdown>
       </div>
     </div>
   );
 };
-
-// // const { GoogleGenerativeAI } = require("@google/generative-ai");
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-
-// // Access your API key as an environment variable (see "Set up your API key" above)
-// const genAI = new GoogleGenerativeAI("");
-
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// export async function generateText(prompt) {
-//   try {
-//     const result = await model.generateContent(prompt);
-//     const response = await result.response;
-//     return response.text();
-//   } catch (error) {
-//     console.error("Error generating text:", error);
-//     return "An error occurred. Please try again later.";
-//   }
-// }
