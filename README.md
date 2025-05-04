@@ -7,25 +7,40 @@
 - **Clean, Minimalist Interface** - Focus on your writing without distractions
 - **Full Markdown Support** - Express yourself with rich formatting
 - **AI-Powered Assistance** - Get journaling prompts and insights powered by Gemini API
-- **Works Offline** - Your data stays on your device
+- **Works Offline** - Your notes data stays on your device and you can take it anywhere becasue they are simply .md files
 - **Cross-Platform** - Available for Windows, Linux, and macOS
 - **Free and Open Source** - Use and modify as you need
-- **Automatic Saving** - Never lose your thoughts with automatic saving
+- **Automatic Saving** - Never lose your thoughts with real-time autosave
 - **Modern Blur Effects** - Beautiful transparent UI with backdrop blur effects
+- **Multiple Themes** - Choose from different visual styles including Mica, Acrylic and more
+- **Zen Mode** - Distraction-free full-screen writing mode with custom shortcuts
 - **Material Design** - Beautiful, responsive interface
+- **Image Attachments** - Easily add and view images in your notes
 
 ## Screenshots
 
 <div align="center">
 
-![MarkDoom Main Interface](screenshots/1.webp)
+![MarkDoom Main Interface](screenshots/Main%20interface%20with%20markdown%20editor%20and%20file%20navigation.webp)
 *Main interface with markdown editor and file navigation*
 
-![MarkDoom AI Assistant](screenshots/2.webp)
-*AI-powered writing assistant using Gemini API*
+![Zen Mode](screenshots/Zen%20mode.webp)
+*Zen Mode for distraction-free writing*
 
-![MarkDoom AI helpful answers](screenshots/3.webp)
-*Helpful answers for your queries by refering to your notes*
+![AI Integration](screenshots/Image%20attachments%20and%20AI%20integration.webp)
+*Image attachments and AI integration*
+
+![Preferences](screenshots/Preferences.webp)
+*Customize your preferences and settings*
+
+![Gemini API Settings](screenshots/can%20set%20your%20gemini%20api%20key%20and%20toggle%20all%20the%20options.webp)
+*Configure your Gemini API key and toggle various options*
+
+![Mica Theme](screenshots/mica%20theme.webp)
+*Beautiful Mica theme for those who hate excessive blur themes*
+
+![Theme Options](screenshots/Many%20theme%20options%20to%20choose%20from.webp)
+*Multiple theme options to choose from*
 
 </div>
 
