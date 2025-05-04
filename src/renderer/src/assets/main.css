@@ -77,7 +77,9 @@
 }
 
 .chat-send-btn:active {
-  @apply text-white bg-blue-500 rounded-full p-1 -m-1 ring-1 ring-white;
+  @apply text-white bg-blue-500 px-3 py-2 rounded-md ring-1 ring-blue-500/50 w-56;
+  /* @apply text-white bg-blue-500 rounded-md ring-1 ring-blue-500/50 w-10 h-10; */
+
 }
 
 .chat-send-btn:active svg {

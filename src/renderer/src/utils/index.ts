@@ -2,7 +2,7 @@ import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 // don't worry about the squigly line on context here
-const Dateformatter = new Intl.DateTimeFormat("en-US", {
+const Dateformatter = new Intl.DateTimeFormat("en-GB", {
   dateStyle: "short",
   timeStyle: "short",
   timeZone: "UTC",
