@@ -42,3 +42,18 @@
   @apply mx-4 mt-2 rounded-md !important;
   width: calc(100% - 2rem) !important;
 }
+
+/* Animation for the send button trail */
+@keyframes dash {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-dash {
+  animation: dash 0.7s ease-in-out forwards;
+}

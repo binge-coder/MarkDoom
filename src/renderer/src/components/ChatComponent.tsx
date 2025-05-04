@@ -2,11 +2,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { Send } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { twMerge } from "tailwind-merge";
-import { GenericButton, Xbutton } from "./Button";
+import { Xbutton } from "./Button";
 import { geminiApiKeyAtom } from "./PreferencesPage";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
@@ -85,22 +86,43 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         <span>AI Assistant</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
-      <textarea
-        value={promptToShow}
-        onChange={(e) => setPromptToShow(e.target.value)}
-        placeholder="Enter your prompt"
-        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2 min-h-[40px] max-h-[200px] resize-y"
-        rows={1}
-        onInput={(e) => {
-          // Auto-resize based on content
-          const target = e.target as HTMLTextAreaElement;
-          target.style.height = "auto";
-          target.style.height = `${Math.min(200, Math.max(40, target.scrollHeight))}px`;
-        }}
-      />
-      <GenericButton onClick={handleGenerateText} className="w-full mb-2">
-        Submit
-      </GenericButton>
+      <div className="flex mb-2 relative">
+        <textarea
+          value={promptToShow}
+          onChange={(e) => setPromptToShow(e.target.value)}
+          placeholder="Enter your prompt"
+          className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black w-full min-h-[40px] max-h-[200px] resize-y pr-10"
+          rows={1}
+          onInput={(e) => {
+            // Auto-resize based on content
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = "auto";
+            target.style.height = `${Math.min(200, Math.max(40, target.scrollHeight))}px`;
+          }}
+        />
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 group">
+          <button
+            onClick={handleGenerateText}
+            className="relative text-slate-600 hover:text-blue-500 transition-all duration-200 z-20"
+            aria-label="Submit prompt"
+          >
+            <Send className="h-5 w-5" />
+          </button>
+
+          <div
+            className="absolute top-1/2 right-full -translate-y-1/2 w-10 h-4 z-10"
+            style={{ overflow: "visible" }}
+          >
+            <div
+              className="w-10 h-2 bg-blue-500 rounded-l-full absolute right-0 top-1/2 -translate-y-1/2 origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+              style={{
+                transformOrigin: "right center",
+                clipPath: 'path("M0,1 C5,0 7.5,2 10,1 L10,2 C7.5,3 5,1 0,2 z")',
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
       <div className="prose prose-invert prose-sm max-w-full overflow-x-hidden overflow-y-auto">
         <div className="flex flex-row items-center">
           {loading && (
