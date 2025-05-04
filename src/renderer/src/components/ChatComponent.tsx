@@ -95,7 +95,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       <GenericButton onClick={handleGenerateText} className="w-full mb-2">
         Submit
       </GenericButton>
-      <div className="prose prose-invert">
+      <div className="prose prose-invert prose-sm max-w-full overflow-x-hidden overflow-y-auto">
         <div className="flex flex-row items-center">
           {loading && (
             <motion.div
@@ -109,7 +109,27 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
             />
           )}
         </div>
-        <Markdown remarkPlugins={[gfm]}>{result}</Markdown>
+        <Markdown
+          remarkPlugins={[gfm]}
+          className="prose-headings:my-2 prose-p:my-2 prose-ul:my-2 prose-li:my-0.5 prose-code:px-1 prose-code:text-red-200 prose-code:bg-slate-800/50 prose-code:rounded prose-img:max-w-full"
+          components={{
+            // Add custom image component to improve rendering
+            img: ({ node, ...props }) => (
+              <img
+                {...props}
+                className="my-4 rounded-md max-w-full object-contain max-h-64"
+                loading="lazy"
+                onError={(e) => {
+                  // Fallback for failed images
+                  e.currentTarget.style.display = "none";
+                  console.error("Image failed to load:", props.src);
+                }}
+              />
+            ),
+          }}
+        >
+          {result}
+        </Markdown>
       </div>
     </div>
   );
