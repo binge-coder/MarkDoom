@@ -1,4 +1,5 @@
 import { Xbutton } from "@/components/Button";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { cn } from "@renderer/utils";
 import { motion } from "framer-motion";
 import { atom, useAtom } from "jotai";
@@ -18,7 +19,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Create a Jotai atom to share the API key across components
 export const geminiApiKeyAtom = atom<string>("");
@@ -144,7 +144,7 @@ const CustomInput = ({
   onIconClick?: () => void;
   iconAriaLabel?: string;
   className?: string;
-  error?: string;
+  error?: string | null;
 }) => {
   return (
     <div className={cn("relative", className)}>
@@ -209,7 +209,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
 
   const initialLoadComplete = useRef(false);
   const hasRendered = useRef(false);
-  
+
   // Debounce API key validation
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -227,25 +227,35 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       setApiKeyError(null);
       return;
     }
-    
+
     setValidatingApiKey(true);
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-      
+
       // Try a very minimal prompt just to validate the key
       await model.generateContent("Hello");
-      
+
       // If we reach here, the key is valid
       setApiKeyError(null);
     } catch (error) {
       console.error("API key validation error:", error);
       if (error instanceof Error) {
         const errorText = error.message.toLowerCase();
-        if (errorText.includes("api key") || errorText.includes("authentication") || errorText.includes("unauthorized") || errorText.includes("invalid key")) {
+        if (
+          errorText.includes("api key") ||
+          errorText.includes("authentication") ||
+          errorText.includes("unauthorized") ||
+          errorText.includes("invalid key")
+        ) {
           setApiKeyError("Invalid API key. Please check and try again.");
-        } else if (errorText.includes("network") || errorText.includes("connection")) {
-          setApiKeyError("Network error. Please check your internet connection.");
+        } else if (
+          errorText.includes("network") ||
+          errorText.includes("connection")
+        ) {
+          setApiKeyError(
+            "Network error. Please check your internet connection.",
+          );
         } else {
           setApiKeyError("Error validating API key. Please try again.");
         }
@@ -359,12 +369,12 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const newKey = e.target.value;
       setGeminiKeyInput(newKey);
       setSettingsChanged(true);
-      
+
       // Clear previous timeout
       if (validationTimeoutRef.current) {
         clearTimeout(validationTimeoutRef.current);
       }
-      
+
       // Debounce validation to avoid too many API calls
       if (newKey.trim()) {
         validationTimeoutRef.current = setTimeout(() => {
