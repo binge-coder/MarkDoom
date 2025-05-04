@@ -86,12 +86,12 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         <span>AI Assistant</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
-      <div className="flex mb-2 relative">
+      <div className="flex items-center mb-2 relative">
         <textarea
           value={promptToShow}
           onChange={(e) => setPromptToShow(e.target.value)}
           placeholder="Enter your prompt"
-          className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black w-full min-h-[40px] max-h-[200px] resize-y pr-10"
+          className="text-black px-2 py-2 rounded bg-slate-200 focus:outline-black w-full min-h-[40px] max-h-[200px] resize-y pr-10"
           rows={1}
           onInput={(e) => {
             // Auto-resize based on content
@@ -100,27 +100,14 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
             target.style.height = `${Math.min(200, Math.max(40, target.scrollHeight))}px`;
           }}
         />
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 group">
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 group flex items-center justify-center">
           <button
             onClick={handleGenerateText}
-            className="relative text-slate-600 hover:text-blue-500 transition-all duration-200 z-20"
+            className="relative text-slate-600 hover:text-blue-500 transition-all duration-200 z-20 flex items-center justify-center"
             aria-label="Submit prompt"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45 mx-1" />
           </button>
-
-          <div
-            className="absolute top-1/2 right-full -translate-y-1/2 w-10 h-4 z-10"
-            style={{ overflow: "visible" }}
-          >
-            <div
-              className="w-10 h-2 bg-blue-500 rounded-l-full absolute right-0 top-1/2 -translate-y-1/2 origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-              style={{
-                transformOrigin: "right center",
-                clipPath: 'path("M0,1 C5,0 7.5,2 10,1 L10,2 C7.5,3 5,1 0,2 z")',
-              }}
-            ></div>
-          </div>
         </div>
       </div>
       <div className="prose prose-invert prose-sm max-w-full overflow-x-hidden overflow-y-auto">
