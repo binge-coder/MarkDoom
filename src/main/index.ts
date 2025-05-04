@@ -1,5 +1,12 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { BrowserWindow, app, globalShortcut, ipcMain, shell } from "electron";
+import {
+  BrowserWindow,
+  app,
+  globalShortcut,
+  ipcMain,
+  nativeTheme,
+  shell,
+} from "electron";
 import { existsSync, readFile, writeFile } from "fs-extra";
 import { join } from "path";
 import icon from "../../resources/icon.png?asset";
@@ -58,6 +65,9 @@ function registerZenModeShortcut(shortcut: string): boolean {
 }
 
 async function createWindow(): Promise<void> {
+  // Force dark mode but allow transparency effects to work properly
+  nativeTheme.themeSource = "dark";
+
   // Settings file is already ensured to exist in app.whenReady()
   type BackgroundMaterialType =
     | "none"
@@ -91,8 +101,8 @@ async function createWindow(): Promise<void> {
   const windowOptions: Electron.BrowserWindowConstructorOptions = {
     width: 900,
     height: 670,
-    resizable: true,
     fullscreenable: true, // Electron API property name, can't change
+    resizable: true,
     maximizable: true,
     minimizable: true,
     fullscreen: false, // Electron API property name, can't change
@@ -102,6 +112,8 @@ async function createWindow(): Promise<void> {
     center: true,
     title: "MarkDoom",
     frame: true,
+    backgroundColor:
+      savedBackgroundMaterial === "none" ? "#1f1f1f" : "#00000000", // Use transparent for materials
     backgroundMaterial: savedBackgroundMaterial,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
@@ -109,11 +121,6 @@ async function createWindow(): Promise<void> {
       contextIsolation: true,
     },
   };
-
-  // Conditionally set backgroundMaterial and backgroundColor
-  if (savedBackgroundMaterial == "none") {
-    windowOptions.backgroundColor = "#1f1f1f";
-  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow(windowOptions);
@@ -225,10 +232,12 @@ app.whenReady().then(async () => {
     if (!mainWindow) return { success: false, error: "No window available" };
 
     try {
+      // Set appropriate background color based on material
+      // Use transparent background for materials that support it
       if (material === "none") {
         mainWindow.setBackgroundColor("#1f1f1f");
       } else {
-        // Clear background color if using a material effect
+        // Use transparent background to let the material effect work properly
         mainWindow.setBackgroundColor("#00000000");
       }
 
