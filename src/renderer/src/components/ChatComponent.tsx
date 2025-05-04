@@ -103,7 +103,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         <div className="absolute right-2 top-1/2 -translate-y-1/2 group flex items-center justify-center">
           <button
             onClick={handleGenerateText}
-            className="relative text-slate-600 hover:text-blue-500 transition-all duration-200 z-20 flex items-center justify-center"
+            className="chat-send-btn relative text-slate-600 hover:text-blue-500 transition-all duration-200 z-20 flex items-center justify-center"
             aria-label="Submit prompt"
           >
             <Send className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45 mx-1" />

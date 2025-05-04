@@ -42,3 +42,18 @@
   @apply mx-4 mt-2 rounded-md !important;
   width: calc(100% - 2rem) !important;
 }
+
+/* Chat send button styles */
+.chat-send-btn {
+  @apply text-slate-600 hover:text-blue-500 transition-all duration-200;
+}
+
+.chat-send-btn:active {
+  @apply text-white bg-blue-500 rounded-full p-1 -m-1 ring-1 ring-white;
+}
+
+.chat-send-btn:active svg {
+  stroke: white;
+  fill: #3b82f6;
+  stroke-width: 2px;
+}
