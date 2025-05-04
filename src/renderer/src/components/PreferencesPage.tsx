@@ -1,6 +1,7 @@
 import { Xbutton } from "@/components/Button";
 import { cn } from "@renderer/utils";
 import { motion } from "framer-motion";
+import { atom, useAtom } from "jotai";
 import {
   AlertTriangle,
   Check,
@@ -12,9 +13,14 @@ import {
 import React, {
   PropsWithChildren,
   ReactNode,
+  useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
+
+// Create a Jotai atom to share the API key across components
+export const geminiApiKeyAtom = atom<string>("");
 
 interface PrefListItemProps {
   title: string;
@@ -173,6 +179,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   onClose,
 }) => {
   if (!isVisible) return null;
+
+  // Use local state for form values instead of directly using the atom
+  const [geminiApiKey, setGeminiApiKey] = useAtom(geminiApiKeyAtom);
+  // Local state for the form input
   const [geminiKeyInput, setGeminiKeyInput] = useState("");
   const [backdrop, setBackdrop] = useState("none");
   const [isSavedAnimate, setIsSavedAnimate] = useState(false);
@@ -182,6 +192,12 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [shortcutError, setShortcutError] = useState<string | null>(null);
   const [showApiKey, setShowApiKey] = useState(false);
 
+  // Track if settings have changed
+  const [settingsChanged, setSettingsChanged] = useState(false);
+
+  const initialLoadComplete = useRef(false);
+  const hasRendered = useRef(false);
+
   const backdropOptions = [
     { value: "mica", label: "Mica" },
     { value: "acrylic", label: "Acrylic (blur on Win11)" },
@@ -190,36 +206,51 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     { value: "auto", label: "Auto" },
   ];
 
-  const savePreferencesAnimatefn = () => {
+  const showSaveAnimation = () => {
     setIsSavedAnimate(true);
     setTimeout(() => {
       setIsSavedAnimate(false); // Hide checkmark after 2 seconds
     }, 2000);
   };
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const settings = await window.context.getSettings(); // Fetch the settings
-      setGeminiKeyInput(settings.geminiApi || ""); // Set the Gemini API key
-      setBackdrop(settings.backgroundMaterial || "none");
-      setZenModeShortcut(settings.zenModeShortcut || "F11");
-    };
-    fetchSettings();
-  }, []);
+  // Create a save function
+  const saveSettings = useCallback(async () => {
+    if (settingsChanged) {
+      const newSettings = {
+        geminiApi: geminiKeyInput,
+        language: "en",
+        backgroundMaterial: backdrop,
+        zenModeShortcut: zenModeShortcut,
+      };
 
-  const handleSave = async () => {
-    const newSettings = {
-      geminiApi: geminiKeyInput,
-      language: "en",
-      backgroundMaterial: backdrop,
-      zenModeShortcut: zenModeShortcut,
-    }; // Update the settings
-    await window.context.saveSettings(newSettings); // Save the settings
-    console.log("Settings saved.");
+      await window.context.saveSettings(newSettings);
+      console.log("Settings saved:", newSettings);
+      showSaveAnimation();
 
-    // Apply background material immediately
+      // Update the atom for the API key
+      setGeminiApiKey(geminiKeyInput);
+
+      // Reset changed flag
+      setSettingsChanged(false);
+    }
+  }, [
+    geminiKeyInput,
+    backdrop,
+    zenModeShortcut,
+    settingsChanged,
+    setGeminiApiKey,
+  ]);
+
+  // Custom onClose handler that saves settings before closing
+  const handleClose = useCallback(() => {
+    saveSettings();
+    onClose();
+  }, [saveSettings, onClose]);
+
+  // Function to apply background material
+  const applyBackgroundMaterial = useCallback(async (material) => {
     try {
-      const result = await window.context.applyBackgroundMaterial(backdrop);
+      const result = await window.context.applyBackgroundMaterial(material);
       if (!result.success) {
         setApplyError(`Failed to apply: ${result.error}`);
       } else {
@@ -230,11 +261,13 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const error = err instanceof Error ? err.message : String(err);
       setApplyError(`Error: ${error}`);
     }
+  }, []);
 
-    // Apply the Zen Mode shortcut
+  // Function to update zen mode shortcut
+  const updateZenModeShortcut = useCallback(async (shortcut) => {
     try {
       const shortcutResult =
-        await window.context.updateZenModeShortcut(zenModeShortcut);
+        await window.context.updateZenModeShortcut(shortcut);
       if (!shortcutResult.success) {
         setShortcutError(
           "Failed to register shortcut. It may be in use by another application.",
@@ -246,9 +279,51 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
       const error = err instanceof Error ? err.message : String(err);
       setShortcutError(`Error: ${error}`);
     }
+  }, []);
 
-    savePreferencesAnimatefn();
-  };
+  // Load settings on initial render (once)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      if (!hasRendered.current) {
+        hasRendered.current = true;
+        const settings = await window.context.getSettings();
+        setGeminiKeyInput(settings.geminiApi || "");
+        setBackdrop(settings.backgroundMaterial || "none");
+        setZenModeShortcut(settings.zenModeShortcut || "F11");
+        initialLoadComplete.current = true;
+      }
+    };
+    fetchSettings();
+  }, []); // Empty dependency array means this runs only once
+
+  // Handle API key input changes
+  const handleApiKeyChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setGeminiKeyInput(e.target.value);
+      setSettingsChanged(true);
+    },
+    [],
+  );
+
+  // Handle backdrop changes
+  const handleBackdropChange = useCallback(
+    (value: string) => {
+      setBackdrop(value);
+      setSettingsChanged(true);
+      applyBackgroundMaterial(value);
+    },
+    [applyBackgroundMaterial],
+  );
+
+  // Handle zen mode shortcut changes
+  const handleShortcutChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setZenModeShortcut(e.target.value);
+      setSettingsChanged(true);
+      updateZenModeShortcut(e.target.value);
+    },
+    [updateZenModeShortcut],
+  );
 
   return (
     <motion.div
@@ -267,7 +342,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40"></div>
 
         <Xbutton
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Close Preferences"
           className="border border-slate-600/40 hover:bg-slate-700/70"
         />
@@ -296,7 +371,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           >
             <CustomInput
               value={geminiKeyInput}
-              onChange={(e) => setGeminiKeyInput(e.target.value)}
+              onChange={handleApiKeyChange}
               type={showApiKey ? "text" : "password"}
               placeholder="Paste your API key"
               icon={showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -326,7 +401,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           >
             <CustomSelect
               value={backdrop}
-              onChange={setBackdrop}
+              onChange={handleBackdropChange}
               options={backdropOptions}
             />
           </PrefListItem>
@@ -360,7 +435,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           >
             <CustomInput
               value={zenModeShortcut}
-              onChange={(e) => setZenModeShortcut(e.target.value)}
+              onChange={handleShortcutChange}
               placeholder="Enter shortcut"
               className="w-60"
             />
@@ -368,12 +443,6 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         </div>
 
         <div className="flex justify-center mt-6 pt-4 border-t border-slate-700/50">
-          <button
-            onClick={handleSave}
-            className="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 border border-slate-600/40 rounded-lg text-slate-200 font-medium transition-colors duration-200 shadow-sm flex items-center justify-center min-w-[140px]"
-          >
-            Save Preferences
-          </button>
           {isSavedAnimate && (
             <motion.div
               className="flex items-center"
@@ -390,7 +459,10 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
                 },
               }}
             >
-              <Check className="text-green-500 w-6 h-6 ml-3" />
+              <div className="flex items-center justify-center gap-2 text-slate-300">
+                <Check className="text-green-500 w-5 h-5" />
+                <span>Preferences saved</span>
+              </div>
             </motion.div>
           )}
         </div>

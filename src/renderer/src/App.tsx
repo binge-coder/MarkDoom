@@ -9,9 +9,10 @@ import {
   RootLayout,
   Sidebar,
 } from "@/components";
+import { geminiApiKeyAtom } from "@/components/PreferencesPage";
 import { showChatAtom, showLeftSideBarAtom, showSettingsAtom } from "@/store";
-import { useAtom, useAtomValue } from "jotai";
-import { useRef } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect, useRef } from "react";
 
 const App = () => {
   const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -22,6 +23,36 @@ const App = () => {
   const [showChat] = useAtom(showChatAtom);
   const [showSettings, setShowSettings] = useAtom(showSettingsAtom);
   const showLeftSideBar = useAtomValue(showLeftSideBarAtom);
+  const setGeminiApiKey = useSetAtom(geminiApiKeyAtom);
+
+  // Load API key on app start and setup listener for updates
+  useEffect(() => {
+    // Load the API key during initial app load
+    const loadApiKey = async () => {
+      const settings = await window.context.getSettings();
+      if (settings.geminiApi) {
+        setGeminiApiKey(settings.geminiApi);
+      }
+    };
+    loadApiKey();
+
+    // Set up listener for API key updates from other components
+    const handleApiKeyUpdate = (event: CustomEvent) => {
+      setGeminiApiKey(event.detail.apiKey);
+    };
+
+    window.addEventListener(
+      "update-gemini-api-key",
+      handleApiKeyUpdate as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "update-gemini-api-key",
+        handleApiKeyUpdate as EventListener,
+      );
+    };
+  }, [setGeminiApiKey]);
 
   const handleCloseSettings = () => {
     setShowSettings(false);

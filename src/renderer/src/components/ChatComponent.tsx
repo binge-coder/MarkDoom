@@ -1,18 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { motion } from "framer-motion";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ComponentProps, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { twMerge } from "tailwind-merge";
 import { GenericButton, Xbutton } from "./Button";
+import { geminiApiKeyAtom } from "./PreferencesPage";
 
 export const ChatComponent = ({ className }: ComponentProps<"div">) => {
   const selectedNote = useAtomValue(selectedNoteAtom);
   const [result, setResult] = useState("");
-  const [geminiApiKey, setGeminiApiKey] = useState(""); // State to hold the Gemini API key
-  const [promptToShow, setPromptToShow] = useState(""); // State to hold the prompt to show
+
+  // Use the shared Jotai atom for the API key instead of local state
+  const [geminiApiKey] = useAtom(geminiApiKeyAtom);
+
+  const [promptToShow, setPromptToShow] = useState("");
   const setShowChat = useSetAtom(showChatAtom);
   const [loading, setLoading] = useState(false);
   const [context, setContext] = useState<string>();
@@ -27,25 +31,33 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     }
   }, [selectedNote]);
 
+  // Load API key from settings if not already set through Jotai
   useEffect(() => {
     const fetchSettings = async () => {
-      const settings = await window.context.getSettings(); // Fetch settings from preload
-      setGeminiApiKey(settings.geminiApi); // Set the Gemini API key from settings
+      if (!geminiApiKey) {
+        const settings = await window.context.getSettings();
+        if (settings.geminiApi) {
+          // We need to access the atom setter from the outside of this component
+          // since we're using useAtom which gives us a local setter
+          const event = new CustomEvent("update-gemini-api-key", {
+            detail: { apiKey: settings.geminiApi },
+          });
+          window.dispatchEvent(event);
+        }
+      }
     };
     fetchSettings();
-  }, []);
+  }, [geminiApiKey]);
 
   const handleGenerateText = async () => {
     if (!promptToShow) return; // Handle empty prompt
     if (!geminiApiKey) {
-      setResult(
-        "Gemini API key is missing. Please set it in preferences. Then close and open chat window again.",
-      );
+      setResult("Gemini API key is missing. Please set it in preferences.");
       return;
     }
     setLoading(true);
     try {
-      const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key
+      const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key from Jotai atom
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const AIPrompt = promptToShow + context;
       console.log(AIPrompt);
