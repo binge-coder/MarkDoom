@@ -1,22 +1,44 @@
+import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface XbuttonProps {
   onClick: () => void;
   className?: string;
+  ariaLabel?: string;
 }
 
-export const Xbutton: React.FC<XbuttonProps> = ({ onClick, className }) => {
+export const Xbutton: React.FC<XbuttonProps> = ({
+  onClick,
+  className,
+  ariaLabel = "Close",
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <button
+    <motion.button
       className={twMerge(
-        "ring-slate-800/90 bg-slate-900 hover:bg-slate-600/30 hover:ring-[2px] text-slate-200 p-1 rounded absolute top-2 right-2 transition-colors duration-100",
+        "group flex items-center justify-center bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white p-1.5 rounded-full shadow-sm border border-slate-700/50 absolute top-2 right-2 transition-all duration-200",
         className,
       )}
       onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      aria-label={ariaLabel}
+      title={ariaLabel}
     >
-      <X className="w-4 h-4" />
-    </button>
+      <motion.div
+        animate={{ rotate: isHovered ? 90 : 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <X
+          className="w-3.5 h-3.5 transition-transform group-hover:scale-110"
+          strokeWidth={2.5}
+        />
+      </motion.div>
+    </motion.button>
   );
 };
