@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { selectedNoteAtom, showChatAtom } from "@renderer/store";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Bot, Send } from "lucide-react";
+import { Bot, Send, Trash2 } from "lucide-react";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import { ScaleLoader } from "react-spinners";
@@ -126,10 +126,16 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     }
   };
 
+  // Function to clear chat history
+  const clearChat = () => {
+    setMessages([]);
+    setResult("");
+  };
+
   return (
     <div
       className={twMerge(
-        "flex flex-col overflow-hidden max-w-72 h-[100vh] bg-slate-900/80 border-l border-l-slate-800/60 shadow-xl",
+        "flex flex-col overflow-hidden max-w-80 h-[100vh] bg-slate-900/80 border-l border-l-slate-800/60 shadow-xl",
         className,
       )}
     >
@@ -139,16 +145,33 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
           <Bot className="h-4 w-4 text-blue-400" />
           <h3 className="font-medium text-slate-200 text-sm">AI Assistant</h3>
         </div>
-        <Xbutton
-          onClick={() => setShowChat(false)}
-          className="relative top-0 right-0 scale-90"
-        />
+        <div className="flex items-center space-x-1">
+          <motion.button
+            onClick={clearChat}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            disabled={messages.length === 0}
+            className={`p-1.5 rounded-full flex items-center justify-center transition-all duration-200 ${
+              messages.length === 0
+                ? "text-slate-600 cursor-not-allowed"
+                : "text-slate-400 hover:text-red-400 hover:bg-red-400/10"
+            }`}
+            title="Clear conversation"
+            aria-label="Clear conversation"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </motion.button>
+          <Xbutton
+            onClick={() => setShowChat(false)}
+            className="relative top-0 right-0 scale-90"
+          />
+        </div>
       </div>
 
       {/* Chat Messages */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto py-4 px-3 space-y-4 scrollbar-thin"
+        className="flex-1 overflow-y-auto py-2 px-2 space-y-2 scrollbar-thin"
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-6 text-slate-400">
@@ -165,7 +188,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               className={twMerge(
-                "px-3 py-2 rounded-lg max-w-[95%]",
+                "px-2 py-1.5 rounded-lg max-w-[95%]",
                 message.type === "user"
                   ? "bg-blue-600/20 border border-blue-500/30 ml-auto"
                   : "bg-slate-800/50 border border-slate-700/50 mr-auto",
@@ -174,13 +197,13 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
               <Markdown
                 remarkPlugins={[gfm]}
                 className="prose prose-invert prose-sm max-w-full overflow-hidden
-                  prose-headings:my-2 prose-p:my-2 prose-ul:my-2 prose-li:my-0.5 
+                  prose-headings:my-1.5 prose-p:my-1 prose-ul:my-1.5 prose-li:my-0.5 
                   prose-code:px-1 prose-code:text-red-200 prose-code:bg-slate-800/50 prose-code:rounded"
                 components={{
                   img: ({ node, ...props }) => (
                     <img
                       {...props}
-                      className="my-3 rounded-md max-w-full object-contain max-h-64"
+                      className="my-2 rounded-md max-w-full object-contain max-h-64"
                       loading="lazy"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
@@ -201,7 +224,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 max-w-[70%] mr-auto"
+            className="flex items-center space-x-2 px-2 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/50 max-w-[70%] mr-auto"
           >
             <ScaleLoader
               color="#60a5fa"
@@ -217,33 +240,40 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
 
       {/* Input Area */}
       <div className="p-3 border-t border-slate-800/60 bg-slate-800/30 backdrop-blur-sm">
-        <div className="relative flex items-end bg-slate-700/50 rounded-lg border border-slate-600/50 focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 transition-all duration-200">
+        <div className="relative flex items-center bg-slate-900/60 rounded-lg border border-blue-500/80 focus-within:ring-1 focus-within:ring-blue-500/50 transition-all duration-200">
           <textarea
             ref={textareaRef}
             value={promptToShow}
             onChange={(e) => setPromptToShow(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask a question..."
-            className="w-full px-3 py-2.5 bg-transparent text-slate-200 placeholder:text-slate-500 resize-none focus:outline-none min-h-[40px] max-h-[120px] text-sm"
+            className="w-full px-3 py-2.5 bg-transparent text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none min-h-[40px] max-h-[120px] text-sm"
             rows={1}
             onInput={(e) => {
               // Auto-resize based on content
               const target = e.target as HTMLTextAreaElement;
               target.style.height = "auto";
-              target.style.height = `${Math.min(120, Math.max(40, target.scrollHeight))}px`;
+              target.style.height = `${Math.min(
+                120,
+                Math.max(40, target.scrollHeight),
+              )}px`;
             }}
           />
           <motion.button
             onClick={handleGenerateText}
             disabled={loading || !promptToShow.trim()}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={`flex items-center justify-center p-2 mr-2 mb-2 rounded-full 
-              ${promptToShow.trim() ? "text-blue-500 hover:bg-blue-500/20" : "text-slate-500 cursor-not-allowed"} 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={`absolute right-2 flex items-center justify-center p-1.5 rounded-full 
+              ${
+                promptToShow.trim()
+                  ? "text-blue-500 hover:bg-blue-500/20"
+                  : "text-slate-500 cursor-not-allowed"
+              } 
               transition-all duration-200`}
             aria-label="Send message"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </motion.button>
         </div>
         {!geminiApiKey && (
