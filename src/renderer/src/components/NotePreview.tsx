@@ -1,8 +1,9 @@
 import { renameNoteAtom } from "@renderer/store";
 import { cn, formatDateFromMS } from "@renderer/utils";
 import { NoteInfo } from "@shared/models";
+import { motion, MotionProps } from "framer-motion";
 import { useSetAtom } from "jotai";
-import { Pencil } from "lucide-react";
+import { Calendar, FileText, Pencil } from "lucide-react";
 import { ComponentProps, useState } from "react";
 
 export type NotePreviewProps = NoteInfo & {
@@ -61,21 +62,28 @@ export const NotePreview = ({
   };
 
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.01 }}
       className={cn(
-        "cursor-pointer px-2 py-2 rounded-md transition-colors duration-75 ",
-        {
-          "bg-white/30": isActive,
-          "hover:bg-gray-300/25": !isActive,
-        },
+        "cursor-pointer px-3 py-3 rounded-md transition-all duration-150",
+        isActive
+          ? "bg-slate-700/60 border-l-4 border-blue-500 shadow-md"
+          : "bg-slate-800/40 hover:bg-slate-700/50 border-l-4 border-transparent",
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      {...props}
+      {...(props as React.HTMLAttributes<HTMLDivElement> & MotionProps)}
     >
-      {/* <hr /> */}
-      <div className="flex justify-between items-center mb-1">
+      <div className="flex items-start mb-2">
+        <FileText
+          size={18}
+          className={cn(
+            "mt-0.5 mr-2 flex-shrink-0",
+            isActive ? "text-blue-400" : "text-slate-300",
+          )}
+        />
+
         {isEditing ? (
           <form
             onSubmit={handleSubmit}
@@ -89,29 +97,42 @@ export const NotePreview = ({
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               autoFocus
-              className="w-full bg-slate-700/80 text-white px-1 py-0.5 rounded outline-none border border-slate-500"
+              className="w-full bg-slate-700/90 text-white px-2 py-1.5 rounded outline-none border border-blue-500/60 focus:ring-1 focus:ring-blue-500/50"
               onClick={(e) => e.stopPropagation()}
             />
           </form>
         ) : (
-          <>
-            <h3 className="font-bold truncate flex-grow">{displayTitle}</h3>
+          <div className="flex items-center justify-between w-full">
+            <h3
+              className={cn(
+                "text-base font-medium",
+                isActive ? "text-white" : "text-slate-200",
+              )}
+            >
+              {displayTitle}
+            </h3>
+
             {isHovered && (
-              <button
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 onClick={handleRenameClick}
-                className="text-slate-400 hover:text-white transition-colors ml-1"
+                className="text-slate-400 hover:text-white bg-slate-700/60 hover:bg-slate-600/60 p-1 rounded transition-colors ml-1.5"
                 aria-label="Rename note"
               >
                 <Pencil size={14} />
-              </button>
+              </motion.button>
             )}
-          </>
+          </div>
         )}
       </div>
-      <span className="inline-block w-full mb-1 text-xs font-light text-right">
-        {date}
-      </span>
-      <hr className="border border-slate-400" />
-    </div>
+
+      <div className="flex items-center ml-6 text-xs font-light">
+        <Calendar size={14} className="mr-1.5 text-slate-300" />
+        <span className={cn(isActive ? "text-slate-200" : "text-slate-400")}>
+          {date}
+        </span>
+      </div>
+    </motion.div>
   );
 };

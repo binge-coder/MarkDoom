@@ -1,11 +1,16 @@
-// import { notesMock } from "@/store/mocks";
-import { ComponentProps } from "react";
 import { NotePreview } from "@/components";
-import { twMerge } from "tailwind-merge";
 import { useNotesList } from "@/hooks/useNotesList";
+import { selectedNoteIndexAtom } from "@/store";
+import { cn } from "@renderer/utils";
+import { NoteInfo } from "@shared/models";
+import { motion } from "framer-motion";
+import { useAtom } from "jotai";
 import { isEmpty } from "lodash";
+import { FileText, Search, StickyNote } from "lucide-react";
+import { ComponentProps, useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-export type NotePreviewListProps = ComponentProps<"ul"> & {
+export type NotePreviewListProps = ComponentProps<"div"> & {
   onSelect?: () => void;
 };
 
@@ -18,28 +23,153 @@ export const NotePreviewList = ({
     onSelect,
   });
 
+  const [, setSelectedNoteIndex] = useAtom(selectedNoteIndexAtom);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredNotes, setFilteredNotes] = useState<NoteInfo[] | null>(null);
+  const [filteredIndices, setFilteredIndices] = useState<Map<number, number>>(
+    new Map(),
+  );
+
+  // Update filtered notes when search term changes
+  useEffect(() => {
+    if (!notes) {
+      setFilteredNotes(null);
+      setFilteredIndices(new Map());
+      return;
+    }
+
+    if (!searchTerm.trim()) {
+      setFilteredNotes(notes);
+
+      // When clearing the search, create a 1:1 mapping
+      const newIndices = new Map();
+      notes.forEach((_, index) => newIndices.set(index, index));
+      setFilteredIndices(newIndices);
+      return;
+    }
+
+    const lowerCaseSearch = searchTerm.toLowerCase();
+    const filtered: NoteInfo[] = [];
+    const newIndices = new Map<number, number>();
+
+    // Create filtered list and maintain mapping to original indices
+    notes.forEach((note, originalIndex) => {
+      const title = note.title.toLowerCase();
+      if (title.includes(lowerCaseSearch)) {
+        // Store the mapping: filteredIndex → originalIndex
+        newIndices.set(filtered.length, originalIndex);
+        filtered.push(note);
+      }
+    });
+
+    setFilteredNotes(filtered);
+    setFilteredIndices(newIndices);
+  }, [notes, searchTerm]);
+
+  // Create a wrapped version of handleNoteSelect to handle filtered indices
+  const handleFilteredNoteSelect = (filteredIndex: number) => () => {
+    // Convert filtered index to original index
+    const originalIndex = filteredIndices.get(filteredIndex);
+
+    if (originalIndex !== undefined) {
+      // Use the original handleNoteSelect with the mapped index
+      setSelectedNoteIndex(originalIndex);
+      if (onSelect) {
+        onSelect();
+      }
+    }
+  };
+
+  // This will render when no notes match the search
+  const renderEmptySearchResults = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col items-center justify-center py-6 text-center px-4"
+    >
+      <Search className="text-slate-400 mb-2 h-5 w-5" />
+      <p className="text-white text-sm">
+        No notes found matching &quot;
+        {searchTerm.replace(/</g, "&lt;").replace(/>/g, "&gt;")}&quot;
+      </p>
+    </motion.div>
+  );
+
+  // This will render when there are no notes at all
+  const renderEmptyNotes = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col items-center justify-center py-8 text-center px-4"
+    >
+      <div className="bg-slate-700/70 p-4 rounded-full mb-3">
+        <StickyNote className="text-white h-6 w-6" />
+      </div>
+      <p className="text-white font-medium mb-1">No notes yet</p>
+      <p className="text-slate-300 text-sm">
+        Create your first note to get started
+      </p>
+    </motion.div>
+  );
+
   if (!notes) return null;
 
-  if (isEmpty(notes)) {
-    return (
-      <ul className={twMerge("text-center mt-4", className)}>
-        <span>No notes found!</span>
-      </ul>
-    );
-  }
   return (
-    <ul className={className} {...props}>
-      {/* {notes.map((note) => (
-        <li key={note.title}>{note.title}</li>
-      ))} */}
-      {notes.map((note, index) => (
-        <NotePreview
-          key={note.title}
-          isActive={selectedNoteIndex === index}
-          onClick={handleNoteSelect(index)}
-          {...note}
-        />
-      ))}
-    </ul>
+    <div className={twMerge("flex flex-col h-full", className)} {...props}>
+      {/* Header with search */}
+      <div className="mb-4 sticky top-0 z-10 pb-2 pt-1">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center space-x-2">
+            <FileText className="h-4 w-4 text-white" />
+            <h2 className="text-sm font-medium text-white">Notes</h2>
+          </div>
+          <div className="text-xs text-slate-300">
+            {filteredNotes?.length || 0} notes
+          </div>
+        </div>
+
+        {/* Search input styled like chat input */}
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search notes..."
+            className={cn(
+              "w-full bg-slate-900/60 text-sm text-white",
+              "rounded-lg pl-9 pr-3 py-2.5 focus:outline-none",
+              "placeholder:text-slate-400",
+              "border border-slate-700/80 focus:border-blue-500/80",
+              "focus:ring-1 focus:ring-blue-500/50",
+              "transition-all duration-200 shadow-sm",
+            )}
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+        </div>
+      </div>
+
+      {/* Notes list */}
+      <div className="overflow-y-auto flex-1 space-y-2.5 pr-1 scrollbar-thin">
+        {isEmpty(notes)
+          ? renderEmptyNotes()
+          : isEmpty(filteredNotes)
+            ? renderEmptySearchResults()
+            : filteredNotes?.map((note, filteredIndex) => {
+                // Find if this filtered note matches the selected note
+                const originalIndex = filteredIndices.get(filteredIndex);
+                const isActive = originalIndex === selectedNoteIndex;
+
+                return (
+                  <NotePreview
+                    key={note.title}
+                    isActive={isActive}
+                    onClick={handleFilteredNoteSelect(filteredIndex)}
+                    {...note}
+                  />
+                );
+              })}
+      </div>
+    </div>
   );
 };
