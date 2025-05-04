@@ -64,7 +64,7 @@ export const MarkdownEditor = () => {
             }),
             toolbarPlugin({
               toolbarContents: () => (
-                <>
+                <div className="flex items-center space-x-2 flex-wrap gap-y-2">
                   <UndoRedo />
                   <BoldItalicUnderlineToggles />
                   <CodeToggle />
@@ -73,7 +73,7 @@ export const MarkdownEditor = () => {
                   <CreateLink />
                   <InsertImage />
                   <InsertThematicBreak />
-                </>
+                </div>
               ),
             }),
           ]}
