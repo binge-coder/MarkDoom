@@ -15,6 +15,7 @@ import {
   DeleteNote,
   GetNotes,
   ReadNote,
+  RenameNote,
   WriteNote,
 } from "../shared/types";
 import {
@@ -23,6 +24,7 @@ import {
   deleteNote,
   getNotes,
   readNote,
+  renameNote,
   settingsPath,
   writeNote,
 } from "./lib";
@@ -196,6 +198,9 @@ app.whenReady().then(async () => {
   );
   ipcMain.handle("deleteNote", (_, ...args: Parameters<DeleteNote>) =>
     deleteNote(...args),
+  );
+  ipcMain.handle("renameNote", (_, ...args: Parameters<RenameNote>) =>
+    renameNote(...args),
   );
 
   // Add a new handler for toggling Zen Mode

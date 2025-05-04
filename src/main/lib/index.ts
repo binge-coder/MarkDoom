@@ -5,6 +5,7 @@ import {
   readdir,
   readFile,
   remove,
+  rename,
   stat,
   writeFile,
 } from "fs-extra";
@@ -23,6 +24,7 @@ import {
   DeleteNote,
   GetNotes,
   ReadNote,
+  RenameNote,
   WriteNote,
 } from "../../shared/types";
 
@@ -158,6 +160,41 @@ export const deleteNote: DeleteNote = async (filename) => {
   // await remove(`${rootDir}/${filename}.md`);
   await remove(filePath);
   return true;
+};
+
+export const renameNote: RenameNote = async (oldFilename, newFilename) => {
+  const rootDir = getRootDir();
+
+  const oldFilePath = path.join(
+    rootDir,
+    oldFilename.endsWith(".md") ? oldFilename : `${oldFilename}.md`,
+  );
+
+  const newFilePath = path.join(
+    rootDir,
+    newFilename.endsWith(".md") ? newFilename : `${newFilename}.md`,
+  );
+
+  // Check if source exists
+  if (!existsSync(oldFilePath)) {
+    console.error(`Source file does not exist: ${oldFilePath}`);
+    return false;
+  }
+
+  // Check if destination already exists
+  if (existsSync(newFilePath)) {
+    console.error(`Destination file already exists: ${newFilePath}`);
+    return false;
+  }
+
+  try {
+    console.info(`Renaming note from ${oldFilePath} to ${newFilePath}`);
+    await rename(oldFilePath, newFilePath);
+    return true;
+  } catch (error) {
+    console.error(`Failed to rename note: ${error}`);
+    return false;
+  }
 };
 
 const defaultSettings = {

@@ -1,6 +1,5 @@
-import { atom } from "jotai";
 import { NoteContent, NoteInfo } from "@shared/models";
-import { notesMock } from "@/store/mocks";
+import { atom } from "jotai";
 import { unwrap } from "jotai/utils";
 
 const loadNotes = async () => {
@@ -111,3 +110,90 @@ export const deleteNoteAtom = atom(null, async (get, set) => {
 export const showChatAtom = atom(false);
 export const showSettingsAtom = atom(false);
 export const showLeftSideBarAtom = atom(true);
+
+export const renameNoteAtom = atom(
+  null,
+  async (
+    get,
+    set,
+    { oldTitle, newTitle }: { oldTitle: string; newTitle: string },
+  ) => {
+    const notes = get(notesAtom);
+    const selectedNote = get(selectedNoteAtom);
+
+    if (!notes) return false;
+
+    // Validate new title
+    if (!newTitle.trim()) return false;
+
+    // For file system operations, ensure we have the .md extension
+    const oldFileTitle = oldTitle.endsWith(".md") ? oldTitle : `${oldTitle}.md`;
+    const newFileTitle = newTitle.endsWith(".md") ? newTitle : `${newTitle}.md`;
+
+    // The display title doesn't have .md extension
+    const displayTitle = newTitle.endsWith(".md")
+      ? newTitle.slice(0, -3)
+      : newTitle;
+
+    // Check if name already exists
+    if (
+      notes.some((note) => {
+        const noteTitle = note.title.endsWith(".md")
+          ? note.title.slice(0, -3)
+          : note.title;
+        return noteTitle === displayTitle;
+      })
+    ) {
+      console.error("A note with this name already exists");
+      return false;
+    }
+
+    // Check for invalid characters in filename
+    const hasInvalidChars = /[\\/:*?"<>|]/g.test(newTitle);
+    if (hasInvalidChars) {
+      console.error("Filename contains invalid characters");
+      return false;
+    }
+
+    try {
+      // Use the native rename function - this avoids the OS confirmation dialog
+      const success = await window.context.renameNote(
+        oldFileTitle,
+        newFileTitle,
+      );
+
+      if (!success) {
+        console.error("Failed to rename note");
+        return false;
+      }
+
+      // Update the UI state after successful file system operation
+      const updatedNotes = notes.map((note) => {
+        if (note.title === oldTitle || note.title === oldFileTitle) {
+          return { ...note, title: displayTitle, lastEditTime: Date.now() };
+        }
+        return note;
+      });
+
+      set(notesAtom, updatedNotes);
+
+      // Update the selected note index if needed
+      if (
+        selectedNote &&
+        (selectedNote.title === oldTitle || selectedNote.title === oldFileTitle)
+      ) {
+        const newSelectedIndex = updatedNotes.findIndex(
+          (note) => note.title === displayTitle,
+        );
+        if (newSelectedIndex !== -1) {
+          set(selectedNoteIndexAtom, newSelectedIndex);
+        }
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Failed to rename note:", error);
+      return false;
+    }
+  },
+);

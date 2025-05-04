@@ -4,6 +4,7 @@ import {
   DeleteNote,
   GetNotes,
   ReadNote,
+  RenameNote,
   Settings,
   WriteNote,
 } from "../shared/types";
@@ -25,6 +26,8 @@ try {
       ipcRenderer.invoke("createNote", ...args),
     deleteNote: (...args: Parameters<DeleteNote>) =>
       ipcRenderer.invoke("deleteNote", ...args),
+    renameNote: (...args: Parameters<RenameNote>) =>
+      ipcRenderer.invoke("renameNote", ...args),
     getSettings: () => ipcRenderer.invoke("get-settings"),
     saveSettings: (settings: Settings) =>
       ipcRenderer.invoke("save-settings", settings),
