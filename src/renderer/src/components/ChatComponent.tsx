@@ -58,7 +58,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
     setLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(geminiApiKey); // Use the Gemini API key from Jotai atom
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
       const AIPrompt = promptToShow + context;
       console.log(AIPrompt);
       const result = await model.generateContent(AIPrompt);

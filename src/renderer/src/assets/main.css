@@ -23,6 +23,7 @@
 
     @apply overflow-hidden;
   }
+
   ::-webkit-scrollbar {
     @apply w-1;
   }
@@ -36,3 +37,8 @@
   }
 }
 
+/* MDXEditor custom styles */
+.editor-toolbar {
+  @apply mx-4 mt-2 rounded-md !important;
+  width: calc(100% - 2rem) !important;
+}
