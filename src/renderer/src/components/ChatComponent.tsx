@@ -106,11 +106,26 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       }
     } catch (error) {
       console.error("Error generating text:", error);
+      // Provide more specific error messages for different error types
+      let errorMessage = "An error occurred. Please try again later.";
+      
+      // Check for API key errors
+      if (error instanceof Error) {
+        const errorText = error.message.toLowerCase();
+        if (errorText.includes("api key") || errorText.includes("authentication") || errorText.includes("unauthorized") || errorText.includes("invalid key")) {
+          errorMessage = "Invalid API key. Please check your Gemini API key in preferences.";
+        } else if (errorText.includes("network") || errorText.includes("connection")) {
+          errorMessage = "Network error. Please check your internet connection.";
+        } else if (errorText.includes("quota") || errorText.includes("limit")) {
+          errorMessage = "API quota exceeded. Please try again later or check your Gemini API plan limits.";
+        }
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           type: "assistant",
-          content: "An error occurred. Please try again later.",
+          content: errorMessage,
         },
       ]);
     } finally {

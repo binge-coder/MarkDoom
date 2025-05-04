@@ -18,6 +18,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Create a Jotai atom to share the API key across components
 export const geminiApiKeyAtom = atom<string>("");
@@ -133,6 +134,7 @@ const CustomInput = ({
   onIconClick,
   iconAriaLabel,
   className,
+  error,
 }: {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -142,6 +144,7 @@ const CustomInput = ({
   onIconClick?: () => void;
   iconAriaLabel?: string;
   className?: string;
+  error?: string;
 }) => {
   return (
     <div className={cn("relative", className)}>
@@ -152,6 +155,7 @@ const CustomInput = ({
         placeholder={placeholder}
         className={cn(
           "w-full px-4 py-2.5 bg-slate-700/70 border border-slate-600/50 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400/50 hover:bg-slate-700/90 transition-colors duration-200 shadow-sm overflow-x-auto",
+          error && "border-red-500/70 focus:ring-red-500/50",
           icon && "pr-10", // Add padding on the right when icon is present
         )}
       />
@@ -164,6 +168,12 @@ const CustomInput = ({
         >
           {icon}
         </button>
+      )}
+      {error && (
+        <p className="text-xs text-red-400 mt-1 flex items-center">
+          <AlertTriangle className="w-3 h-3 mr-1" />
+          {error}
+        </p>
       )}
     </div>
   );
@@ -191,12 +201,17 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [zenModeShortcut, setZenModeShortcut] = useState("F11");
   const [shortcutError, setShortcutError] = useState<string | null>(null);
   const [showApiKey, setShowApiKey] = useState(false);
+  const [apiKeyError, setApiKeyError] = useState<string | null>(null);
+  const [validatingApiKey, setValidatingApiKey] = useState(false);
 
   // Track if settings have changed
   const [settingsChanged, setSettingsChanged] = useState(false);
 
   const initialLoadComplete = useRef(false);
   const hasRendered = useRef(false);
+  
+  // Debounce API key validation
+  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const backdropOptions = [
     { value: "mica", label: "Mica" },
@@ -205,6 +220,42 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     { value: "tabbed", label: "Tabbed" },
     { value: "auto", label: "Auto" },
   ];
+
+  // Function to validate Gemini API key
+  const validateApiKey = useCallback(async (apiKey: string) => {
+    if (!apiKey) {
+      setApiKeyError(null);
+      return;
+    }
+    
+    setValidatingApiKey(true);
+    try {
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      
+      // Try a very minimal prompt just to validate the key
+      await model.generateContent("Hello");
+      
+      // If we reach here, the key is valid
+      setApiKeyError(null);
+    } catch (error) {
+      console.error("API key validation error:", error);
+      if (error instanceof Error) {
+        const errorText = error.message.toLowerCase();
+        if (errorText.includes("api key") || errorText.includes("authentication") || errorText.includes("unauthorized") || errorText.includes("invalid key")) {
+          setApiKeyError("Invalid API key. Please check and try again.");
+        } else if (errorText.includes("network") || errorText.includes("connection")) {
+          setApiKeyError("Network error. Please check your internet connection.");
+        } else {
+          setApiKeyError("Error validating API key. Please try again.");
+        }
+      } else {
+        setApiKeyError("Unknown error validating API key.");
+      }
+    } finally {
+      setValidatingApiKey(false);
+    }
+  }, []);
 
   const showSaveAnimation = () => {
     setIsSavedAnimate(true);
@@ -216,6 +267,11 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   // Create a save function
   const saveSettings = useCallback(async () => {
     if (settingsChanged) {
+      // Don't save if there's an API key error
+      if (apiKeyError && geminiKeyInput) {
+        return;
+      }
+
       const newSettings = {
         geminiApi: geminiKeyInput,
         language: "en",
@@ -239,6 +295,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     zenModeShortcut,
     settingsChanged,
     setGeminiApiKey,
+    apiKeyError,
   ]);
 
   // Custom onClose handler that saves settings before closing
@@ -299,10 +356,25 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   // Handle API key input changes
   const handleApiKeyChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setGeminiKeyInput(e.target.value);
+      const newKey = e.target.value;
+      setGeminiKeyInput(newKey);
       setSettingsChanged(true);
+      
+      // Clear previous timeout
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+      }
+      
+      // Debounce validation to avoid too many API calls
+      if (newKey.trim()) {
+        validationTimeoutRef.current = setTimeout(() => {
+          validateApiKey(newKey);
+        }, 800);
+      } else {
+        setApiKeyError(null);
+      }
     },
-    [],
+    [validateApiKey],
   );
 
   // Handle backdrop changes
@@ -402,7 +474,13 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               onIconClick={() => setShowApiKey(!showApiKey)}
               iconAriaLabel={showApiKey ? "Hide API key" : "Show API key"}
               className="w-60"
+              error={apiKeyError}
             />
+            {validatingApiKey && (
+              <div className="text-xs text-blue-400 mt-1">
+                Validating API key...
+              </div>
+            )}
           </PrefListItem>
           <PrefListItem
             title="Zen Mode Shortcut"
@@ -441,6 +519,12 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         </div>
 
         <div className="flex justify-center mt-6 pt-4 border-t border-slate-700/50">
+          {apiKeyError && (
+            <div className="text-red-400 text-sm flex items-center mr-4">
+              <AlertTriangle className="mr-1.5 h-4 w-4" />
+              Unable to save with invalid API key
+            </div>
+          )}
           {isSavedAnimate && (
             <motion.div
               className="flex items-center"
