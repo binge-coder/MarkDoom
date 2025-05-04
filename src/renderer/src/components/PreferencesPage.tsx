@@ -354,6 +354,30 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
 
         <div className="overflow-y-auto pr-2 max-h-[calc(100vh-220px)] scrollbar-thin">
           <PrefListItem
+            title="Window Backdrop Effect"
+            subtitle={
+              <>
+                <p>Choose the visual style for your application window</p>
+                {applyError && (
+                  <p className="text-red-400 flex items-center mt-1.5">
+                    <AlertTriangle className="mr-1.5 h-4 w-4" /> {applyError}
+                  </p>
+                )}
+                {debugInfo && debugInfo.success && (
+                  <div className="text-xs mt-1.5 text-slate-500">
+                    Applied: {debugInfo.appliedMaterial}
+                  </div>
+                )}
+              </>
+            }
+          >
+            <CustomSelect
+              value={backdrop}
+              onChange={handleBackdropChange}
+              options={backdropOptions}
+            />
+          </PrefListItem>
+          <PrefListItem
             title="Gemini API Key"
             subtitle={
               <>
@@ -380,32 +404,6 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               className="w-60"
             />
           </PrefListItem>
-
-          <PrefListItem
-            title="Window Backdrop Effect"
-            subtitle={
-              <>
-                <p>Choose the visual style for your application window</p>
-                {applyError && (
-                  <p className="text-red-400 flex items-center mt-1.5">
-                    <AlertTriangle className="mr-1.5 h-4 w-4" /> {applyError}
-                  </p>
-                )}
-                {debugInfo && debugInfo.success && (
-                  <div className="text-xs mt-1.5 text-slate-500">
-                    Applied: {debugInfo.appliedMaterial}
-                  </div>
-                )}
-              </>
-            }
-          >
-            <CustomSelect
-              value={backdrop}
-              onChange={handleBackdropChange}
-              options={backdropOptions}
-            />
-          </PrefListItem>
-
           <PrefListItem
             title="Zen Mode Shortcut"
             subtitle={
