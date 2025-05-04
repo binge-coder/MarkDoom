@@ -85,12 +85,18 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         <span>AI Assistant</span>
         <Xbutton onClick={() => setShowChat(false)} />
       </div>
-      <input
-        type="text"
+      <textarea
         value={promptToShow}
         onChange={(e) => setPromptToShow(e.target.value)}
         placeholder="Enter your prompt"
-        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2"
+        className="text-black px-2 rounded py-1 bg-slate-200 focus:outline-black mb-2 min-h-[40px] max-h-[200px] resize-y"
+        rows={1}
+        onInput={(e) => {
+          // Auto-resize based on content
+          const target = e.target as HTMLTextAreaElement;
+          target.style.height = "auto";
+          target.style.height = `${Math.min(200, Math.max(40, target.scrollHeight))}px`;
+        }}
       />
       <GenericButton onClick={handleGenerateText} className="w-full mb-2">
         Submit
