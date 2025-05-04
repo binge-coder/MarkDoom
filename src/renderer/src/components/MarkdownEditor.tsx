@@ -44,7 +44,7 @@ export const MarkdownEditor = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-2 mt-1">
         <MDXEditor
           ref={editorRef}
           key={selectedNote.title}
