@@ -1,6 +1,6 @@
 import {
-  ChatButton,
-  DeleteNoteButton, // Changed from FullscreenButton to ZenModeButton
+  // ChatButton,
+  // DeleteNoteButton,
   NewNoteButton,
   SettingsButton,
   ZenModeButton, // Changed from FullscreenButton to ZenModeButton
@@ -11,11 +11,10 @@ export const ActionButtonsRow = (props: ComponentProps<"div">) => {
   return (
     <div {...props}>
       <NewNoteButton />
-      <DeleteNoteButton />
-      <ChatButton />
+      {/* <DeleteNoteButton /> */}
+      {/* <ChatButton /> */}
       <SettingsButton />
       <ZenModeButton /> {/* Changed from FullscreenButton to ZenModeButton */}
-      {/* <LeftBarHideButton /> */}
     </div>
   );
 };

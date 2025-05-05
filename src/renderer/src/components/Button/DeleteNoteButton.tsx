@@ -1,3 +1,5 @@
+// Not using this button anymore. I have a different button for deleting notes in the NotePreview component. I have implemented a custom delete confirmation dialog instead of using this below code. this is kept for reference.
+
 import { ActionButton, ActionButtonProps } from "@/components";
 import { deleteNoteAtom } from "@/store";
 import { useSetAtom } from "jotai";

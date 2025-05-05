@@ -1,4 +1,3 @@
-import { dialog } from "electron";
 import {
   ensureDir,
   existsSync,
@@ -102,54 +101,55 @@ export const writeNote: WriteNote = async (filename, content) => {
   });
 };
 
-export const createNote: CreateNote = async () => {
+export const createNote: CreateNote = async (filename) => {
   const rootDir = getRootDir();
   await ensureDir(rootDir);
-  const { filePath, canceled } = await dialog.showSaveDialog({
-    title: "New Note",
-    defaultPath: path.join(rootDir, "Untitled.md"),
-    buttonLabel: "Create",
-    properties: ["showOverwriteConfirmation"],
-    showsTagField: false,
-    filters: [{ name: "Markdown", extensions: ["md"] }],
-  });
-  if (canceled || !filePath) {
-    console.log("Note creation canceled");
+
+  // If no filename is provided, return false (invalid operation)
+  if (!filename) {
+    console.log("Note creation canceled: No filename provided");
     return false;
   }
-  const { name: filename, dir: parentDir } = path.parse(filePath);
 
-  if (parentDir !== rootDir) {
-    await dialog.showMessageBox({
-      type: "error",
-      title: "Creation failed",
-      message: `All notes must be saved under ${rootDir}. Avoid using other directories!`,
-    });
+  // Ensure filename has .md extension
+  const noteFilename = filename.endsWith(".md") ? filename : `${filename}.md`;
+  const filePath = path.join(rootDir, noteFilename);
 
+  // Check if file already exists
+  if (existsSync(filePath)) {
+    console.error(`Cannot create note: File already exists: ${filePath}`);
     return false;
   }
-  console.info(`Creating note: ${filePath}`);
-  await writeFile(filePath, "");
 
-  return filename;
+  try {
+    console.info(`Creating note: ${filePath}`);
+    await writeFile(filePath, "");
+
+    // Return the filename without extension for consistency with UI
+    return noteFilename;
+  } catch (error) {
+    console.error(`Failed to create note: ${error}`);
+    return false;
+  }
 };
 
 export const deleteNote: DeleteNote = async (filename) => {
   const rootDir = getRootDir();
 
-  const { response } = await dialog.showMessageBox({
-    type: "warning",
-    title: "Delete note",
-    message: `Are you sure you want to delete ${filename}?`,
-    buttons: ["Delete", "Cancel"], // 0 is Delete, 1 is Cancel
-    defaultId: 1,
-    cancelId: 1,
-  });
+  // I have implemented a custom delete confirmation dialog instead of using this below code. this is kept for reference.
+  // const { response } = await dialog.showMessageBox({
+  //   type: "warning",
+  //   title: "Delete note",
+  //   message: `Are you sure you want to delete ${filename}?`,
+  //   buttons: ["Delete", "Cancel"], // 0 is Delete, 1 is Cancel
+  //   defaultId: 1,
+  //   cancelId: 1,
+  // });
 
-  if (response === 1) {
-    console.info("Note deletion canceled");
-    return false;
-  }
+  // if (response === 1) {
+  //   console.info("Note deletion canceled");
+  //   return false;
+  // }
 
   const filePath = path.join(
     rootDir,

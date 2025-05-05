@@ -66,26 +66,34 @@ export const saveNoteAtom = atom(
   },
 );
 
-export const createEmptyNoteAtom = atom(null, async (get, set) => {
-  const notes = get(notesAtom);
+export const createEmptyNoteAtom = atom(
+  null,
+  async (get, set, filename?: string) => {
+    const notes = get(notesAtom);
 
-  if (!notes) return;
+    if (!notes) return;
 
-  const title = await window.context.createNote();
-  if (!title) return;
+    if (!filename) {
+      console.error("No filename provided for note creation");
+      return;
+    }
 
-  const newNote: NoteInfo = {
-    title,
-    lastEditTime: Date.now(),
-  };
+    const title = await window.context.createNote(filename);
+    if (!title) return;
 
-  set(notesAtom, [
-    newNote,
-    ...notes.filter((note) => note.title !== newNote.title),
-  ]);
+    const newNote: NoteInfo = {
+      title,
+      lastEditTime: Date.now(),
+    };
 
-  set(selectedNoteIndexAtom, 0);
-});
+    set(notesAtom, [
+      newNote,
+      ...notes.filter((note) => note.title !== newNote.title),
+    ]);
+
+    set(selectedNoteIndexAtom, 0);
+  },
+);
 
 export const deleteNoteAtom = atom(null, async (get, set) => {
   const notes = get(notesAtom);
