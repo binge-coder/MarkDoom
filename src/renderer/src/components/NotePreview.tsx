@@ -107,8 +107,8 @@ export const NotePreview = ({
           "cursor-pointer px-3 py-3 rounded-md transition-all duration-150",
           isActive
             ? isLightMode
-              ? "bg-blue-50/80 border-l-4 border-blue-500 shadow-md"
-              : "bg-slate-900/80 border-l-4 border-blue-500 shadow-md"
+              ? "bg-blue-50/80 border-blue-500 shadow-md"
+              : "bg-slate-900/80 border-blue-500 shadow-md"
             : isLightMode
               ? "bg-slate-50/40 hover:bg-slate-100/40 border-l-4 border-transparent"
               : "bg-slate-950/40 hover:bg-slate-800/40 border-l-4 border-transparent",
