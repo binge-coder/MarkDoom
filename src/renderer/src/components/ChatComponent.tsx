@@ -223,11 +223,11 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         {messages.length === 0 ? (
           <div
             className={`flex flex-col items-center justify-center h-full text-center px-6 ${
-              isLightMode ? "text-slate-500" : "text-slate-400"
+              isLightMode ? "text-slate-900" : "text-slate-200"
             }`}
           >
             <Bot
-              className={`h-12 w-12 mb-2 ${isLightMode ? "text-slate-400/60" : "text-slate-500/60"}`}
+              className={`h-12 w-12 mb-2 ${isLightMode ? "text-slate-900/60" : "text-slate-200/60"}`}
             />
             <p className="text-sm">
               Ask me any question or request assistance with your notes.

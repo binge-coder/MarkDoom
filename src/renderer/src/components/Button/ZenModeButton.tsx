@@ -1,5 +1,6 @@
 import { ActionButton, ActionButtonProps } from "@/components";
 import { themeAtom } from "@renderer/store";
+import { cn } from "@renderer/utils";
 import { useAtomValue } from "jotai";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -33,11 +34,17 @@ export const ZenModeButton = (props: ActionButtonProps) => {
     <ActionButton onClick={toggleZenMode} title={"Zen Mode"} {...props}>
       {isZenMode ? (
         <Minimize2
-          className={`h-5 w-5 ${isLightMode ? "text-slate-700" : "text-white/70"}`}
+          className={cn(
+            "h-5 w-5",
+            isLightMode ? "text-slate-600" : "text-slate-300",
+          )}
         />
       ) : (
         <Maximize2
-          className={`h-5 w-5 ${isLightMode ? "text-slate-700" : "text-white/70"}`}
+          className={cn(
+            "h-5 w-5",
+            isLightMode ? "text-slate-600" : "text-slate-300",
+          )}
         />
       )}
     </ActionButton>

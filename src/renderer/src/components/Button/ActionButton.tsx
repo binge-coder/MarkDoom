@@ -1,7 +1,8 @@
 import { themeAtom } from "@renderer/store";
+import { cn } from "@renderer/utils";
+import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
 
 export type ActionButtonProps = ComponentProps<"button">;
 
@@ -14,16 +15,20 @@ export const ActionButton = ({
   const isLightMode = theme === "light";
 
   return (
-    <button
-      className={twMerge(
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={cn(
+        "p-2.5 rounded-lg transition-all duration-150",
+        "shadow-sm",
         isLightMode
-          ? "px-4 py-3 rounded-md bg-slate-100/70 hover:bg-slate-200/90 active:bg-slate-300/80 transition-colors duration-100 text-slate-700"
-          : "px-4 py-3 rounded-md bg-slate-950/40 hover:bg-slate-800 active:bg-slate-900 transition-colors duration-100 text-white/70",
+          ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-800"
+          : "bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white",
         className,
       )}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
