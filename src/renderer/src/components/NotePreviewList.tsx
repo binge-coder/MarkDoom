@@ -6,7 +6,7 @@ import { NoteInfo } from "@shared/models";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
 import { isEmpty } from "lodash";
-import { FileText, Search, StickyNote } from "lucide-react";
+import { FileText, Search, StickyNote, Folder } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -151,7 +151,7 @@ export const NotePreviewList = ({
       <div className="mb-4 sticky top-0 z-10 pb-2 pt-1">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <FileText
+            <Folder
               className={
                 isLightMode ? "h-4 w-4 text-slate-700" : "h-4 w-4 text-white"
               }
@@ -163,7 +163,7 @@ export const NotePreviewList = ({
                   : "text-sm font-medium text-white"
               }
             >
-              Notes
+              All Notes
             </h2>
           </div>
           <div

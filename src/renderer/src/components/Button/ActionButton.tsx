@@ -19,11 +19,11 @@ export const ActionButton = ({
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        "p-2.5 rounded-lg transition-all duration-150",
+        "px-4 py-3 rounded-lg transition-all duration-150",
         "shadow-sm",
         isLightMode
-          ? "bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-800"
-          : "bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white",
+          ? "bg-white/70 hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-800"
+          : "bg-slate-950/40 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white",
         className,
       )}
       {...props}
