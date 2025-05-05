@@ -67,7 +67,7 @@
   overflow: visible !important;
 }
 
-/* Sleek toolbar scrollbar styles - fallback if still needed */
+/* Sleek toolbar scrollbar styles */
 .editor-toolbar::-webkit-scrollbar {
   height: 3px;
   width: 3px;
@@ -93,4 +93,110 @@ html.light-theme .mdxeditor-content-editable {
 
 html.light-theme .prose-code {
   @apply !text-red-700;
+}
+
+/* Toolbar button styling for light theme */
+html.light-theme .mdxeditor-toolbar button {
+  @apply text-slate-700 hover:bg-slate-200 active:bg-slate-300 !important;
+}
+
+/* Dark mode styles for toolbar buttons */
+html:not(.light-theme) .mdxeditor-toolbar button {
+  @apply text-slate-200 hover:bg-slate-700 active:bg-slate-600 !important;
+}
+
+/* Fix for SVG icons in dark mode - overrides any previous styles */
+html:not(.light-theme) .mdxeditor-toolbar button svg {
+  filter: invert(1) !important;
+}
+
+/* Selected state for toolbar buttons */
+html.light-theme .mdxeditor-toolbar button[data-state="on"] {
+  @apply bg-blue-100/70 text-blue-700 !important;
+}
+
+html:not(.light-theme) .mdxeditor-toolbar button[data-state="on"] {
+  @apply bg-slate-700 text-blue-400 !important;
+}
+
+/* Dropdown menus styling */
+html.light-theme .mdxeditor-toolbar [aria-haspopup="menu"] {
+  @apply border-slate-300 !important;
+}
+
+html:not(.light-theme) .mdxeditor-toolbar [aria-haspopup="menu"] {
+  @apply border-slate-600 !important;
+}
+
+/* Dropdown menu content styling */
+html.light-theme [data-radix-popper-content-wrapper] [role="menu"] {
+  @apply bg-white border border-slate-300 shadow-md !important;
+}
+
+html:not(.light-theme) [data-radix-popper-content-wrapper] [role="menu"] {
+  @apply bg-slate-900 border border-slate-700 shadow-md !important;
+}
+
+/* Dropdown menu items */
+html.light-theme [data-radix-popper-content-wrapper] [role="menuitem"] {
+  @apply text-slate-700 hover:bg-slate-100 !important;
+}
+
+html:not(.light-theme) [data-radix-popper-content-wrapper] [role="menuitem"] {
+  @apply text-slate-300 hover:bg-slate-800 !important;
+}
+
+/* Block type select button */
+html:not(.light-theme) .mdxeditor-toolbar button[aria-haspopup="listbox"] {
+  @apply text-slate-200 !important;
+}
+
+/* Fix the Block Type dropdown styling for dark mode */
+html:not(.light-theme) .mdxeditor-toolbar [role="combobox"] {
+  @apply bg-slate-800 border-slate-700 text-slate-200 !important;
+}
+
+html:not(.light-theme) .mdxeditor-toolbar button[aria-label="Paragraph"] {
+  @apply bg-slate-800 border-slate-700 text-slate-200 !important;
+}
+
+/* Style all listbox buttons in toolbar */
+html:not(.light-theme) .mdxeditor-toolbar [aria-expanded] {
+  @apply bg-slate-800 border-slate-700 text-slate-200 !important;
+}
+
+/* Fix for dropdown popup menu in dark mode */
+html:not(.light-theme) [role="listbox"] {
+  @apply bg-slate-800 border-slate-700 text-slate-200 shadow-lg !important;
+}
+
+/* Fix for dropdown menu items in dark mode - all states */
+html:not(.light-theme) [role="option"] {
+  @apply text-slate-200 !important;
+  background-color: rgb(30, 41, 59) !important;
+  /* slate-800 */
+}
+
+/* Hover state for menu items */
+html:not(.light-theme) [role="option"]:hover {
+  @apply bg-slate-700 !important;
+  background-color: rgb(51, 65, 85) !important;
+  /* slate-700 */
+}
+
+/* Selected item in dropdown */
+html:not(.light-theme) [role="option"][aria-selected="true"] {
+  @apply bg-slate-700 !important;
+  background-color: rgb(51, 65, 85) !important;
+  /* slate-700 */
+}
+
+/* Highlight/active item in dropdown */
+html:not(.light-theme) [role="option"].active,
+html:not(.light-theme) [role="option"]:focus,
+html:not(.light-theme) [role="option"][data-highlighted],
+html:not(.light-theme) [role="option"][aria-highlighted="true"] {
+  @apply bg-slate-700 text-slate-200 !important;
+  background-color: rgb(51, 65, 85) !important;
+  color: rgb(226, 232, 240) !important;
 }

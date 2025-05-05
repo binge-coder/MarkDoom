@@ -20,6 +20,7 @@ import {
 } from "@mdxeditor/editor";
 import { useMarkdownEditor } from "@renderer/hooks/useMarkdownEditor";
 import { themeAtom } from "@renderer/store";
+import { cn } from "@renderer/utils";
 import { useAtomValue } from "jotai";
 
 export const MarkdownEditor = () => {
@@ -69,6 +70,11 @@ export const MarkdownEditor = () => {
               imageUploadHandler,
             }),
             toolbarPlugin({
+              toolbarClassName: cn(
+                isDarkMode ? "bg-slate-800/70" : "bg-slate-100/70",
+                "border rounded-md shadow-sm backdrop-blur-sm",
+                isDarkMode ? "border-slate-700/50" : "border-slate-300/50",
+              ),
               toolbarContents: () => (
                 <div className="flex items-center space-x-2 flex-wrap gap-y-2">
                   <UndoRedo />
