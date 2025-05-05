@@ -42,6 +42,7 @@ export const CreateNoteDialog = ({
       setIsVisible(true);
       setNoteName("");
       setError(null);
+      // Focus will be handled in a separate useEffect to ensure proper timing
     } else {
       const timer = setTimeout(() => setIsVisible(false), 200);
       return () => clearTimeout(timer);
@@ -66,10 +67,13 @@ export const CreateNoteDialog = ({
 
   // Focus input field on open
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (isOpen && isVisible && inputRef.current) {
+      // Small timeout to ensure the DOM is fully rendered
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
     }
-  }, [isOpen]);
+  }, [isOpen, isVisible]);
 
   const validateAndSubmit = (e: React.FormEvent) => {
     e.preventDefault();
