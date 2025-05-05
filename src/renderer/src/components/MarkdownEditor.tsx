@@ -50,7 +50,7 @@ export const MarkdownEditor = () => {
   const isDarkMode = theme === "dark";
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col ">
       <div className="px-4 pt-2 mt-1">
         <MDXEditor
           ref={editorRef}

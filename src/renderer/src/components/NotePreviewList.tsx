@@ -146,7 +146,7 @@ export const NotePreviewList = ({
   if (!notes) return null;
 
   return (
-    <div className={twMerge("flex flex-col h-full", className)} {...props}>
+    <div className={twMerge("flex flex-col", className)} {...props}>
       {/* Header with search */}
       <div className="mb-4 sticky top-0 z-10 pb-2 pt-1">
         <div className="flex items-center justify-between mb-2">
