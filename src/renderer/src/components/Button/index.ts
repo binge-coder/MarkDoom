@@ -8,3 +8,4 @@ export * from "./RightBarHideButton";
 export * from "./SettingsButton";
 export * from "./Xbutton";
 export * from "./ZenModeButton";
+export * from "./SidebarHideButton";
