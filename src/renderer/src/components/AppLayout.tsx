@@ -19,7 +19,7 @@ export const Sidebar = ({
   ...props
 }: ComponentProps<"aside">) => {
   return (
-    <aside className={twMerge("h-[100vh] overflow-auto", className)} {...props}>
+    <aside className={twMerge("h-[100vh] flex flex-col", className)} {...props}>
       {children}
     </aside>
   );

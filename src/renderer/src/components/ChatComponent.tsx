@@ -172,9 +172,9 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         className,
       )}
     >
-      {/* Header */}
+      {/* Header - fixed */}
       <div
-        className={`flex items-center justify-between px-4 py-3 border-b ${
+        className={`flex-shrink-0 flex items-center justify-between px-4 py-3 border-b ${
           isLightMode
             ? "border-slate-200/80 bg-slate-100 backdrop-blur-md"
             : "border-slate-800/80 bg-slate-900 backdrop-blur-md"
@@ -215,7 +215,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         </div>
       </div>
 
-      {/* Chat Messages */}
+      {/* Chat Messages - scrollable */}
       <div
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto py-2 px-2 space-y-2 scrollbar-thin"
@@ -309,8 +309,8 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
         )}
       </div>
 
-      {/* Input Area */}
-      <div className="backdrop-blur-sm rounded-md">
+      {/* Input Area - fixed at the bottom */}
+      <div className="flex-shrink-0 backdrop-blur-sm rounded-md p-2">
         <div className="relative">
           <textarea
             value={promptToShow}

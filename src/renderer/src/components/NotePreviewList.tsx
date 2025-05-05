@@ -146,9 +146,9 @@ export const NotePreviewList = ({
   if (!notes) return null;
 
   return (
-    <div className={twMerge("flex flex-col", className)} {...props}>
-      {/* Header with search */}
-      <div className="mb-4 sticky top-0 z-10 pb-2 pt-1">
+    <div className={twMerge("flex flex-col h-full", className)} {...props}>
+      {/* Header with search - fixed at the top */}
+      <div className="flex-shrink-0 sticky top-0 z-10 pb-2 pt-1 bg-inherit">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
             <Folder
@@ -200,8 +200,8 @@ export const NotePreviewList = ({
         </div>
       </div>
 
-      {/* Notes list */}
-      <div className="overflow-y-auto flex-1 space-y-2.5 pr-1 scrollbar-thin">
+      {/* Notes list - scrollable */}
+      <div className="overflow-y-auto overflow-x-hidden flex-1 space-y-2.5 pr-1 mt-2 min-h-0 pb-2">
         {isEmpty(notes)
           ? renderEmptyNotes()
           : isEmpty(filteredNotes)

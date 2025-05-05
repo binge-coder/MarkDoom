@@ -83,7 +83,7 @@ const App = () => {
       <Sidebar
         className={`${theme === "light" ? "bg-slate-200/40" : "bg-slate-800/40"} transform ${showLeftSideBar ? "translate-x-0 w-[250px] p-2" : "-translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
       >
-        <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
+        <ActionButtonsRow className="flex-shrink-0 flex mt-1 justify-center gap-2" />
         <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
       </Sidebar>
 
