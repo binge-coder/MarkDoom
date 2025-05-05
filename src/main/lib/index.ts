@@ -202,6 +202,7 @@ const defaultSettings = {
   geminiApi: "",
   backgroundMaterial: "acrylic", // Ensure this matches the allowed values
   zenModeShortcut: "F11", // Use the new property name consistently
+  theme: "dark", // Default theme is dark mode
 };
 
 export const settingsPath = path.join(getRootDir(), "settings.json");

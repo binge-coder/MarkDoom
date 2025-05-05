@@ -1,10 +1,10 @@
 import { NotePreview } from "@/components";
 import { useNotesList } from "@/hooks/useNotesList";
-import { selectedNoteIndexAtom } from "@/store";
+import { selectedNoteIndexAtom, themeAtom } from "@/store";
 import { cn } from "@renderer/utils";
 import { NoteInfo } from "@shared/models";
 import { motion } from "framer-motion";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { isEmpty } from "lodash";
 import { FileText, Search, StickyNote } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
@@ -29,6 +29,8 @@ export const NotePreviewList = ({
   const [filteredIndices, setFilteredIndices] = useState<Map<number, number>>(
     new Map(),
   );
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   // Update filtered notes when search term changes
   useEffect(() => {
@@ -87,8 +89,14 @@ export const NotePreviewList = ({
       animate={{ opacity: 1 }}
       className="flex flex-col items-center justify-center py-6 text-center px-4"
     >
-      <Search className="text-slate-400 mb-2 h-5 w-5" />
-      <p className="text-white text-sm">
+      <Search
+        className={`${isLightMode ? "text-slate-500" : "text-slate-400"} mb-2 h-5 w-5`}
+      />
+      <p
+        className={
+          isLightMode ? "text-slate-700 text-sm" : "text-white text-sm"
+        }
+      >
         No notes found matching &quot;
         {searchTerm.replace(/</g, "&lt;").replace(/>/g, "&gt;")}&quot;
       </p>
@@ -103,11 +111,33 @@ export const NotePreviewList = ({
       transition={{ duration: 0.3 }}
       className="flex flex-col items-center justify-center py-8 text-center px-4"
     >
-      <div className="bg-slate-700/70 p-4 rounded-full mb-3">
-        <StickyNote className="text-white h-6 w-6" />
+      <div
+        className={
+          isLightMode
+            ? "bg-slate-200/70 p-4 rounded-full mb-3"
+            : "bg-slate-700/70 p-4 rounded-full mb-3"
+        }
+      >
+        <StickyNote
+          className={
+            isLightMode ? "text-slate-700 h-6 w-6" : "text-white h-6 w-6"
+          }
+        />
       </div>
-      <p className="text-white font-medium mb-1">No notes yet</p>
-      <p className="text-slate-300 text-sm">
+      <p
+        className={
+          isLightMode
+            ? "text-slate-800 font-medium mb-1"
+            : "text-white font-medium mb-1"
+        }
+      >
+        No notes yet
+      </p>
+      <p
+        className={
+          isLightMode ? "text-slate-600 text-sm" : "text-slate-300 text-sm"
+        }
+      >
         Create your first note to get started
       </p>
     </motion.div>
@@ -121,10 +151,26 @@ export const NotePreviewList = ({
       <div className="mb-4 sticky top-0 z-10 pb-2 pt-1">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <FileText className="h-4 w-4 text-white" />
-            <h2 className="text-sm font-medium text-white">Notes</h2>
+            <FileText
+              className={
+                isLightMode ? "h-4 w-4 text-slate-700" : "h-4 w-4 text-white"
+              }
+            />
+            <h2
+              className={
+                isLightMode
+                  ? "text-sm font-medium text-slate-800"
+                  : "text-sm font-medium text-white"
+              }
+            >
+              Notes
+            </h2>
           </div>
-          <div className="text-xs text-slate-300">
+          <div
+            className={
+              isLightMode ? "text-xs text-slate-600" : "text-xs text-slate-300"
+            }
+          >
             {filteredNotes?.length || 0} notes
           </div>
         </div>
@@ -137,15 +183,20 @@ export const NotePreviewList = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search notes..."
             className={cn(
-              "w-full bg-slate-950/40 focus:bg-slate-900 text-sm text-white",
-              "rounded-lg pl-9 pr-3 py-2.5 focus:outline-none",
-              "placeholder:text-slate-300/60",
-              "border border-slate-700/80 focus:border-blue-500/80",
+              "w-full text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none",
+              "placeholder:text-slate-400/60",
               "focus:ring-1 focus:ring-blue-500/50",
               "transition-all duration-200 shadow-sm",
+              isLightMode
+                ? "bg-white/60 focus:bg-white text-slate-800 border border-slate-300/80 focus:border-blue-500/80"
+                : "bg-slate-950/40 focus:bg-slate-900 text-white border border-slate-700/80 focus:border-blue-500/80",
             )}
           />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search
+            className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
+              isLightMode ? "text-slate-500" : "text-slate-400"
+            }`}
+          />
         </div>
       </div>
 

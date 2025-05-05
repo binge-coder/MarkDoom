@@ -1,4 +1,5 @@
 import { NoteContent, NoteInfo } from "@shared/models";
+import { ThemeMode } from "@shared/types";
 import { atom } from "jotai";
 import { unwrap } from "jotai/utils";
 
@@ -114,6 +115,23 @@ export const deleteNoteAtom = atom(null, async (get, set) => {
   // make selected note null
   set(selectedNoteIndexAtom, null);
 });
+
+// Simpler implementation of theme atom that will properly update
+export const themeAtom = atom<ThemeMode>("dark");
+
+// Initialize the theme from settings when the app starts
+export const initializeThemeFromSettings = async (
+  setTheme: (theme: ThemeMode) => void,
+) => {
+  try {
+    const settings = await window.context.getSettings();
+    if (settings.theme === "light" || settings.theme === "dark") {
+      setTheme(settings.theme);
+    }
+  } catch (error) {
+    console.error("Error loading theme settings:", error);
+  }
+};
 
 export const showChatAtom = atom(false);
 export const showSettingsAtom = atom(false);

@@ -10,18 +10,20 @@
   html,
   body {
     @apply h-full;
-
     @apply select-none;
-
-    /* @apply bg-slate-900; */
-
     @apply bg-transparent;
-
-    @apply font-mono antialiased text-white;
-    /* @apply font-mono antialiased text-slate-800; */
-
-
+    @apply font-mono antialiased;
     @apply overflow-hidden;
+  }
+
+  /* Dark mode (default) */
+  body {
+    @apply text-white;
+  }
+
+  /* Light mode classes */
+  html.light-theme body {
+    @apply text-slate-800;
   }
 
   ::-webkit-scrollbar {
@@ -32,9 +34,22 @@
     @apply bg-slate-600 rounded-full;
   }
 
+  html.light-theme ::-webkit-scrollbar-thumb {
+    @apply bg-slate-400 rounded-full;
+  }
+
   ::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
+}
+
+/* Light/Dark mode variants */
+.light-mode .prose-invert {
+  @apply prose-slate;
+}
+
+.dark-mode .prose {
+  @apply prose-invert;
 }
 
 /* MDXEditor custom styles */
@@ -71,3 +86,11 @@
   background: transparent;
 }
 
+/* Light theme styles for MDXEditor */
+html.light-theme .mdxeditor-content-editable {
+  @apply !text-slate-800;
+}
+
+html.light-theme .prose-code {
+  @apply !text-red-700;
+}

@@ -1,15 +1,19 @@
 import { Xbutton } from "@/components/Button";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { themeAtom } from "@renderer/store";
 import { cn } from "@renderer/utils";
+import { ThemeMode } from "@shared/types";
 import { motion } from "framer-motion";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import {
   AlertTriangle,
   Check,
   ChevronDown,
   Eye,
   EyeOff,
+  Moon,
   Settings as SettingsIcon,
+  Sun,
 } from "lucide-react";
 import React, {
   PropsWithChildren,
@@ -46,16 +50,51 @@ const PrefListItem: React.FC<PropsWithChildren<PrefListItemProps>> = ({
   icon,
   ...props
 }) => {
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
+
   return (
     <div
-      className="border border-slate-600/30 bg-slate-800/20 hover:bg-slate-800/30 rounded-lg py-4 px-5 mb-5 flex items-center justify-between transition-all duration-200 shadow-sm"
+      className={cn(
+        "rounded-lg py-4 px-5 mb-5 flex items-center justify-between transition-all duration-200 shadow-sm",
+        isLightMode
+          ? "border border-slate-300/30 bg-slate-100/70 hover:bg-slate-200/80"
+          : "border border-slate-600/30 bg-slate-800/20 hover:bg-slate-800/30",
+      )}
       {...props}
     >
       <div className="flex items-start gap-3">
-        {icon && <div className="text-slate-400 mt-1">{icon}</div>}
+        {icon && (
+          <div
+            className={cn(
+              isLightMode ? "text-slate-600" : "text-slate-400",
+              "mt-1",
+            )}
+          >
+            {icon}
+          </div>
+        )}
         <div className="flex flex-col">
-          <div className="font-medium text-slate-100 mb-0.5">{title}</div>
-          {subtitle && <div className="text-sm text-slate-400">{subtitle}</div>}
+          <div
+            className={
+              isLightMode
+                ? "font-medium text-slate-800 mb-0.5"
+                : "font-medium text-slate-100 mb-0.5"
+            }
+          >
+            {title}
+          </div>
+          {subtitle && (
+            <div
+              className={
+                isLightMode
+                  ? "text-sm text-slate-600"
+                  : "text-sm text-slate-400"
+              }
+            >
+              {subtitle}
+            </div>
+          )}
         </div>
       </div>
       <div className="flex-shrink-0 ml-4">{children}</div>
@@ -74,12 +113,19 @@ const CustomSelect = ({
   options: { value: string; label: string }[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-60 px-4 py-2 bg-slate-700/70 border border-slate-600/50 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400/30 hover:bg-slate-700/90 transition-colors duration-200 shadow-sm"
+        className={cn(
+          "flex items-center justify-between w-60 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 shadow-sm",
+          isLightMode
+            ? "bg-white border border-slate-300/70 text-slate-800 focus:ring-slate-300/50 hover:bg-slate-50"
+            : "bg-slate-700/70 border border-slate-600/50 text-slate-200 focus:ring-slate-400/30 hover:bg-slate-700/90",
+        )}
       >
         <span>
           {options.find((opt) => opt.value === value)?.label || value}
@@ -87,7 +133,8 @@ const CustomSelect = ({
         <ChevronDown
           size={18}
           className={cn(
-            "text-slate-400 transition-transform duration-200",
+            isLightMode ? "text-slate-600" : "text-slate-400",
+            "transition-transform duration-200",
             isOpen && "transform rotate-180",
           )}
         />
@@ -99,7 +146,12 @@ const CustomSelect = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -5 }}
           transition={{ duration: 0.15 }}
-          className="absolute right-0 mt-1 w-full bg-slate-800 border border-slate-600/50 rounded-lg overflow-hidden shadow-lg z-10"
+          className={cn(
+            "absolute right-0 mt-1 w-full rounded-lg overflow-hidden shadow-lg z-10",
+            isLightMode
+              ? "bg-white border border-slate-300/50"
+              : "bg-slate-800 border border-slate-600/50",
+          )}
         >
           {options.map((option) => (
             <button
@@ -109,10 +161,14 @@ const CustomSelect = ({
                 setIsOpen(false);
               }}
               className={cn(
-                "w-full text-left px-4 py-2.5 hover:bg-slate-700 transition-colors duration-150",
-                value === option.value
-                  ? "bg-slate-700/70 text-white"
-                  : "text-slate-300",
+                "w-full text-left px-4 py-2.5 transition-colors duration-150",
+                isLightMode
+                  ? value === option.value
+                    ? "bg-blue-100/50 text-blue-800 font-medium"
+                    : "text-slate-700 hover:bg-slate-100"
+                  : value === option.value
+                    ? "bg-slate-700/70 text-white"
+                    : "text-slate-300 hover:bg-slate-700",
               )}
             >
               {option.label}
@@ -146,6 +202,9 @@ const CustomInput = ({
   className?: string;
   error?: string | null;
 }) => {
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
+
   return (
     <div className={cn("relative", className)}>
       <input
@@ -154,7 +213,10 @@ const CustomInput = ({
         onChange={onChange}
         placeholder={placeholder}
         className={cn(
-          "w-full px-4 py-2.5 bg-slate-700/70 border border-slate-600/50 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400/50 hover:bg-slate-700/90 transition-colors duration-200 shadow-sm overflow-x-auto",
+          "w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 shadow-sm overflow-x-auto",
+          isLightMode
+            ? "bg-white border border-slate-300/70 text-slate-800 focus:ring-blue-400/40 hover:border-slate-400/80"
+            : "bg-slate-700/70 border border-slate-600/50 text-slate-200 focus:ring-slate-400/50 hover:bg-slate-700/90",
           error && "border-red-500/70 focus:ring-red-500/50",
           icon && "pr-10", // Add padding on the right when icon is present
         )}
@@ -163,18 +225,95 @@ const CustomInput = ({
         <button
           type="button"
           onClick={onIconClick}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 focus:outline-none transition-colors duration-150"
+          className={cn(
+            "absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none transition-colors duration-150",
+            isLightMode
+              ? "text-slate-500 hover:text-slate-700"
+              : "text-slate-400 hover:text-slate-200",
+          )}
           aria-label={iconAriaLabel}
         >
           {icon}
         </button>
       )}
       {error && (
-        <p className="text-xs text-red-400 mt-1 flex items-center">
+        <p className="text-xs text-red-500 mt-1 flex items-center">
           <AlertTriangle className="w-3 h-3 mr-1" />
           {error}
         </p>
       )}
+    </div>
+  );
+};
+
+// Theme toggle component
+const ThemeModeToggle = ({
+  value,
+  onChange,
+}: {
+  value: ThemeMode;
+  onChange: (value: ThemeMode) => void;
+}) => {
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
+
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded-lg p-1 border",
+        isLightMode
+          ? "bg-slate-200/80 border-slate-300/60"
+          : "bg-slate-700/70 border-slate-600/50",
+      )}
+    >
+      <button
+        onClick={() => onChange("light")}
+        className={cn(
+          "flex items-center justify-center gap-2 px-3 py-2 rounded-md transition-colors duration-200",
+          value === "light"
+            ? "bg-blue-500/80 text-white font-medium"
+            : isLightMode
+              ? "text-slate-600 hover:bg-slate-300/70"
+              : "text-slate-300 hover:bg-slate-600/50",
+        )}
+        aria-label="Light Mode"
+      >
+        <Sun
+          size={18}
+          className={
+            value === "light"
+              ? "text-yellow-200"
+              : isLightMode
+                ? "text-slate-500"
+                : "text-slate-400"
+          }
+        />
+        <span>Light</span>
+      </button>
+      <button
+        onClick={() => onChange("dark")}
+        className={cn(
+          "flex items-center justify-center gap-2 px-3 py-2 rounded-md transition-colors duration-200",
+          value === "dark"
+            ? "bg-blue-500/80 text-white font-medium"
+            : isLightMode
+              ? "text-slate-600 hover:bg-slate-300/70"
+              : "text-slate-300 hover:bg-slate-600/50",
+        )}
+        aria-label="Dark Mode"
+      >
+        <Moon
+          size={18}
+          className={
+            value === "dark"
+              ? "text-blue-200"
+              : isLightMode
+                ? "text-slate-500"
+                : "text-slate-400"
+          }
+        />
+        <span>Dark</span>
+      </button>
     </div>
   );
 };
@@ -203,6 +342,8 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
   const [showApiKey, setShowApiKey] = useState(false);
   const [apiKeyError, setApiKeyError] = useState<string | null>(null);
   const [validatingApiKey, setValidatingApiKey] = useState(false);
+  const [theme, setTheme] = useAtom(themeAtom);
+  const isLightMode = theme === "light";
 
   // Track if settings have changed
   const [settingsChanged, setSettingsChanged] = useState(false);
@@ -287,6 +428,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         language: "en",
         backgroundMaterial: backdrop,
         zenModeShortcut: zenModeShortcut,
+        theme: theme,
       };
 
       await window.context.saveSettings(newSettings);
@@ -303,6 +445,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     geminiKeyInput,
     backdrop,
     zenModeShortcut,
+    theme,
     settingsChanged,
     setGeminiApiKey,
     apiKeyError,
@@ -357,11 +500,14 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         setGeminiKeyInput(settings.geminiApi || "");
         setBackdrop(settings.backgroundMaterial || "none");
         setZenModeShortcut(settings.zenModeShortcut || "F11");
+        if (settings.theme) {
+          setTheme(settings.theme);
+        }
         initialLoadComplete.current = true;
       }
     };
     fetchSettings();
-  }, []); // Empty dependency array means this runs only once
+  }, [setTheme]); // Added setTheme to dependency array
 
   // Handle API key input changes
   const handleApiKeyChange = useCallback(
@@ -407,6 +553,15 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
     [updateZenModeShortcut],
   );
 
+  // Handle theme changes
+  const handleThemeChange = useCallback(
+    (newTheme: ThemeMode) => {
+      setTheme(newTheme);
+      setSettingsChanged(true);
+    },
+    [setTheme],
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -419,34 +574,74 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ type: "spring", damping: 15 }}
-        className="relative w-full max-w-3xl bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-2xl p-6 overflow-hidden mx-4"
+        className={cn(
+          "relative w-full max-w-3xl rounded-xl shadow-2xl p-6 overflow-hidden mx-4",
+          isLightMode
+            ? "bg-white/95 backdrop-blur-md border border-slate-200/70"
+            : "bg-slate-900/95 backdrop-blur-md border border-slate-700/50",
+        )}
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40"></div>
 
         <Xbutton
           onClick={handleClose}
           aria-label="Close Preferences"
-          className="border border-slate-600/40 hover:bg-slate-700/70"
+          className={
+            isLightMode
+              ? "border border-slate-300/40 hover:bg-slate-200/70"
+              : "border border-slate-600/40 hover:bg-slate-700/70"
+          }
         />
 
         <div className="flex items-center justify-center mb-6 mt-2">
-          <SettingsIcon className="h-6 w-6 text-slate-400 mr-2" />
-          <h2 className="text-xl font-medium text-slate-200">Preferences</h2>
+          <SettingsIcon
+            className={cn(
+              "h-6 w-6 mr-2",
+              isLightMode ? "text-slate-600" : "text-slate-400",
+            )}
+          />
+          <h2
+            className={cn(
+              "text-xl font-medium",
+              isLightMode ? "text-slate-800" : "text-slate-200",
+            )}
+          >
+            Preferences
+          </h2>
         </div>
 
         <div className="overflow-y-auto pr-2 max-h-[calc(100vh-220px)] scrollbar-thin">
+          <PrefListItem
+            title="Theme Mode"
+            subtitle="Choose between light and dark interface theme"
+            icon={
+              theme === "light" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )
+            }
+          >
+            <ThemeModeToggle value={theme} onChange={handleThemeChange} />
+          </PrefListItem>
+
           <PrefListItem
             title="Window Backdrop Effect"
             subtitle={
               <>
                 <p>Choose the visual style for your application window</p>
                 {applyError && (
-                  <p className="text-red-400 flex items-center mt-1.5">
+                  <p className="text-red-500 flex items-center mt-1.5">
                     <AlertTriangle className="mr-1.5 h-4 w-4" /> {applyError}
                   </p>
                 )}
                 {debugInfo && debugInfo.success && (
-                  <div className="text-xs mt-1.5 text-slate-500">
+                  <div
+                    className={cn(
+                      "text-xs mt-1.5",
+                      isLightMode ? "text-slate-600" : "text-slate-500",
+                    )}
+                  >
                     Applied: {debugInfo.appliedMaterial}
                   </div>
                 )}
@@ -465,7 +660,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               <>
                 Connect your AI assistant by adding a Gemini API key from{" "}
                 <a
-                  className="text-blue-400 hover:text-blue-300 underline"
+                  className="text-blue-500 hover:text-blue-400 underline"
                   href="https://aistudio.google.com/app/apikey"
                   target="_blank"
                   rel="noreferrer"
@@ -487,7 +682,7 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
               error={apiKeyError}
             />
             {validatingApiKey && (
-              <div className="text-xs text-blue-400 mt-1">
+              <div className="text-xs text-blue-500 mt-1">
                 Validating API key...
               </div>
             )}
@@ -497,22 +692,42 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
             subtitle={
               <>
                 <p>Set your keyboard shortcut for toggling Zen Mode</p>
-                <p className="text-amber-300/80 text-xs mt-1.5 flex items-center">
-                  <span className="bg-slate-800 px-1.5 py-0.5 rounded mr-1.5">
+                <p
+                  className={cn(
+                    "text-xs mt-1.5 flex items-center",
+                    isLightMode ? "text-amber-600/90" : "text-amber-300/80",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "px-1.5 py-0.5 rounded mr-1.5",
+                      isLightMode ? "bg-slate-100" : "bg-slate-800",
+                    )}
+                  >
                     +
                   </span>
                   Use plus sign between keys (e.g.{" "}
-                  <span className="font-mono bg-slate-800 mx-1 px-1.5 py-0.5 rounded">
+                  <span
+                    className={cn(
+                      "font-mono mx-1 px-1.5 py-0.5 rounded",
+                      isLightMode ? "bg-slate-100" : "bg-slate-800",
+                    )}
+                  >
                     ctrl+shift+z
                   </span>{" "}
                   or{" "}
-                  <span className="font-mono bg-slate-800 mx-1 px-1.5 py-0.5 rounded">
+                  <span
+                    className={cn(
+                      "font-mono mx-1 px-1.5 py-0.5 rounded",
+                      isLightMode ? "bg-slate-100" : "bg-slate-800",
+                    )}
+                  >
                     f11
                   </span>
                   )
                 </p>
                 {shortcutError && (
-                  <p className="text-red-400 flex items-center mt-1.5">
+                  <p className="text-red-500 flex items-center mt-1.5">
                     <AlertTriangle className="mr-1.5 h-4 w-4" /> {shortcutError}
                   </p>
                 )}
@@ -528,9 +743,14 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
           </PrefListItem>
         </div>
 
-        <div className="flex justify-center mt-6 pt-4 border-t border-slate-700/50">
+        <div
+          className={cn(
+            "flex justify-center mt-6 pt-4 border-t",
+            isLightMode ? "border-slate-200/70" : "border-slate-700/50",
+          )}
+        >
           {apiKeyError && (
-            <div className="text-red-400 text-sm flex items-center mr-4">
+            <div className="text-red-500 text-sm flex items-center mr-4">
               <AlertTriangle className="mr-1.5 h-4 w-4" />
               Unable to save with invalid API key
             </div>
@@ -551,7 +771,12 @@ export const PreferencesPage: React.FC<PreferencesPageProps> = ({
                 },
               }}
             >
-              <div className="flex items-center justify-center gap-2 text-slate-300">
+              <div
+                className={cn(
+                  "flex items-center justify-center gap-2",
+                  isLightMode ? "text-slate-700" : "text-slate-300",
+                )}
+              >
                 <Check className="text-green-500 w-5 h-5" />
                 <span>Preferences saved</span>
               </div>

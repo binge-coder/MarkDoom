@@ -1,13 +1,15 @@
 import { ActionButton, ActionButtonProps } from "@/components";
 import { CreateNoteDialog } from "@/components/Dialog";
-import { createEmptyNoteAtom } from "@/store";
-import { useSetAtom } from "jotai";
+import { createEmptyNoteAtom, themeAtom } from "@/store";
+import { useAtomValue, useSetAtom } from "jotai";
 import { FilePlus } from "lucide-react";
 import { useState } from "react";
 
 export const NewNoteButton = (props: ActionButtonProps) => {
   const createEmptyNote = useSetAtom(createEmptyNoteAtom);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -25,7 +27,9 @@ export const NewNoteButton = (props: ActionButtonProps) => {
   return (
     <>
       <ActionButton onClick={handleOpenDialog} title="New Note" {...props}>
-        <FilePlus className="h-5 w-5" />
+        <FilePlus
+          className={`h-5 w-5 ${isLightMode ? "text-slate-700" : "text-white/70"}`}
+        />
       </ActionButton>
 
       <CreateNoteDialog

@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { themeAtom } from "@renderer/store";
+import { useAtomValue } from "jotai";
 
 interface XbuttonProps {
   onClick: () => void;
@@ -15,11 +17,15 @@ export const Xbutton: React.FC<XbuttonProps> = ({
   ariaLabel = "Close",
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   return (
     <motion.button
       className={twMerge(
-        "group flex items-center justify-center bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white p-1.5 rounded-full shadow-sm border border-slate-700/50 absolute top-2 right-2 transition-all duration-200",
+        isLightMode
+          ? "group flex items-center justify-center bg-slate-200/60 hover:bg-slate-300 text-slate-600 hover:text-slate-800 p-1.5 rounded-full shadow-sm border border-slate-300/50 absolute top-2 right-2 transition-all duration-200"
+          : "group flex items-center justify-center bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white p-1.5 rounded-full shadow-sm border border-slate-700/50 absolute top-2 right-2 transition-all duration-200",
         className,
       )}
       onClick={onClick}

@@ -1,5 +1,7 @@
+import { themeAtom } from "@/store";
 import { cn } from "@renderer/utils";
 import { motion } from "framer-motion";
+import { useAtomValue } from "jotai";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -30,6 +32,8 @@ export const CreateNoteDialog = ({
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   // Find the root element for the portal
   useEffect(() => {
@@ -113,18 +117,35 @@ export const CreateNoteDialog = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-slate-800 rounded-lg shadow-lg w-full max-w-md p-5 relative border border-slate-700"
+        className={cn(
+          "rounded-lg shadow-lg w-full max-w-md p-5 relative",
+          isLightMode
+            ? "bg-white border border-slate-200"
+            : "bg-slate-800 border border-slate-700",
+        )}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onCancel}
-          className="absolute top-3 right-3 p-1 rounded-full hover:bg-slate-700/50 text-slate-400 hover:text-slate-200 transition-colors"
+          className={cn(
+            "absolute top-3 right-3 p-1 rounded-full transition-colors",
+            isLightMode
+              ? "hover:bg-slate-200/80 text-slate-500 hover:text-slate-700"
+              : "hover:bg-slate-700/50 text-slate-400 hover:text-slate-200",
+          )}
           aria-label="Close"
         >
           <X size={18} />
         </button>
 
-        <h3 className="text-lg font-medium text-white mb-4">{title}</h3>
+        <h3
+          className={cn(
+            "text-lg font-medium mb-4",
+            isLightMode ? "text-slate-800" : "text-white",
+          )}
+        >
+          {title}
+        </h3>
 
         <form onSubmit={validateAndSubmit}>
           <div className="mb-4">
@@ -138,22 +159,39 @@ export const CreateNoteDialog = ({
               }}
               placeholder={placeholder}
               className={cn(
-                "w-full px-3 py-2.5 bg-slate-700/70 border rounded-lg text-slate-200",
-                "focus:outline-none focus:ring-2 transition-colors",
-                error
-                  ? "border-red-500/70 focus:ring-red-500/50"
-                  : "border-slate-600/50 focus:ring-blue-500/50",
+                "w-full px-3 py-2.5 rounded-lg transition-colors focus:outline-none focus:ring-2",
+                isLightMode
+                  ? error
+                    ? "bg-white border-red-400/70 focus:ring-red-400/50 text-slate-800 border"
+                    : "bg-white border-slate-300 hover:border-slate-400 focus:ring-blue-400/50 text-slate-800 border"
+                  : error
+                    ? "bg-slate-700/70 border-red-500/70 focus:ring-red-500/50 text-slate-200 border"
+                    : "bg-slate-700/70 border-slate-600/50 focus:ring-blue-500/50 text-slate-200 border",
               )}
               autoComplete="off"
             />
-            {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+            {error && (
+              <p
+                className={cn(
+                  "mt-2 text-sm",
+                  isLightMode ? "text-red-600" : "text-red-400",
+                )}
+              >
+                {error}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={onCancel}
-              className="px-3 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors"
+              className={cn(
+                "px-3 py-2 rounded-md transition-colors",
+                isLightMode
+                  ? "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                  : "bg-slate-700 hover:bg-slate-600 text-slate-200",
+              )}
             >
               {cancelText}
             </button>

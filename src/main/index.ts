@@ -16,6 +16,7 @@ import {
   GetNotes,
   ReadNote,
   RenameNote,
+  ThemeMode,
   WriteNote,
 } from "../shared/types";
 import {
@@ -67,8 +68,24 @@ function registerZenModeShortcut(shortcut: string): boolean {
 }
 
 async function createWindow(): Promise<void> {
-  // Force dark mode but allow transparency effects to work properly
-  nativeTheme.themeSource = "dark";
+  // Load theme settings
+  let themePreference: ThemeMode = "dark"; // Default to dark mode
+
+  try {
+    const settings = await readFile(settingsPath, { encoding: "utf-8" });
+    const parsedSettings = JSON.parse(settings);
+
+    // Set the theme based on user preference
+    if (parsedSettings.theme === "light" || parsedSettings.theme === "dark") {
+      themePreference = parsedSettings.theme;
+    }
+  } catch (error) {
+    console.error("Error reading theme settings:", error);
+    // Continue with default dark theme
+  }
+
+  // Set the native theme source based on user's preference
+  nativeTheme.themeSource = themePreference;
 
   // Settings file is already ensured to exist in app.whenReady()
   type BackgroundMaterialType =
@@ -229,6 +246,15 @@ app.whenReady().then(async () => {
       JSON.stringify(newSettings, null, 2),
       "utf-8",
     );
+
+    // Update theme if it has changed
+    if (
+      newSettings.theme &&
+      (newSettings.theme === "light" || newSettings.theme === "dark")
+    ) {
+      nativeTheme.themeSource = newSettings.theme;
+    }
+
     return { success: true }; // Return success after saving
   });
 

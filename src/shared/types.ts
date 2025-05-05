@@ -1,5 +1,7 @@
 import { NoteContent, NoteInfo } from "./models";
 
+export type ThemeMode = "light" | "dark";
+
 export type GetNotes = () => Promise<NoteInfo[]>;
 export type ReadNote = (title: NoteInfo["title"]) => Promise<NoteContent>;
 export type WriteNote = (
@@ -20,6 +22,7 @@ export type Settings = {
   geminiApi: string;
   backgroundMaterial: string;
   zenModeShortcut: string;
+  theme: ThemeMode;
 };
 
 export type GetSettings = () => Promise<Settings>;

@@ -10,7 +10,13 @@ import {
   Sidebar,
 } from "@/components";
 import { geminiApiKeyAtom } from "@/components/PreferencesPage";
-import { showChatAtom, showLeftSideBarAtom, showSettingsAtom } from "@/store";
+import {
+  initializeThemeFromSettings,
+  showChatAtom,
+  showLeftSideBarAtom,
+  showSettingsAtom,
+  themeAtom,
+} from "@/store";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef } from "react";
 
@@ -24,17 +30,20 @@ const App = () => {
   const [showSettings, setShowSettings] = useAtom(showSettingsAtom);
   const showLeftSideBar = useAtomValue(showLeftSideBarAtom);
   const setGeminiApiKey = useSetAtom(geminiApiKeyAtom);
+  const [theme, setTheme] = useAtom(themeAtom);
 
-  // Load API key on app start and setup listener for updates
+  // Load settings on app start
   useEffect(() => {
-    // Load the API key during initial app load
-    const loadApiKey = async () => {
+    // Load settings during initial app load
+    const loadSettings = async () => {
       const settings = await window.context.getSettings();
       if (settings.geminiApi) {
         setGeminiApiKey(settings.geminiApi);
       }
+      // Initialize theme using the new helper function
+      await initializeThemeFromSettings(setTheme);
     };
-    loadApiKey();
+    loadSettings();
 
     // Set up listener for API key updates from other components
     const handleApiKeyUpdate = (event: CustomEvent) => {
@@ -52,18 +61,27 @@ const App = () => {
         handleApiKeyUpdate as EventListener,
       );
     };
-  }, [setGeminiApiKey]);
+  }, [setGeminiApiKey, setTheme]);
+
+  // Apply theme class to html element
+  useEffect(() => {
+    if (theme === "light") {
+      document.documentElement.classList.add("light-theme");
+    } else {
+      document.documentElement.classList.remove("light-theme");
+    }
+  }, [theme]);
 
   const handleCloseSettings = () => {
     setShowSettings(false);
   };
 
   return (
-    <RootLayout>
+    <RootLayout className={theme === "light" ? "light-mode" : "dark-mode"}>
       <PreferencesPage isVisible={showSettings} onClose={handleCloseSettings} />
 
       <Sidebar
-        className={`bg-slate-800/40 transform ${showLeftSideBar ? "translate-x-0 w-[250px] p-2" : "-translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
+        className={`${theme === "light" ? "bg-slate-200/40" : "bg-slate-800/40"} transform ${showLeftSideBar ? "translate-x-0 w-[250px] p-2" : "-translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
       >
         <ActionButtonsRow className="flex mt-1 justify-center gap-2" />
         <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
@@ -71,13 +89,13 @@ const App = () => {
 
       <Content
         ref={contentContainerRef}
-        className="border-l border-l-black/40 bg-slate-900/60"
+        className={`border-l ${theme === "light" ? "border-l-gray-300/40 bg-slate-100/60" : "border-l-black/40 bg-slate-900/60"}`}
       >
         <FloatingNoteTitle className="pt-2" />
         <MarkdownEditor />
       </Content>
       <ChatComponent
-        className={`bg-slate-800/40 transform ${showChat ? "translate-x-0 w-[250px] p-2" : "translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
+        className={`${theme === "light" ? "bg-slate-200/40" : "bg-slate-800/40"} transform ${showChat ? "translate-x-0 w-[250px] p-2" : "translate-x-full w-0 p-0"} transition-all duration-200 ease-in-out`}
       />
     </RootLayout>
   );

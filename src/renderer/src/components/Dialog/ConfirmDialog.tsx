@@ -1,5 +1,7 @@
+import { themeAtom } from "@/store";
 import { cn } from "@renderer/utils";
 import { motion } from "framer-motion";
+import { useAtomValue } from "jotai";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -28,6 +30,8 @@ export const ConfirmDialog = ({
   const [isVisible, setIsVisible] = useState(false);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
+  const theme = useAtomValue(themeAtom);
+  const isLightMode = theme === "light";
 
   // Find the root element for the portal
   useEffect(() => {
@@ -80,24 +84,52 @@ export const ConfirmDialog = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="bg-slate-800 rounded-lg shadow-lg w-full max-w-md p-5 relative border border-slate-700"
+        className={cn(
+          "rounded-lg shadow-lg w-full max-w-md p-5 relative",
+          isLightMode
+            ? "bg-white border border-slate-200"
+            : "bg-slate-800 border border-slate-700",
+        )}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onCancel}
-          className="absolute top-3 right-3 p-1 rounded-full hover:bg-slate-700/50 text-slate-400 hover:text-slate-200 transition-colors"
+          className={cn(
+            "absolute top-3 right-3 p-1 rounded-full transition-colors",
+            isLightMode
+              ? "hover:bg-slate-200/80 text-slate-500 hover:text-slate-700"
+              : "hover:bg-slate-700/50 text-slate-400 hover:text-slate-200",
+          )}
           aria-label="Close"
         >
           <X size={18} />
         </button>
 
-        <h3 className="text-lg font-medium text-white mb-2">{title}</h3>
-        <p className="text-slate-300 mb-6">{message}</p>
+        <h3
+          className={cn(
+            "text-lg font-medium mb-2",
+            isLightMode ? "text-slate-800" : "text-white",
+          )}
+        >
+          {title}
+        </h3>
+        <p
+          className={
+            isLightMode ? "text-slate-600 mb-6" : "text-slate-300 mb-6"
+          }
+        >
+          {message}
+        </p>
 
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-3 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors"
+            className={cn(
+              "px-3 py-2 rounded-md transition-colors",
+              isLightMode
+                ? "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                : "bg-slate-700 hover:bg-slate-600 text-slate-200",
+            )}
           >
             {cancelText}
           </button>
