@@ -188,7 +188,7 @@ export const NotePreviewList = ({
               "focus:ring-1 focus:ring-blue-500/50",
               "transition-all duration-200 shadow-sm",
               isLightMode
-                ? "bg-white/60 focus:bg-white text-slate-800 border border-slate-300/80 focus:border-blue-500/80"
+                ? "bg-white/80 focus:bg-white text-slate-800 border border-slate-300/80 focus:border-blue-500/80"
                 : "bg-slate-950/40 focus:bg-slate-900 text-white border border-slate-700/80 focus:border-blue-500/80",
             )}
           />
