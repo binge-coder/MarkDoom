@@ -38,6 +38,7 @@ export const ConfirmDialog = ({
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
+      return undefined;
     } else {
       const timer = setTimeout(() => setIsVisible(false), 200);
       return () => clearTimeout(timer);

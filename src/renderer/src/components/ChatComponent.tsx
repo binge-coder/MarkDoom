@@ -166,7 +166,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/80 bg-slate-800/50 backdrop-blur-md">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/80 bg-slate-900 backdrop-blur-md rounded-md">
         <div className="flex items-center space-x-2">
           <Bot className="h-4 w-4 text-blue-400" />
           <h3 className="font-medium text-slate-200 text-sm">AI Assistant</h3>
@@ -179,7 +179,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
             disabled={messages.length === 0}
             className={`p-1.5 rounded-full flex items-center justify-center transition-all duration-200 ${
               messages.length === 0
-                ? "text-slate-600 cursor-not-allowed"
+                ? "text-slate-500 cursor-not-allowed"
                 : "text-slate-400 hover:text-red-400 hover:bg-red-400/10"
             }`}
             title="Clear conversation"
@@ -265,15 +265,16 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-slate-800/60 bg-slate-800/30 backdrop-blur-sm">
-        <div className="relative flex items-center bg-slate-900/60 rounded-lg border border-blue-500/80 focus-within:ring-1 focus-within:ring-blue-500/50 transition-all duration-200">
+      <div className="p-3 border-t border-slate-800 backdrop-blur-sm rounded-md">
+        <div className="relative flex items-center bg-slate-900/60 rounded-lg transition-all duration-200 border-slate-700">
           <textarea
             ref={textareaRef}
             value={promptToShow}
             onChange={(e) => setPromptToShow(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask a question..."
-            className="w-full px-3 py-2.5 bg-transparent text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none min-h-[40px] max-h-[120px] text-sm"
+            className="w-full px-3 py-2.5 bg-transparent text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-0 focus:border-0 outline-none ring-0 border-none min-h-[40px] max-h-[120px] text-sm"
+            style={{ outline: "none", boxShadow: "none" }}
             rows={1}
             onInput={(e) => {
               // Auto-resize based on content
