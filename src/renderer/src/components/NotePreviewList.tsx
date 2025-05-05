@@ -6,7 +6,7 @@ import { NoteInfo } from "@shared/models";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue } from "jotai";
 import { isEmpty } from "lodash";
-import { FileText, Search, StickyNote, Folder } from "lucide-react";
+import { Folder, Search, StickyNote } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
