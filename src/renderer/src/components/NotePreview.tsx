@@ -104,7 +104,7 @@ export const NotePreview = ({
           "cursor-pointer px-3 py-3 rounded-md transition-all duration-150",
           isActive
             ? "bg-slate-900/80 border-l-4 border-blue-500 shadow-md"
-            : "bg-slate-800/60 hover:bg-slate-700/60 border-l-4 border-transparent",
+            : "bg-slate-950/40 hover:bg-slate-800/40 border-l-4 border-transparent",
           className,
         )}
         onMouseEnter={() => setIsHovered(true)}

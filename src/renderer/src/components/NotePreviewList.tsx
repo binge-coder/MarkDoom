@@ -137,7 +137,7 @@ export const NotePreviewList = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search notes..."
             className={cn(
-              "w-full bg-slate-900/60 focus:bg-slate-900 text-sm text-white",
+              "w-full bg-slate-950/40 focus:bg-slate-900 text-sm text-white",
               "rounded-lg pl-9 pr-3 py-2.5 focus:outline-none",
               "placeholder:text-slate-300/60",
               "border border-slate-700/80 focus:border-blue-500/80",
