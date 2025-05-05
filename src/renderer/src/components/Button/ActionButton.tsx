@@ -1,10 +1,10 @@
 import { themeAtom } from "@renderer/store";
 import { cn } from "@renderer/utils";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { ComponentProps } from "react";
 
-export type ActionButtonProps = ComponentProps<"button">;
+export type ActionButtonProps = HTMLMotionProps<"button">;
 
 export const ActionButton = ({
   className,
