@@ -266,7 +266,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-slate-800 backdrop-blur-sm rounded-md">
+      <div className=" backdrop-blur-sm rounded-md">
         <div className="relative">
           <textarea
             value={promptToShow}
@@ -300,7 +300,7 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
           </button>
         </div>
         {!geminiApiKey && (
-          <p className="text-amber-400/80 text-xs mt-1.5 px-2">
+          <p className="text-amber-400/80 text-xs px-2">
             Please set your Gemini API key in preferences to use the AI
             assistant.
           </p>
