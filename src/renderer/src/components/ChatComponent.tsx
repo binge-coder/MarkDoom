@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { selectedNoteAtom, showChatAtom } from "@renderer/store";
+import { cn } from "@renderer/utils";
 import { motion } from "framer-motion";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Bot, Send, Trash2 } from "lucide-react";
@@ -266,42 +267,37 @@ export const ChatComponent = ({ className }: ComponentProps<"div">) => {
 
       {/* Input Area */}
       <div className="p-3 border-t border-slate-800 backdrop-blur-sm rounded-md">
-        <div className="relative flex items-center bg-slate-900/60 rounded-lg transition-all duration-200 border-slate-700">
+        <div className="relative">
           <textarea
-            ref={textareaRef}
             value={promptToShow}
-            onChange={(e) => setPromptToShow(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask a question..."
-            className="w-full px-3 py-2.5 bg-transparent text-slate-200 placeholder:text-slate-400 resize-none focus:outline-none focus:ring-0 focus:border-0 outline-none ring-0 border-none min-h-[40px] max-h-[120px] text-sm"
-            style={{ outline: "none", boxShadow: "none" }}
-            rows={1}
-            onInput={(e) => {
-              // Auto-resize based on content
-              const target = e.target as HTMLTextAreaElement;
-              target.style.height = "auto";
-              target.style.height = `${Math.min(
-                120,
-                Math.max(40, target.scrollHeight),
-              )}px`;
+            onChange={(e) => {
+              setPromptToShow(e.target.value);
+              // Auto-resize the textarea
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 150)}px`;
             }}
+            placeholder="Ask questions..."
+            className={cn(
+              "w-full bg-slate-900/60 focus:bg-slate-900 text-sm text-white",
+              "rounded-lg pl-3 pr-9 py-2.5 focus:outline-none",
+              "placeholder:text-slate-300/60",
+              "border border-slate-700/80 focus:border-blue-500/80",
+              "focus:ring-1 focus:ring-blue-500/50",
+              "transition-all duration-200 shadow-sm",
+              "resize-none min-h-[40px] max-h-[150px] overflow-y-auto",
+              "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]", // Cross-browser scrollbar hiding
+            )}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            ref={textareaRef}
           />
-          <motion.button
+          <button
+            className="absolute right-2 top-2 text-slate-400 hover:text-blue-500 transition-colors p-1"
             onClick={handleGenerateText}
             disabled={loading || !promptToShow.trim()}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`absolute right-2 flex items-center justify-center p-1.5 rounded-full 
-              ${
-                promptToShow.trim()
-                  ? "text-blue-500 hover:bg-blue-500/20"
-                  : "text-slate-500 cursor-not-allowed"
-              } 
-              transition-all duration-200`}
-            aria-label="Send message"
           >
-            <Send className="h-5 w-5" />
-          </motion.button>
+            <Send className="h-4 w-4" />
+          </button>
         </div>
         {!geminiApiKey && (
           <p className="text-amber-400/80 text-xs mt-1.5 px-2">
